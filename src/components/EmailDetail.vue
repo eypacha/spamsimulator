@@ -12,7 +12,7 @@
     <div class="flex gap-4 border-t pt-4">
       <button v-if="!email.trash" @click="onDelete" class="px-4 py-2 rounded bg-red-100 text-red-700 hover:bg-red-200"><i class="fas fa-trash"></i></button>
       <button v-else @click="onDeletePermanent" class="px-4 py-2 rounded bg-red-100 text-red-700 hover:bg-red-200"><i class="fas fa-times"></i></button>
-      <button @click="onStar" class="px-4 py-2 rounded bg-yellow-100 text-yellow-700 hover:bg-yellow-200"><i :class="email.starred ? 'fas fa-star' : 'far fa-star'"></i></button>
+      <button v-if="!email.trash" @click="onStar" class="px-4 py-2 rounded bg-yellow-100 text-yellow-700 hover:bg-yellow-200"><i :class="email.starred ? 'fas fa-star' : 'far fa-star'" ></i></button>
     </div>
   </div>
 </template>
