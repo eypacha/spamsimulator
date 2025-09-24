@@ -7,7 +7,8 @@ export const useEmailStore = defineStore('email', () => {
   const emails = ref(EMAILS.map(e => ({
     ...e,
     starred: false,
-    read: false
+    read: false,
+    trash: false
   })));
 
   function toggleStar(id) {
@@ -20,5 +21,10 @@ export const useEmailStore = defineStore('email', () => {
     if (email) email.read = value;
   }
 
-  return { emails, toggleStar, setRead };
+  function moveToTrash(id) {
+    const email = emails.value.find(e => e.id === id);
+    if (email) email.trash = true;
+  }
+
+  return { emails, toggleStar, setRead, moveToTrash };
 });

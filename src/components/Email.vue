@@ -8,7 +8,7 @@
       <i :class="email.starred ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-400'" aria-label="Destacar"></i>
     </span>
     <span class="w-50 text-gray-500">{{ email.from }}</span>
-    <span class="flex-1">{{ email.subject }}</span>
+    <span class="flex-1 truncate whitespace-nowrap" style="max-width: 320px;">{{ email.subject }}</span>
     <span class="w-32 text-right text-gray-400">{{ email.date }}</span>
   </li>
 </template>
@@ -17,7 +17,10 @@
 import { defineProps, defineEmits } from 'vue';
 const props = defineProps({
   email: Object,
-  modelValue: Array
+  modelValue: {
+    type: Array,
+    default: () => []
+  }
 });
 const emit = defineEmits(['update:modelValue', 'update:starred']);
 
