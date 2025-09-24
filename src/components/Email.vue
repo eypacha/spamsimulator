@@ -4,7 +4,7 @@
     email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'
   ]">
     <input type="checkbox" :checked="modelValue.includes(email.id)" :value="email.id" @change="onChange" class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
-    <span class="mr-2 cursor-pointer" @click="$emit('toggle-star', email.id)">
+    <span class="mr-2 cursor-pointer" @click="toggleStar">
       <i :class="email.starred ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-400'" aria-label="Destacar"></i>
     </span>
     <span class="w-50 text-gray-500">{{ email.from }}</span>
@@ -33,6 +33,9 @@ function onChange(event) {
   emit('update:modelValue', newValue);
 }
 
+function toggleStar() {
+  props.email.starred = !props.email.starred;
+}
 // Font Awesome import for icons
 import '@fortawesome/fontawesome-free/css/all.css';
 </script>
