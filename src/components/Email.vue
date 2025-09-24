@@ -3,13 +3,13 @@
     'flex items-center px-6 py-2 cursor-pointer transition',
     email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'
   ]">
-    <input type="checkbox" :checked="modelValue.includes(email.id)" :value="email.id" @change="onChange" class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
-    <span class="mr-2 cursor-pointer" @click="toggleStar">
+    <input type="checkbox" :checked="modelValue.includes(email.id)" :value="email.id" @click.stop @change="onChange" class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
+    <span class="mr-2 cursor-pointer" @click.stop="toggleStar">
       <i :class="email.starred ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-400'" aria-label="Destacar"></i>
     </span>
     <span class="w-50 text-gray-500">{{ email.from }}</span>
-    <span class="flex-1 truncate whitespace-nowrap" style="max-width: 320px;">{{ email.subject }}</span>
-    <span class="w-32 text-right text-gray-400">{{ email.date }}</span>
+    <span class="flex-1 min-w-0 truncate whitespace-nowrap" style="max-width: 220px;">{{ email.subject }}</span>
+    <span class="w-32 flex-shrink-0 text-right text-gray-400">{{ email.date }}</span>
   </li>
 </template>
 

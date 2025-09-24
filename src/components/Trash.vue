@@ -1,12 +1,14 @@
 <template>
-  <section>
-    <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b">
+  <section class="h-full flex flex-col">
+    <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b sticky top-0 z-10">
       <span class="text-lg font-semibold text-gray-700">Papelera</span>
       <span class="text-sm text-gray-500">{{ trashedEmails.length }} correos</span>
     </div>
-    <ul v-if="!selectedEmail" class="divide-y divide-gray-200 bg-white rounded-lg shadow">
-      <Email v-for="email in trashedEmails" :key="email.id" :email="email" @click="openEmail(email)" />
-    </ul>
+    <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
+      <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
+        <Email v-for="email in trashedEmails" :key="email.id" :email="email" @click="openEmail(email)" />
+      </ul>
+    </div>
     <EmailDetail v-else :email="selectedEmail" @deletePermanent="confirmDeletePermanent" />
     <div v-if="showConfirm" class="fixed inset-0 flex items-center justify-center z-50" style="background: rgba(0,0,0,0.4);">
       <div class="bg-white rounded-lg shadow-lg p-8 text-center">
