@@ -2,7 +2,7 @@
   <section class="h-full flex flex-col">
     <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b sticky top-0 z-10">
       <span class="text-lg font-semibold text-gray-700">Papelera</span>
-      <span class="text-sm text-gray-500">{{ trashedEmails.length }} correos</span>
+      <span class="text-sm text-gray-500">{{ trashedEmails.length }}/{{ TRASH_MAX }} emails</span>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
       <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
@@ -35,6 +35,7 @@ const trashedEmails = computed(() => emails.value.filter(e => e.trash));
 const selectedEmail = ref(null);
 const showConfirm = ref(false);
 let pendingDeleteId = null;
+const TRASH_MAX = 5;
 
 function openEmail(email) {
   selectedEmail.value = email;
@@ -50,4 +51,5 @@ function doDeletePermanent() {
   showConfirm.value = false;
   pendingDeleteId = null;
 }
+// No changes needed here for the popup, logic is handled in Inbox.vue
 </script>
