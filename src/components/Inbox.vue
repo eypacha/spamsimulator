@@ -1,5 +1,9 @@
 <template>
   <section>
+    <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b">
+      <span class="text-lg font-semibold text-gray-700">Recibidos</span>
+      <span class="text-sm text-gray-500">{{ visibleEmails.length }} correos</span>
+    </div>
     <ul v-if="!selectedEmail" class="divide-y divide-gray-200 bg-white rounded-lg shadow">
       <Email v-for="email in visibleEmails" :key="email.id" :email="email" v-model="selectedEmails" @toggle-star="emailStore.toggleStar" @click="openEmail(email)" />
     </ul>
