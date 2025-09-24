@@ -8,7 +8,7 @@
       <i :class="email.starred ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-400'" aria-label="Destacar"></i>
     </span>
     <span class="w-50 text-gray-500">{{ email.from }}</span>
-    <span class="flex-1 min-w-0 truncate whitespace-nowrap" style="max-width: 220px;">{{ email.subject }}</span>
+    <span class="flex-1 min-w-0 truncate whitespace-nowrap w-0">{{ email.subject }}</span>
     <span class="w-32 flex-shrink-0 text-right text-gray-400">{{ email.date }}</span>
   </li>
 </template>
