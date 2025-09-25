@@ -37,14 +37,43 @@ function onStar() {
 const urlRegex = /(https?:\/\/[^\s]+)/g;
 // Regex para markdown [texto](url)
 const mdLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+// Regex para detectar links markdown [texto](url) con mayor robustez
+const mdLinkRegexRobust = /\[([^\]]+)\]\((https?:\/\/[^\s)]+(?:\([^)]*\)[^)]*)*)\)/g;
+// Regex para bold **texto** o __texto__
+const boldRegex = /\*\*([^*]+)\*\*|__([^_]+)__/g;
+// Regex para italic *texto* o _texto_
+const italicRegex = /\*([^*]+)\*|_([^_]+)_/g;
 
 const parsedBody = computed(() => {
   if (!props.email.body) return '';
   let body = props.email.body;
-  // Primero reemplaza markdown links
-  body = body.replace(mdLinkRegex, (match, text, url) => `<span style='color:#2563eb;text-decoration:underline;cursor:pointer'>${text}</span>`);
-  // Luego reemplaza URLs sueltas
-  body = body.replace(urlRegex, url => `<span style='color:#2563eb;text-decoration:underline;cursor:pointer'>${url}</span>`);
+  // Links markdown: guardamos los URLs para no parsearlos dos veces
+  const markdownLinks = [];
+  // Usar regex robusto
+  body = body.replace(mdLinkRegexRobust, (match, text, url) => {
+    console.log('[DEBUG] Markdown link match:', { match, text, url });
+    markdownLinks.push(url);
+    return `<span style='color:#2563eb;text-decoration:underline;cursor:pointer'>${text}</span>`;
+  });
+  // URLs sueltas, pero ignoramos las que ya están en markdownLinks
+  body = body.replace(urlRegex, url => {
+    if (markdownLinks.includes(url)) return url; // ya parseado
+    return `<span style='color:#2563eb;text-decoration:underline;cursor:pointer'>${url}</span>`;
+  });
+  // Bold
+  body = body.replace(boldRegex, (match, g1, g2) => `<span style='font-weight:bold;'>${g1 || g2}</span>`);
+  // Italic
+  body = body.replace(italicRegex, (match, g1, g2) => `<span style='font-style:italic;'>${g1 || g2}</span>`);
+  // Encabezados markdown ###, ## y #
+  body = body.replace(/(^|<br>)###\s*(.*?)(?=<br>|$)/g, (match, br, text) => `${br}<span style='font-size:1.1em;font-weight:bold;color:#5e35b1;'>${text}</span>`);
+  body = body.replace(/(^|<br>)##\s*(.*?)(?=<br>|$)/g, (match, br, text) => `${br}<span style='font-size:1.3em;font-weight:bold;color:#142c96;'>${text}</span>`);
+  body = body.replace(/(^|<br>)#\s*(.*?)(?=<br>|$)/g, (match, br, text) => `${br}<span style='font-size:1.6em;font-weight:bold;color:#f9490d;'>${text}</span>`);
+  // Listas con puntitos si la línea empieza con '-'
+  body = body.replace(/(^|<br>)-\s*(.*?)(?=<br>|$)/g, (match, br, item) => `${br}<span style='display:inline-block;width:1em;text-align:center;'>•</span> ${item}`);
+  // Saltos de línea
+  body = body.replace(/\n/g, '<br>');
+  console.log('[DEBUG] Email body original:', props.email.body);
+  console.log('[DEBUG] Email body parsed:', body);
   return body;
 });
 

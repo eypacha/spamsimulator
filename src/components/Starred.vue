@@ -25,7 +25,7 @@ import EmailDetail from './EmailDetail.vue';
 
 const emailStore = useEmailStore();
 const { emails } = storeToRefs(emailStore);
-const starredEmails = computed(() => emails.value.filter(e => e.starred));
+const starredEmails = computed(() => emails.value.filter(e => e.starred).reverse());
 const selectedEmail = ref(null);
 
 function openEmail(email) {

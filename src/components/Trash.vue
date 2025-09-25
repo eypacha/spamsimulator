@@ -41,7 +41,7 @@ import EmailDetail from './EmailDetail.vue';
 
 const emailStore = useEmailStore();
 const { emails } = storeToRefs(emailStore);
-const trashedEmails = computed(() => emails.value.filter(e => e.trash));
+const trashedEmails = computed(() => emails.value.filter(e => e.trash).reverse());
 const selectedEmail = ref(null);
 const showConfirm = ref(false);
 let pendingDeleteId = null;

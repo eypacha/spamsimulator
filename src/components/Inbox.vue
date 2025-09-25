@@ -42,7 +42,7 @@ const selectedEmails = ref([]);
 const selectedEmail = ref(null);
 const emailStore = useEmailStore();
 const { emails } = storeToRefs(emailStore);
-const visibleEmails = computed(() => emails.value.filter(e => !e.trash));
+const visibleEmails = computed(() => emails.value.filter(e => !e.trash).reverse());
 const trashCount = computed(() => emails.value.filter(e => e.trash).length);
 const showTrashFull = ref(false);
 

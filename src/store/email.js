@@ -11,8 +11,12 @@ export const useEmailStore = defineStore('email', () => {
     if (gameLoopInterval) return;
     fetchEmail();
     gameLoopInterval = setInterval(() => {
-      fetchEmail();
-    }, 5000); // cada 5 segundos
+
+      setTimeout(() => {
+        fetchEmail();
+      }, 1000); // pequeño retraso para evitar solapamientos
+
+    }, 2500);
   }
 
   async function fetchEmail() {
@@ -26,6 +30,7 @@ export const useEmailStore = defineStore('email', () => {
       'family',
       'promo',
       'support',
+      'circus',
       'newsletter',
       'friend',
       'friend',
@@ -55,7 +60,7 @@ export const useEmailStore = defineStore('email', () => {
     if (spamType === 'legit') {
       lang = 'es';
     } else {
-      const langs = ['es', 'en', 'zh'];
+      const langs = ['es', 'en'];
       lang = langs[Math.floor(Math.random() * langs.length)];
     }
     try {

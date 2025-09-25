@@ -2,7 +2,7 @@
 
 export async function fetchEmailFromLLM(spamType = 'legit', emailType = 'office', lang = 'es') {
     try {
-        const systemContent = `sendemail; spamType: ${spamType}; type: ${emailType}; lang: ${lang};`;
+        const systemContent = `sendemail: ${spamType}; type: ${emailType}; lang: ${lang}; emojis: true`;
         const res = await fetch('http://localhost:1234/v1/chat/completions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
