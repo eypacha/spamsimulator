@@ -19,7 +19,36 @@ export const useEmailStore = defineStore('email', () => {
     // Determinar spam o legit
     const spamType = Math.random() < 0.5 ? 'spam' : 'legit';
     // Tipos posibles
-    const types = ['friend', 'girlfriend', 'office', 'family', 'promo', 'support', 'newsletter'];
+    const types = [
+      'friend',
+      'girlfriend',
+      'office',
+      'family',
+      'promo',
+      'support',
+      'newsletter',
+      'friend',
+      'friend',
+      'friend',
+      'bank',
+      'spaship',
+      'social',
+      'phishing',
+      'girlfriend',
+      'girlfriend',
+      'nigerian prince',
+      'shopping',
+      'travel',
+      'school',
+      'health',
+      'event',
+      'subscription',
+      'update',
+      'alert',
+      'delivery',
+      'job',
+      'community'
+    ];
     const emailType = types[Math.floor(Math.random() * types.length)];
     // Idioma
     let lang;
@@ -31,6 +60,11 @@ export const useEmailStore = defineStore('email', () => {
     }
     try {
       const parsed = await fetchEmailFromLLM(spamType, emailType, lang);
+      // Excepción: si el tipo es girlfriend, usar nombre fijo
+      if (emailType === 'girlfriend' && spamType === 'legit') {
+        parsed.fromName = '💚 Cari';
+        parsed.fromEmail = 'caribufaino@gmail.com';
+      }
       emails.value.push(newEmail(parsed));
     } catch (err) {
       console.error('Error al pedir email:', err);
