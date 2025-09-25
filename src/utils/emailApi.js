@@ -28,7 +28,8 @@ export function newEmail(parsed) {
   return {
     id: Date.now(),
     subject: parsed.subject || '(Sin asunto)',
-    from: parsed.fromName || 'Unknown',
+    fromName: parsed.fromName || 'Unknown',
+    fromEmail: parsed.fromEmail || '',
     date: new Date().toLocaleDateString(),
     body: parsed.body || parsed.subject || '',
     isSpam: false,

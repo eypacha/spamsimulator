@@ -2,7 +2,8 @@
   <div class="max-w-xl mx-auto bg-white rounded-lg shadow p-6 mt-8">
     <div class="mb-4">
       <h2 class="text-2xl font-bold mb-2">{{ email.subject }}</h2>
-      <div class="text-gray-500 text-sm mb-1">De: <span class="font-semibold">{{ email.from }}</span></div>
+      <div class="text-gray-500 text-sm mb-1">De: <span class="font-semibold">{{ email.fromName }}</span></div>
+      <div v-if="email.fromEmail" class="text-gray-400 text-xs mb-1">&lt;{{ email.fromEmail }}&gt;</div>
       <div class="text-gray-500 text-sm mb-1">Para: <span class="font-semibold">{{ email.sender || 'tú' }}</span></div>
       <div class="text-gray-400 text-xs mb-2">Fecha: {{ email.date }}</div>
     </div>
