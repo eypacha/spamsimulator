@@ -48,6 +48,7 @@ const showTrashFull = ref(false);
 
 function openEmail(email) {
   selectedEmail.value = email;
+  emailStore.setRead(email.id);
 }
 
 function deleteEmail(id) {

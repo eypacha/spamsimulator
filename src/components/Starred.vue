@@ -30,5 +30,6 @@ const selectedEmail = ref(null);
 
 function openEmail(email) {
   selectedEmail.value = email;
+  emailStore.setRead(email.id);
 }
 </script>

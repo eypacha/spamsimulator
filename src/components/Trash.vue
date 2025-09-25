@@ -49,6 +49,7 @@ const TRASH_MAX = 5;
 
 function openEmail(email) {
   selectedEmail.value = email;
+  emailStore.setRead(email.id);
 }
 function confirmDeletePermanent(id) {
   pendingDeleteId = id;
