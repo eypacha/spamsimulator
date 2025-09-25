@@ -7,7 +7,7 @@
       <div class="text-gray-400 text-xs mb-2">Fecha: {{ email.date }}</div>
     </div>
     <div class="mb-6">
-      <div class="text-base whitespace-pre-line">{{ email.body }}</div>
+      <div class="text-base whitespace-pre-line" v-html="email.body"></div>
     </div>
     <div class="flex gap-4 border-t pt-4">
       <button v-if="!email.trash" @click="onDelete" class="px-4 py-2 rounded bg-red-100 text-red-700 hover:bg-red-200"><i class="fas fa-trash"></i></button>
