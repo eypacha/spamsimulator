@@ -65,7 +65,7 @@ export const useEmailStore = defineStore('email', () => {
         parsed.fromName = '💚 Cari';
         parsed.fromEmail = 'caribufaino@gmail.com';
       }
-      emails.value.push(newEmail(parsed));
+      emails.value.push(newEmail({ ...parsed, isSpam: spamType === 'spam' }));
     } catch (err) {
       console.error('Error al pedir email:', err);
     }

@@ -2,7 +2,7 @@
 
 export async function fetchEmailFromLLM(spamType = 'legit', emailType = 'office', lang = 'es') {
     try {
-        const systemContent = `sendemail; spamType: ${spamType}; type: ${emailType}; lang: ${lang}`;
+        const systemContent = `sendemail; spamType: ${spamType}; type: ${emailType}; lang: ${lang};`;
         const res = await fetch('http://localhost:1234/v1/chat/completions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -34,7 +34,7 @@ export function newEmail(parsed) {
         fromEmail: parsed.fromEmail || '',
         date: new Date().toLocaleDateString(),
         body: parsed.body || parsed.subject || '',
-        isSpam: false,
+        isSpam: parsed.isSpam ?? false,
         starred: false,
         read: false,
         trash: false
