@@ -5,9 +5,16 @@
       <span class="text-sm text-gray-500">{{ trashedEmails.length }}/{{ TRASH_MAX }} emails</span>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
-      <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
-        <Email v-for="email in trashedEmails" :key="email.id" :email="email" @click="openEmail(email)" />
-      </ul>
+      <template v-if="trashedEmails.length > 0">
+        <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
+          <Email v-for="email in trashedEmails" :key="email.id" :email="email" @click="openEmail(email)" />
+        </ul>
+      </template>
+      <template v-else>
+        <div class="flex items-center justify-center h-full">
+          <div class="text-2xl text-gray-400 font-semibold">¡Nada en la papelera! Todo limpio 🚀</div>
+        </div>
+      </template>
     </div>
     <EmailDetail v-else :email="selectedEmail" @deletePermanent="confirmDeletePermanent" />
     <div v-if="showConfirm" class="fixed inset-0 flex items-center justify-center z-50" style="background: rgba(0,0,0,0.4);">

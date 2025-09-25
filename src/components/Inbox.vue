@@ -5,9 +5,16 @@
       <span class="text-sm text-gray-500">{{ visibleEmails.length }} correos</span>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
-      <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
-        <Email v-for="email in visibleEmails" :key="email.id" :email="email" v-model="selectedEmails" @toggle-star="emailStore.toggleStar" @click="openEmail(email)" />
-      </ul>
+      <template v-if="visibleEmails.length > 0">
+        <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
+          <Email v-for="email in visibleEmails" :key="email.id" :email="email" v-model="selectedEmails" @toggle-star="emailStore.toggleStar" @click="openEmail(email)" />
+        </ul>
+      </template>
+      <template v-else>
+        <div class="flex items-center justify-center h-full">
+          <div class="text-2xl text-gray-400 font-semibold">¡Tu bandeja está vacía! Disfruta tu día 😊</div>
+        </div>
+      </template>
     </div>
     <EmailDetail v-else :email="selectedEmail" @delete="deleteEmail" @star="toggleStar" />
     <div v-if="showTrashFull" class="fixed inset-0 flex items-center justify-center z-50" style="background: rgba(0,0,0,0.4);">
