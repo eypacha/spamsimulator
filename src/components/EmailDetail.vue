@@ -8,7 +8,7 @@
       <div class="text-gray-400 text-xs mb-2">Fecha: {{ email.date }}</div>
     </div>
     <div class="mb-6">
-      <div class="text-base whitespace-pre-line" v-html="email.body"></div>
+      <div class="text-base whitespace-pre-line" v-html="parsedBody"></div>
     </div>
     <div class="flex gap-4 border-t pt-4">
       <button v-if="!email.trash" @click="onDelete" class="px-4 py-2 rounded bg-red-100 text-red-700 hover:bg-red-200"><i class="fas fa-trash"></i></button>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, computed } from 'vue';
 const props = defineProps({ email: Object });
 const emit = defineEmits(['delete', 'star', 'deletePermanent']);
 
@@ -32,5 +32,21 @@ function onDeletePermanent() {
 function onStar() {
   emit('star', props.email.id);
 }
+
+// Regex para URLs (simplificado)
+const urlRegex = /(https?:\/\/[^\s]+)/g;
+// Regex para markdown [texto](url)
+const mdLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+
+const parsedBody = computed(() => {
+  if (!props.email.body) return '';
+  let body = props.email.body;
+  // Primero reemplaza markdown links
+  body = body.replace(mdLinkRegex, (match, text, url) => `<span style='color:#2563eb;text-decoration:underline;cursor:pointer'>${text}</span>`);
+  // Luego reemplaza URLs sueltas
+  body = body.replace(urlRegex, url => `<span style='color:#2563eb;text-decoration:underline;cursor:pointer'>${url}</span>`);
+  return body;
+});
+
 import '@fortawesome/fontawesome-free/css/all.css';
 </script>
