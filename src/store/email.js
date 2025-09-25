@@ -1,15 +1,9 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
-import { EMAILS } from '../constants/emails.js';
 
 export const useEmailStore = defineStore('email', () => {
-  // Add starred and read to each email on initialization
-  const emails = ref(EMAILS.map(e => ({
-    ...e,
-    starred: false,
-    read: false,
-    trash: false
-  })));
+  // Inicializa la bandeja vacía
+  const emails = ref([]);
 
   function toggleStar(id) {
     const email = emails.value.find(e => e.id === id);
