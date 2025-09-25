@@ -1,6 +1,7 @@
 <template>
   <aside class="w-64 bg-gray-800 text-white flex-shrink-0">
     <nav class="h-full flex flex-col py-6">
+        <div class="px-6 py-3 font-semibold">📬 Survival Inbox</div>
       <ul class="space-y-2">
         <li>
           <button @click="selectMenu('compose')" :class="menuBtnClass('compose')">Redactar</button>
