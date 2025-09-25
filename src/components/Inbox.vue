@@ -16,7 +16,10 @@
         </div>
       </template>
     </div>
-    <EmailDetail v-else :email="selectedEmail" @delete="deleteEmail" @star="toggleStar" />
+    <div v-else class="flex-1 overflow-y-auto">
+      <button @click="selectedEmail = null" class="my-4 ml-6 px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">←</button>
+      <EmailDetail :email="selectedEmail" @delete="deleteEmail" @star="toggleStar" />
+    </div>
     <div v-if="showTrashFull" class="fixed inset-0 flex items-center justify-center z-50" style="background: rgba(0,0,0,0.4);">
       <div class="bg-white rounded-lg shadow-lg p-8 text-center">
         <div class="mb-4 text-lg">No puedes eliminar este correo, papelera llena</div>
