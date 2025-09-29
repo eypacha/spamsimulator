@@ -46,6 +46,7 @@
 import { ref, computed } from 'vue';
 import { useEmailStore } from '../store/email.js';
 import { useStatsStore } from '../store/stats.js';
+import { useSoundStore } from '../store/sound.js';
 import { storeToRefs } from 'pinia';
 import Email from './Email.vue';
 import EmailDetail from './EmailDetail.vue';
@@ -54,6 +55,7 @@ const selectedEmails = ref([]);
 const selectedEmail = ref(null);
 const emailStore = useEmailStore();
 const statsStore = useStatsStore();
+const soundStore = useSoundStore();
 const { emails } = storeToRefs(emailStore);
 const visibleEmails = computed(() => emails.value.filter(e => !e.trash).reverse());
 const trashCount = computed(() => emails.value.filter(e => e.trash).length);
@@ -67,6 +69,7 @@ function openEmail(email) {
 function deleteEmail(id) {
   if (trashCount.value >= statsStore.maxTrash) {
     showTrashFull.value = true;
+    soundStore.playErrorSound();
     return;
   }
   emailStore.moveToTrash(id);
@@ -80,7 +83,9 @@ function toggleStar(id) {
 function deleteSelected() {
   const totalToTrash = trashCount.value + selectedEmails.value.length;
   if (totalToTrash > statsStore.maxTrash) {
+    console.log('Trash full in deleteSelected, playing sound');
     showTrashFull.value = true;
+    soundStore.playErrorSound();
     return;
   }
   selectedEmails.value.forEach(id => emailStore.moveToTrash(id));

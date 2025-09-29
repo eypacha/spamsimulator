@@ -26,7 +26,6 @@ export async function fetchEmailFromLLM(spamType = 'legit', emailType = 'office'
 }
 
 export function newEmail(parsed) {
-    console.log("🚀 ~ newEmail ~ parsed:", parsed)
     return {
         id: Date.now(),
         subject: parsed.subject || '(Sin asunto)',

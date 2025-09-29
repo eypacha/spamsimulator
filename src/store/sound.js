@@ -11,16 +11,6 @@ export const useSoundStore = defineStore('sound', () => {
     volume: 0.8
   });
 
-  const deleteSound = new Howl({
-    src: ['/sounds/delete.mp3'], // Agregar archivo
-    volume: 0.6
-  });
-
-  const starSound = new Howl({
-    src: ['/sounds/star.mp3'], // Agregar archivo
-    volume: 0.7
-  });
-
   const coinSound = new Howl({
     src: ['/sounds/coin.mp3'], // Agregar archivo
     volume: 0.8
@@ -29,6 +19,11 @@ export const useSoundStore = defineStore('sound', () => {
   const buySound = new Howl({
     src: ['/sounds/ding.mp3'], // Agregar archivo
     volume: 0.7
+  });
+
+  const errorSound = new Howl({
+    src: ['/sounds/error.mp3'], // Agregar archivo
+    volume: 1.0
   });
 
   // Funciones para reproducir sonidos
@@ -52,6 +47,10 @@ export const useSoundStore = defineStore('sound', () => {
     buySound.play();
   }
 
+  function playErrorSound() {
+    errorSound.play();
+  }
+
   // Función para cambiar volumen global
   function setVolume(volume) {
     Howler.volume(volume);
@@ -63,6 +62,7 @@ export const useSoundStore = defineStore('sound', () => {
     playStar,
     playCoinSound,
     playBuySound,
+    playErrorSound,
     setVolume
   };
 });
