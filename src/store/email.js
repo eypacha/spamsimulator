@@ -2,12 +2,12 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { fetchEmailFromLLM, newEmail } from '../utils/emailApi.js';
 import { useSoundStore } from './sound.js';
+import { useStatsStore } from './stats.js';
+import { EMAILS } from '../constants/emails.js';
 
 export const useEmailStore = defineStore('email', () => {
-  // Inicializa la bandeja vacía
+
   const emails = ref([]);
-  const score = ref(0);
-  const level = ref(1);
   const time = ref(0); // in seconds
   let gameLoopInterval = null;
   let timeInterval = null;
@@ -75,8 +75,14 @@ export const useEmailStore = defineStore('email', () => {
 
   function moveToTrash(id) {
     const email = emails.value.find(e => e.id === id);
-    if (email) email.trash = true;
+    if (email) {
+      email.trash = true;
+      if (email.isSpam) {
+        const statsStore = useStatsStore();
+        statsStore.addScore(statsStore.pointsPerSpam);
+      }
+    }
   }
 
-  return { emails, score, level, time, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop };
+  return { emails, time, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop };
 });
