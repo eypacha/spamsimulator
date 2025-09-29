@@ -1,22 +1,24 @@
 <template>
   <aside class="w-64 bg-gray-800 text-white flex-shrink-0">
     <nav class="h-full flex flex-col py-6">
-        <div class="px-6 py-3 font-semibold">⚔️📬 Survival Inbox</div>
       <ul class="space-y-2">
         <li>
-          <button @click="selectMenu('compose')" :class="menuBtnClass('compose')">Redactar</button>
+          <button @click="selectMenu('compose')" :class="menuBtnClass('compose')">✍️ Redactar</button>
         </li>
         <li>
-          <button @click="selectMenu('inbox')" :class="menuBtnClass('inbox')">Recibidos</button>
+          <button @click="selectMenu('inbox')" :class="menuBtnClass('inbox')">📥 Recibidos</button>
         </li>
         <li>
-          <button @click="selectMenu('starred')" :class="menuBtnClass('starred')">Destacados</button>
+          <button @click="selectMenu('sent')" :class="menuBtnClass('sent')">📤 Enviado</button>
         </li>
         <li>
-          <button @click="selectMenu('sent')" :class="menuBtnClass('sent')">Enviado</button>
+          <button @click="selectMenu('starred')" :class="menuBtnClass('starred')">⭐ Destacados</button>
         </li>
         <li>
-          <button @click="selectMenu('trash')" :class="menuBtnClass('trash')">Papelera</button>
+          <button @click="selectMenu('trash')" :class="menuBtnClass('trash')">🗑️ Papelera</button>
+        </li>
+        <li>
+          <button @click="selectMenu('store')" :class="menuBtnClass('store')">🛒 Tienda</button>
         </li>
       </ul>
     </nav>

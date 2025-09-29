@@ -9,6 +9,7 @@
         <Inbox v-if="selectedMenu === 'inbox'"/>
         <Starred v-else-if="selectedMenu === 'starred'"/>
         <Trash v-else-if="selectedMenu === 'trash'"/>
+        <Store v-else-if="selectedMenu === 'store'"/>
         <section v-else>
           <div class="text-gray-400 text-center mt-20 text-lg">Selecciona una opción del menú</div>
         </section>
@@ -24,6 +25,7 @@ import Inbox from '../components/Inbox.vue';
 import Trash from '../components/Trash.vue';
 import Starred from '../components/Starred.vue';
 import Hud from '../components/Hud.vue';
+import Store from '../components/Store.vue';
 
 const selectedMenu = ref('inbox');
 
