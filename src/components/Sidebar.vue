@@ -20,17 +20,50 @@
         <li>
           <button @click="selectMenu('store')" :class="menuBtnClass('store')">🛒 Tienda</button>
         </li>
+        <li>
+          <button @click="selectMenu('achievements')" :class="menuBtnClass('achievements')">🏆 Logros</button>
+        </li>
       </ul>
+      
+      <!-- Barra de progreso del espacio -->
+      <div class="mt-auto px-6">
+        <div class="text-sm text-gray-300 mb-2">Espacio de Bandeja</div>
+        <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
+          <div 
+            class="bg-blue-500 h-2 rounded-full transition-all duration-300" 
+            :style="{ width: progressPercentage + '%' }"
+          ></div>
+        </div>
+        <div class="text-xs text-gray-400 text-center">
+          {{ currentSpace }} / {{ maxSpace }}
+        </div>
+      </div>
     </nav>
   </aside>
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, computed } from 'vue';
+import { useEmailStore } from '../store/email.js';
+import { useStatsStore } from '../store/stats.js';
+
 const props = defineProps({
   selectedMenu: String
 });
 const emit = defineEmits(['selectMenu']);
+
+const emailStore = useEmailStore();
+const statsStore = useStatsStore();
+
+const visibleEmails = computed(() => emailStore.emails.filter(e => !e.trash));
+
+const currentSpace = computed(() => statsStore.getSpaceString(visibleEmails.value.length));
+const maxSpace = computed(() => statsStore.getSpaceString(statsStore.maxInbox));
+const progressPercentage = computed(() => {
+  const used = visibleEmails.value.length;
+  const max = statsStore.maxInbox;
+  return max > 0 ? Math.min((used / max) * 100, 100) : 0;
+});
 
 function selectMenu(menu) {
   emit('selectMenu', menu);

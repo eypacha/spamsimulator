@@ -6,7 +6,7 @@
     <div class="flex-1 overflow-y-auto p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold">Upgrade Puntos por Spam</h3>
+          <h3 class="text-lg font-semibold">Dinero, dame dinero</h3>
           <p class="text-gray-600">Aumenta los puntos lo que ganas por eliminar spam.</p>
           <p class="text-sm">Actual: {{ statsStore.pointsPerSpam }} puntos</p>
           <p class="text-sm">Costo: {{ statsStore.upgradeCost }} 🪙</p>
@@ -15,7 +15,7 @@
           </button>
         </div>
         <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold">Aumentar Espacio en Papelera</h3>
+          <h3 class="text-lg font-semibold">Basura espacial</h3>
           <p class="text-gray-600">Aumenta el límite de emails en la papelera.</p>
           <p class="text-sm">Actual: {{ statsStore.getSpaceString(statsStore.maxTrash, 3) }}</p>
           <p class="text-sm">Costo: {{ statsStore.trashUpgradeCost }} 🪙</p>
@@ -24,7 +24,7 @@
           </button>
         </div>
         <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold">Aumentar Espacio en Bandeja</h3>
+          <h3 class="text-lg font-semibold">Come disco</h3>
           <p class="text-gray-600">Aumenta el límite de emails en la bandeja de entrada.</p>
           <p class="text-sm">Actual: {{ statsStore.getSpaceString(statsStore.maxInbox) }}</p>
           <p class="text-sm">Costo: {{ statsStore.inboxUpgradeCost }} 🪙</p>
@@ -32,7 +32,15 @@
             Comprar
           </button>
         </div>
-        <!-- Add more upgrades here in the future -->
+        <div class="bg-white p-4 rounded-lg shadow">
+          <h3 class="text-lg font-semibold">Selección múltiple</h3>
+          <p class="text-gray-600">Aumenta el número de emails que puedes seleccionar a la vez.</p>
+          <p class="text-sm">Actual: {{ statsStore.maxSelectable }} emails</p>
+          <p class="text-sm">Costo: {{ statsStore.selectionUpgradeCost }} 🪙</p>
+          <button @click="buySelectionUpgrade" :disabled="statsStore.score < statsStore.selectionUpgradeCost" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400">
+            Comprar
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -53,5 +61,9 @@ function buyTrashUpgrade() {
 
 function buyInboxUpgrade() {
   statsStore.buyInboxUpgrade();
+}
+
+function buySelectionUpgrade() {
+  statsStore.buySelectionUpgrade();
 }
 </script>

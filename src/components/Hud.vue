@@ -5,6 +5,7 @@
     </div>
     <div class="flex items-center space-x-4">
       <span :class="['transition-transform duration-300', { 'scale-110': scoreAnimating }]">🪙 {{ score }}</span>
+      <span>⭐ {{ totalSpamDeleted }}</span>
     </div>
   </div>
 </template>
@@ -16,6 +17,7 @@ import { useStatsStore } from '../store/stats.js';
 const statsStore = useStatsStore();
 
 const score = computed(() => statsStore.score);
+const totalSpamDeleted = computed(() => statsStore.totalSpamDeleted);
 const scoreAnimating = ref(false);
 
 watch(score, () => {

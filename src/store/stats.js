@@ -8,11 +8,14 @@ export const useStatsStore = defineStore('stats', () => {
   const level = ref(1); // Maybe keep level for display, but not auto
   const pointsPerSpam = ref(1);
   const totalSpamDeleted = ref(0);
+  const totalEmailsRead = ref(0);
   const upgradeCost = ref(10);
   const trashUpgradeCost = ref(20);
   const inboxUpgradeCost = ref(30);
+  const selectionUpgradeCost = ref(15);
   const maxTrash = ref(5);
   const maxInbox = ref(20);
+  const maxSelectable = ref(3);
   const EMAIL_SIZE_KB = 5; // Simulated size per email
   let soundTimeout = null;
 
@@ -25,6 +28,10 @@ export const useStatsStore = defineStore('stats', () => {
       const soundStore = useSoundStore();
       soundStore.playCoinSound();
     }, 100);
+  }
+
+  function markEmailAsRead() {
+    totalEmailsRead.value += 1;
   }
 
   function buyUpgrade() {
@@ -57,6 +64,16 @@ export const useStatsStore = defineStore('stats', () => {
     }
   }
 
+  function buySelectionUpgrade() {
+    if (score.value >= selectionUpgradeCost.value) {
+      score.value -= selectionUpgradeCost.value;
+      maxSelectable.value += 1;
+      selectionUpgradeCost.value = Math.floor(selectionUpgradeCost.value * 1.5);
+      const soundStore = useSoundStore();
+      soundStore.playBuySound();
+    }
+  }
+
   function getSpaceString(emailCount, sizeKB = EMAIL_SIZE_KB) {
     return formatStorage(emailCount * sizeKB);
   }
@@ -66,12 +83,15 @@ export const useStatsStore = defineStore('stats', () => {
     level.value = 1;
     pointsPerSpam.value = 1;
     totalSpamDeleted.value = 0;
+    totalEmailsRead.value = 0;
     upgradeCost.value = 10;
     trashUpgradeCost.value = 20;
     inboxUpgradeCost.value = 30;
+    selectionUpgradeCost.value = 15;
     maxTrash.value = 5;
     maxInbox.value = 20;
+    maxSelectable.value = 3;
   }
 
-  return { score, level, pointsPerSpam, totalSpamDeleted, upgradeCost, trashUpgradeCost, inboxUpgradeCost, maxTrash, maxInbox, addScore, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, getSpaceString, reset };
+  return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset };
 });

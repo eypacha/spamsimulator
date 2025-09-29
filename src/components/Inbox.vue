@@ -3,9 +3,10 @@
     <div class="bg-gray-50 border-b ">
       <div class="flex items-center justify-between px-6 py-4 top-0 z-10">
         <span class="text-lg font-semibold text-gray-700">Recibidos</span>
-        <span class="text-sm text-gray-500">{{ statsStore.getSpaceString(visibleEmails.length) }} / {{ statsStore.getSpaceString(statsStore.maxInbox) }}</span>
+        <span class="text-sm text-gray-500">{{ visibleEmails.length }} correos</span>
       </div>
       <div v-if="!selectedEmail" class="px-6 py-2">
+        <button @click="selectFirstThree" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}</button>
         <button @click="deleteSelected" :disabled="selectedEmails.length === 0"
           class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed">Eliminar
           ({{ selectedEmails.length }})</button>
@@ -79,6 +80,7 @@ watch(inboxFull, (newVal) => {
 function openEmail(email) {
   selectedEmail.value = email;
   emailStore.setRead(email.id);
+  statsStore.markEmailAsRead();
 }
 
 function deleteEmail(id) {
@@ -105,5 +107,9 @@ function deleteSelected() {
   }
   selectedEmails.value.forEach(id => emailStore.moveToTrash(id));
   selectedEmails.value = [];
+}
+
+function selectFirstThree() {
+  selectedEmails.value = visibleEmails.value.slice(0, statsStore.maxSelectable).map(e => e.id);
 }
 </script>

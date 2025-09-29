@@ -1,15 +1,18 @@
 <template>
   <section class="h-full flex flex-col">
-    <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b sticky top-0 z-10">
-      <span class="text-lg font-semibold text-gray-700">Papelera</span>
-      <span class="text-sm text-gray-500">{{ trashedEmails.length }}/{{ TRASH_MAX }} emails</span>
-    </div>
-    <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
-      <div class="px-6 py-2 bg-gray-100 border-b">
+    <div class="bg-gray-50 border-b ">
+      <div class="flex items-center justify-between px-6 py-4 top-0 z-10">
+        <span class="text-lg font-semibold text-gray-700">Papelera</span>
+        <span class="text-sm text-gray-500">{{ trashedEmails.length }}/{{ TRASH_MAX }} emails</span>
+      </div>
+      <div v-if="!selectedEmail" class="px-6 py-2">
+        <button @click="selectFirstThree" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}</button>
         <button @click="deleteSelected" :disabled="selectedEmails.length === 0"
           class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed">Eliminar
           ({{ selectedEmails.length }})</button>
       </div>
+    </div>
+    <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
       <template v-if="trashedEmails.length > 0">
         <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
           <Email v-for="email in trashedEmails" :key="email.id" :email="email" v-model="selectedEmails"
@@ -45,11 +48,13 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useEmailStore } from '../store/email.js';
+import { useStatsStore } from '../store/stats.js';
 import { storeToRefs } from 'pinia';
 import Email from './Email.vue';
 import EmailDetail from './EmailDetail.vue';
 
 const emailStore = useEmailStore();
+const statsStore = useStatsStore();
 const { emails } = storeToRefs(emailStore);
 const trashedEmails = computed(() => emails.value.filter(e => e.trash).reverse());
 const selectedEmail = ref(null);
@@ -61,6 +66,7 @@ const TRASH_MAX = 5;
 function openEmail(email) {
   selectedEmail.value = email;
   emailStore.setRead(email.id);
+  statsStore.markEmailAsRead();
 }
 function confirmDeletePermanent(id) {
   pendingDeleteId = id;
@@ -81,5 +87,8 @@ function deleteSelected() {
   });
   selectedEmails.value = [];
 }
-// No changes needed here for the popup, logic is handled in Inbox.vue
+
+function selectFirstThree() {
+  selectedEmails.value = trashedEmails.value.slice(0, statsStore.maxSelectable).map(e => e.id);
+}
 </script>

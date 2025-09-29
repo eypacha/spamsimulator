@@ -10,6 +10,7 @@
         <Starred v-else-if="selectedMenu === 'starred'"/>
         <Trash v-else-if="selectedMenu === 'trash'"/>
         <Store v-else-if="selectedMenu === 'store'"/>
+        <Achievements v-else-if="selectedMenu === 'achievements'"/>
         <section v-else>
           <div class="text-gray-400 text-center mt-20 text-lg">Selecciona una opción del menú</div>
         </section>
@@ -26,6 +27,7 @@ import Trash from '../components/Trash.vue';
 import Starred from '../components/Starred.vue';
 import Hud from '../components/Hud.vue';
 import Store from '../components/Store.vue';
+import Achievements from '../components/Achievements.vue';
 
 const selectedMenu = ref('inbox');
 
