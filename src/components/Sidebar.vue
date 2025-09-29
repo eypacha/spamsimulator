@@ -30,7 +30,7 @@
         <div class="text-sm text-gray-300 mb-2">Espacio de Bandeja</div>
         <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
           <div 
-            class="bg-blue-500 h-2 rounded-full transition-all duration-300" 
+            :class="['h-2 rounded-full transition-all duration-300', progressBarColor]" 
             :style="{ width: progressPercentage + '%' }"
           ></div>
         </div>
@@ -63,6 +63,13 @@ const progressPercentage = computed(() => {
   const used = visibleEmails.value.length;
   const max = statsStore.maxInbox;
   return max > 0 ? Math.min((used / max) * 100, 100) : 0;
+});
+
+const progressBarColor = computed(() => {
+  const percentage = progressPercentage.value;
+  if (percentage < 50) return 'bg-green-500';
+  if (percentage < 90) return 'bg-yellow-500';
+  return 'bg-red-500';
 });
 
 function selectMenu(menu) {

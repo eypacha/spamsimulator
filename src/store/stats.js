@@ -9,6 +9,9 @@ export const useStatsStore = defineStore('stats', () => {
   const pointsPerSpam = ref(1);
   const totalSpamDeleted = ref(0);
   const totalEmailsRead = ref(0);
+  const totalCoinsEarned = ref(0);
+  const currentStreak = ref(0);
+  const maxStreak = ref(0);
   const upgradeCost = ref(10);
   const trashUpgradeCost = ref(20);
   const inboxUpgradeCost = ref(30);
@@ -21,6 +24,7 @@ export const useStatsStore = defineStore('stats', () => {
 
   function addScore(points) {
     score.value += points;
+    totalCoinsEarned.value += points;
     totalSpamDeleted.value += 1;
     // Throttle sound to avoid multiple plays
     if (soundTimeout) clearTimeout(soundTimeout);
@@ -32,6 +36,17 @@ export const useStatsStore = defineStore('stats', () => {
 
   function markEmailAsRead() {
     totalEmailsRead.value += 1;
+  }
+
+  function recordCorrectDeletion() {
+    currentStreak.value += 1;
+    if (currentStreak.value > maxStreak.value) {
+      maxStreak.value = currentStreak.value;
+    }
+  }
+
+  function recordIncorrectDeletion() {
+    currentStreak.value = 0;
   }
 
   function buyUpgrade() {
@@ -84,6 +99,9 @@ export const useStatsStore = defineStore('stats', () => {
     pointsPerSpam.value = 1;
     totalSpamDeleted.value = 0;
     totalEmailsRead.value = 0;
+    totalCoinsEarned.value = 0;
+    currentStreak.value = 0;
+    maxStreak.value = 0;
     upgradeCost.value = 10;
     trashUpgradeCost.value = 20;
     inboxUpgradeCost.value = 30;
@@ -93,5 +111,5 @@ export const useStatsStore = defineStore('stats', () => {
     maxSelectable.value = 3;
   }
 
-  return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset };
+  return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset };
 });

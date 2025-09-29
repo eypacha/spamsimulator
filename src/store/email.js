@@ -93,9 +93,12 @@ export const useEmailStore = defineStore('email', () => {
     const email = emails.value.find(e => e.id === id);
     if (email) {
       email.trash = true;
+      const statsStore = useStatsStore();
       if (email.isSpam) {
-        const statsStore = useStatsStore();
         statsStore.addScore(statsStore.pointsPerSpam);
+        statsStore.recordCorrectDeletion();
+      } else {
+        statsStore.recordIncorrectDeletion();
       }
     }
   }
