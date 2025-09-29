@@ -9,8 +9,11 @@ export const useEmailStore = defineStore('email', () => {
 
   const emails = ref([]);
   const time = ref(0); // in seconds
+  const inboxFull = ref(false);
   let gameLoopInterval = null;
   let timeInterval = null;
+
+  const statsStore = useStatsStore();
 
   function startGameLoop() {
     if (gameLoopInterval) return;
@@ -28,6 +31,12 @@ export const useEmailStore = defineStore('email', () => {
   }
 
   async function fetchEmail() {
+    const visibleCount = emails.value.filter(e => !e.trash).length;
+    if (visibleCount >= statsStore.maxInbox) {
+      inboxFull.value = true;
+      return;
+    }
+    inboxFull.value = false;
     // Determinar spam o legit
     const spamType = Math.random() < 0.5 ? 'spam' : 'legit';
     // Tipos para legit
@@ -84,5 +93,5 @@ export const useEmailStore = defineStore('email', () => {
     }
   }
 
-  return { emails, time, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop };
+  return { emails, time, inboxFull, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop };
 });

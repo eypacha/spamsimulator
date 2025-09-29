@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { useSoundStore } from './sound.js';
+import { formatStorage } from '../utils/storage.js';
 
 export const useStatsStore = defineStore('stats', () => {
   const score = ref(0);
@@ -9,7 +10,10 @@ export const useStatsStore = defineStore('stats', () => {
   const totalSpamDeleted = ref(0);
   const upgradeCost = ref(10);
   const trashUpgradeCost = ref(20);
+  const inboxUpgradeCost = ref(30);
   const maxTrash = ref(5);
+  const maxInbox = ref(20);
+  const EMAIL_SIZE_KB = 5; // Simulated size per email
   let soundTimeout = null;
 
   function addScore(points) {
@@ -43,6 +47,20 @@ export const useStatsStore = defineStore('stats', () => {
     }
   }
 
+  function buyInboxUpgrade() {
+    if (score.value >= inboxUpgradeCost.value) {
+      score.value -= inboxUpgradeCost.value;
+      maxInbox.value += 10;
+      inboxUpgradeCost.value = Math.floor(inboxUpgradeCost.value * 1.5);
+      const soundStore = useSoundStore();
+      soundStore.playBuySound();
+    }
+  }
+
+  function getSpaceString(emailCount, sizeKB = EMAIL_SIZE_KB) {
+    return formatStorage(emailCount * sizeKB);
+  }
+
   function reset() {
     score.value = 0;
     level.value = 1;
@@ -50,8 +68,10 @@ export const useStatsStore = defineStore('stats', () => {
     totalSpamDeleted.value = 0;
     upgradeCost.value = 10;
     trashUpgradeCost.value = 20;
+    inboxUpgradeCost.value = 30;
     maxTrash.value = 5;
+    maxInbox.value = 20;
   }
 
-  return { score, level, pointsPerSpam, totalSpamDeleted, upgradeCost, trashUpgradeCost, maxTrash, addScore, buyUpgrade, buyTrashUpgrade, reset };
+  return { score, level, pointsPerSpam, totalSpamDeleted, upgradeCost, trashUpgradeCost, inboxUpgradeCost, maxTrash, maxInbox, addScore, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, getSpaceString, reset };
 });

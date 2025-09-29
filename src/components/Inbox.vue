@@ -3,7 +3,7 @@
     <div class="bg-gray-50 border-b ">
       <div class="flex items-center justify-between px-6 py-4 top-0 z-10">
         <span class="text-lg font-semibold text-gray-700">Recibidos</span>
-        <span class="text-sm text-gray-500">{{ visibleEmails.length }} correos</span>
+        <span class="text-sm text-gray-500">{{ statsStore.getSpaceString(visibleEmails.length) }} / {{ statsStore.getSpaceString(statsStore.maxInbox) }}</span>
       </div>
       <div v-if="!selectedEmail" class="px-6 py-2">
         <button @click="deleteSelected" :disabled="selectedEmails.length === 0"
@@ -39,11 +39,21 @@
         </div>
       </div>
     </div>
+    <div v-if="showInboxFullModal" class="fixed inset-0 flex items-center justify-center z-50"
+      style="background: rgba(0,0,0,0.4);">
+      <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+        <div class="mb-4 text-lg">Bandeja llena, no se pueden recibir más correos</div>
+        <div class="flex gap-4 justify-center">
+          <button @click="showInboxFullModal = false"
+            class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Aceptar</button>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useEmailStore } from '../store/email.js';
 import { useStatsStore } from '../store/stats.js';
 import { useSoundStore } from '../store/sound.js';
@@ -56,10 +66,15 @@ const selectedEmail = ref(null);
 const emailStore = useEmailStore();
 const statsStore = useStatsStore();
 const soundStore = useSoundStore();
-const { emails } = storeToRefs(emailStore);
+const { emails, inboxFull } = storeToRefs(emailStore);
 const visibleEmails = computed(() => emails.value.filter(e => !e.trash).reverse());
 const trashCount = computed(() => emails.value.filter(e => e.trash).length);
 const showTrashFull = ref(false);
+const showInboxFullModal = ref(false);
+
+watch(inboxFull, (newVal) => {
+  if (newVal) showInboxFullModal.value = true;
+});
 
 function openEmail(email) {
   selectedEmail.value = email;
