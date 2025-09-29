@@ -8,6 +8,8 @@ export const useStatsStore = defineStore('stats', () => {
   const pointsPerSpam = ref(1);
   const totalSpamDeleted = ref(0);
   const upgradeCost = ref(10);
+  const trashUpgradeCost = ref(20);
+  const maxTrash = ref(5);
   let soundTimeout = null;
 
   function addScore(points) {
@@ -26,6 +28,18 @@ export const useStatsStore = defineStore('stats', () => {
       score.value -= upgradeCost.value;
       pointsPerSpam.value += 1;
       upgradeCost.value = Math.floor(upgradeCost.value * 1.5); // Increase cost
+      const soundStore = useSoundStore();
+      soundStore.playBuySound();
+    }
+  }
+
+  function buyTrashUpgrade() {
+    if (score.value >= trashUpgradeCost.value) {
+      score.value -= trashUpgradeCost.value;
+      maxTrash.value += 5;
+      trashUpgradeCost.value = Math.floor(trashUpgradeCost.value * 1.5);
+      const soundStore = useSoundStore();
+      soundStore.playBuySound();
     }
   }
 
@@ -35,7 +49,9 @@ export const useStatsStore = defineStore('stats', () => {
     pointsPerSpam.value = 1;
     totalSpamDeleted.value = 0;
     upgradeCost.value = 10;
+    trashUpgradeCost.value = 20;
+    maxTrash.value = 5;
   }
 
-  return { score, level, pointsPerSpam, totalSpamDeleted, upgradeCost, addScore, buyUpgrade, reset };
+  return { score, level, pointsPerSpam, totalSpamDeleted, upgradeCost, trashUpgradeCost, maxTrash, addScore, buyUpgrade, buyTrashUpgrade, reset };
 });

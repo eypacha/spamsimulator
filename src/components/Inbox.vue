@@ -45,6 +45,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useEmailStore } from '../store/email.js';
+import { useStatsStore } from '../store/stats.js';
 import { storeToRefs } from 'pinia';
 import Email from './Email.vue';
 import EmailDetail from './EmailDetail.vue';
@@ -52,6 +53,7 @@ import EmailDetail from './EmailDetail.vue';
 const selectedEmails = ref([]);
 const selectedEmail = ref(null);
 const emailStore = useEmailStore();
+const statsStore = useStatsStore();
 const { emails } = storeToRefs(emailStore);
 const visibleEmails = computed(() => emails.value.filter(e => !e.trash).reverse());
 const trashCount = computed(() => emails.value.filter(e => e.trash).length);
@@ -63,7 +65,7 @@ function openEmail(email) {
 }
 
 function deleteEmail(id) {
-  if (trashCount.value >= 5) {
+  if (trashCount.value >= statsStore.maxTrash) {
     showTrashFull.value = true;
     return;
   }
@@ -77,7 +79,7 @@ function toggleStar(id) {
 
 function deleteSelected() {
   const totalToTrash = trashCount.value + selectedEmails.value.length;
-  if (totalToTrash > 5) {
+  if (totalToTrash > statsStore.maxTrash) {
     showTrashFull.value = true;
     return;
   }
