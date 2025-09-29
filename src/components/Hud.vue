@@ -4,16 +4,24 @@
       <span class="font-bold">Spam Simulator</span>
     </div>
     <div class="flex items-center space-x-4">
-      <span>🪙 {{ score }}</span>
+      <span :class="['transition-transform duration-300', { 'scale-110': scoreAnimating }]">🪙 {{ score }}</span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useStatsStore } from '../store/stats.js';
 
 const statsStore = useStatsStore();
 
 const score = computed(() => statsStore.score);
+const scoreAnimating = ref(false);
+
+watch(score, () => {
+  scoreAnimating.value = true;
+  setTimeout(() => {
+    scoreAnimating.value = false;
+  }, 300);
+});
 </script>

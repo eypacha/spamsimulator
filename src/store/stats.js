@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
+import { useSoundStore } from './sound.js';
 
 export const useStatsStore = defineStore('stats', () => {
   const score = ref(0);
@@ -7,10 +8,17 @@ export const useStatsStore = defineStore('stats', () => {
   const pointsPerSpam = ref(1);
   const totalSpamDeleted = ref(0);
   const upgradeCost = ref(10);
+  let soundTimeout = null;
 
   function addScore(points) {
     score.value += points;
     totalSpamDeleted.value += 1;
+    // Throttle sound to avoid multiple plays
+    if (soundTimeout) clearTimeout(soundTimeout);
+    soundTimeout = setTimeout(() => {
+      const soundStore = useSoundStore();
+      soundStore.playCoinSound();
+    }, 100);
   }
 
   function buyUpgrade() {

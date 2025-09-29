@@ -21,6 +21,11 @@ export const useSoundStore = defineStore('sound', () => {
     volume: 0.7
   });
 
+  const coinSound = new Howl({
+    src: ['/sounds/coin.mp3'], // Agregar archivo
+    volume: 0.8
+  });
+
   // Funciones para reproducir sonidos
   function playNewEmail() {
     newEmailSound.play();
@@ -34,6 +39,10 @@ export const useSoundStore = defineStore('sound', () => {
     starSound.play();
   }
 
+  function playCoinSound() {
+    coinSound.play();
+  }
+
   // Función para cambiar volumen global
   function setVolume(volume) {
     Howler.volume(volume);
@@ -43,6 +52,7 @@ export const useSoundStore = defineStore('sound', () => {
     playNewEmail,
     playDelete,
     playStar,
+    playCoinSound,
     setVolume
   };
 });
