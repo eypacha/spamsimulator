@@ -1,7 +1,7 @@
 <template>
   <div class="home-view h-screen bg-gray-100 overflow-x-hidden flex flex-col">
     <Hud />
-    <div class="flex flex-1">
+    <div class="flex flex-1 overflow-hidden">
       <!-- Sidebar -->
       <Sidebar :selectedMenu="selectedMenu" @selectMenu="selectMenu" />
       <!-- Main Panel -->
