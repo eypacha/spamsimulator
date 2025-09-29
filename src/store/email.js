@@ -6,7 +6,11 @@ import { useSoundStore } from './sound.js';
 export const useEmailStore = defineStore('email', () => {
   // Inicializa la bandeja vacía
   const emails = ref([]);
+  const score = ref(0);
+  const level = ref(1);
+  const time = ref(0); // in seconds
   let gameLoopInterval = null;
+  let timeInterval = null;
 
   function startGameLoop() {
     if (gameLoopInterval) return;
@@ -18,6 +22,9 @@ export const useEmailStore = defineStore('email', () => {
       }, 1000); // pequeño retraso para evitar solapamientos
 
     }, 3500);
+    timeInterval = setInterval(() => {
+      time.value++;
+    }, 1000);
   }
 
   async function fetchEmail() {
@@ -71,5 +78,5 @@ export const useEmailStore = defineStore('email', () => {
     if (email) email.trash = true;
   }
 
-  return { emails, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop };
+  return { emails, score, level, time, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop };
 });

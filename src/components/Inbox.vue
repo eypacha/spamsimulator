@@ -1,6 +1,6 @@
 <template>
   <section class="h-full flex flex-col">
-    <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b sticky top-0 z-10">
+    <div class="flex items-center justify-between px-6 py-4 bg-gray-50 border-b top-0 z-10">
       <span class="text-lg font-semibold text-gray-700">Recibidos</span>
       <span class="text-sm text-gray-500">{{ visibleEmails.length }} correos</span>
     </div>
