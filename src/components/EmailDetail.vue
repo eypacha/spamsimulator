@@ -5,7 +5,7 @@
       <div class="text-gray-500 text-sm mb-1">De: <span class="font-semibold">{{ email.fromName }}</span></div>
       <div v-if="email.fromEmail" class="text-gray-400 text-xs mb-1">&lt;{{ email.fromEmail }}&gt;</div>
       <div class="text-gray-500 text-sm mb-1">Para: <span class="font-semibold">{{ email.sender || 'tú' }}</span></div>
-      <div class="text-gray-400 text-xs mb-2">Fecha: {{ email.date }}</div>
+      <div class="text-gray-400 text-xs mb-2">Fecha: {{ formatDate(email.id) }}</div>
     </div>
     <div class="mb-6">
       <div class="text-base whitespace-pre-line" v-html="parsedBody"></div>
@@ -20,6 +20,9 @@
 
 <script setup>
 import { defineProps, defineEmits, computed } from 'vue';
+import '@fortawesome/fontawesome-free/css/all.css';
+import { formatDate } from '@/utils/date';
+
 const props = defineProps({ email: Object });
 const emit = defineEmits(['delete', 'star', 'deletePermanent']);
 
@@ -77,5 +80,4 @@ const parsedBody = computed(() => {
   return body;
 });
 
-import '@fortawesome/fontawesome-free/css/all.css';
 </script>

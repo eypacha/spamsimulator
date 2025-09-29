@@ -14,12 +14,15 @@
       {{ email.fromName }}
     </span>
     <span class="flex-1 min-w-0 truncate whitespace-nowrap w-0">{{ email.subject }}</span>
-    <span class="w-32 flex-shrink-0 text-right text-gray-400">{{ email.date }}</span>
+    <span class="w-32 flex-shrink-0 text-right text-gray-400">{{ formatDate(email.id) }}</span>
   </li>
 </template>
 
 <script setup>
 import { defineProps, defineEmits } from 'vue';
+import '@fortawesome/fontawesome-free/css/all.css';
+import { formatDate } from '@/utils/date';
+
 const props = defineProps({
   email: Object,
   modelValue: {
@@ -41,9 +44,8 @@ function onChange(event) {
   emit('update:modelValue', newValue);
 }
 
+
 function toggleStar() {
   props.email.starred = !props.email.starred;
 }
-// Font Awesome import for icons
-import '@fortawesome/fontawesome-free/css/all.css';
 </script>

@@ -5,6 +5,9 @@
       <span class="text-sm text-gray-500">{{ visibleEmails.length }} correos</span>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
+      <div class="px-6 py-2 bg-gray-100 border-b">
+        <button @click="deleteSelected" :disabled="selectedEmails.length === 0" class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed">Eliminar ({{ selectedEmails.length }})</button>
+      </div>
       <template v-if="visibleEmails.length > 0">
         <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
           <Email v-for="email in visibleEmails" :key="email.id" :email="email" v-model="selectedEmails" @toggle-star="emailStore.toggleStar" @click="openEmail(email)" />
@@ -62,5 +65,15 @@ function deleteEmail(id) {
 
 function toggleStar(id) {
   emailStore.toggleStar(id);
+}
+
+function deleteSelected() {
+  const totalToTrash = trashCount.value + selectedEmails.value.length;
+  if (totalToTrash > 5) {
+    showTrashFull.value = true;
+    return;
+  }
+  selectedEmails.value.forEach(id => emailStore.moveToTrash(id));
+  selectedEmails.value = [];
 }
 </script>

@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { fetchEmailFromLLM, newEmail } from '../utils/emailApi.js';
+import { useSoundStore } from './sound.js';
 
 export const useEmailStore = defineStore('email', () => {
   // Inicializa la bandeja vacía
@@ -16,45 +17,18 @@ export const useEmailStore = defineStore('email', () => {
         fetchEmail();
       }, 1000); // pequeño retraso para evitar solapamientos
 
-    }, 2500);
+    }, 3500);
   }
 
   async function fetchEmail() {
     // Determinar spam o legit
     const spamType = Math.random() < 0.5 ? 'spam' : 'legit';
-    // Tipos posibles
-    const types = [
-      'friend',
-      'girlfriend',
-      'office',
-      'family',
-      'promo',
-      'support',
-      'circus',
-      'newsletter',
-      'friend',
-      'friend',
-      'friend',
-      'bank',
-      'spaship',
-      'social',
-      'phishing',
-      'girlfriend',
-      'girlfriend',
-      'nigerian prince',
-      'shopping',
-      'travel',
-      'school',
-      'health',
-      'event',
-      'subscription',
-      'update',
-      'alert',
-      'delivery',
-      'job',
-      'community'
-    ];
-    const emailType = types[Math.floor(Math.random() * types.length)];
+    // Tipos para legit
+    const legitTypes = ['friend', 'girlfriend', 'office', 'family', 'support'];
+    // Tipos para spam
+    const spamTypes = ['promo', 'cine', 'newsletter', 'bank', 'spaship', 'social', 'phishing', 'nigerian prince', 'shopping', 'travel', 'school', 'health', 'event', 'subscription', 'update', 'alert', 'delivery', 'job', 'community'];
+    // Elegir tipo según spamType
+    const emailType = spamType === 'legit' ? legitTypes[Math.floor(Math.random() * legitTypes.length)] : spamTypes[Math.floor(Math.random() * spamTypes.length)];
     // Idioma
     let lang;
     if (spamType === 'legit') {
@@ -71,6 +45,9 @@ export const useEmailStore = defineStore('email', () => {
         parsed.fromEmail = 'caribufaino@gmail.com';
       }
       emails.value.push(newEmail({ ...parsed, isSpam: spamType === 'spam' }));
+      // Reproducir sonido de nuevo email
+      const soundStore = useSoundStore();
+      soundStore.playNewEmail();
     } catch (err) {
       console.error('Error al pedir email:', err);
     }
