@@ -6,7 +6,7 @@
         <span class="text-sm text-gray-500">{{ trashedEmails.length }}/{{ TRASH_MAX }} emails</span>
       </div>
       <div v-if="!selectedEmail" class="px-6 py-2">
-        <button @click="selectFirstThree" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}</button>
+        <button v-if="statsStore.maxSelectable !== 0" @click="selectFirstThree" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}</button>
         <button @click="deleteSelected" :disabled="selectedEmails.length === 0"
           class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed">Eliminar
           ({{ selectedEmails.length }})</button>
