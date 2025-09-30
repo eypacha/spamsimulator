@@ -41,6 +41,16 @@
             Comprar
           </button>
         </div>
+        <div class="bg-white p-4 shadow">
+          <h3 class="text-lg font-semibold">TurboSpam</h3>
+          <p class="text-gray-600">Reduce el intervalo de llegada de emails un 10% (mínimo 1s).</p>
+          <p class="text-sm">Actual: {{ (statsStore.turboSpamInterval / 1000).toFixed(2) }} s</p>
+          <p class="text-sm">Nivel: {{ statsStore.turboSpamLevel }}</p>
+          <p class="text-sm">Costo: {{ statsStore.turboSpamUpgradeCost }} 🪙</p>
+          <button @click="buyTurboSpamUpgrade" :disabled="statsStore.score < statsStore.turboSpamUpgradeCost || statsStore.turboSpamInterval <= 1000" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400">
+            Comprar
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -65,5 +75,9 @@ function buyInboxUpgrade() {
 
 function buySelectionUpgrade() {
   statsStore.buySelectionUpgrade();
+}
+
+function buyTurboSpamUpgrade() {
+  statsStore.buyTurboSpamUpgrade();
 }
 </script>

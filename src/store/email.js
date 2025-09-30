@@ -29,22 +29,23 @@ export const useEmailStore = defineStore('email', () => {
   const time = ref(0); // in seconds
   const inboxFull = ref(false);
   const inboxFullNotified = ref(false);
-  let gameLoopInterval = null;
+  let gameLoopTimeout = null;
   let timeInterval = null;
 
   const statsStore = useStatsStore();
   const soundStore = useSoundStore();
 
+  function scheduleNextEmail() {
+    gameLoopTimeout = setTimeout(async () => {
+      await fetchEmail();
+      scheduleNextEmail();
+    }, statsStore.turboSpamInterval);
+  }
+
   function startGameLoop() {
-    if (gameLoopInterval) return;
+    if (gameLoopTimeout) return;
     fetchEmail();
-    gameLoopInterval = setInterval(() => {
-
-      setTimeout(() => {
-        fetchEmail();
-      }, 1000); // pequeño retraso para evitar solapamientos
-
-    }, 3500);
+    scheduleNextEmail();
     timeInterval = setInterval(() => {
       time.value++;
     }, 1000);

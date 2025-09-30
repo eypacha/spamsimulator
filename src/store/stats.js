@@ -30,20 +30,29 @@ export const useStatsStore = defineStore('stats', () => {
       maxTrash: maxTrash.value,
       maxInbox: maxInbox.value,
       maxSelectable: maxSelectable.value,
-      totalCoinsEarned: totalCoinsEarned.value
+      totalCoinsEarned: totalCoinsEarned.value,
+      totalSpamDeleted: totalSpamDeleted.value,
+      totalEmailsRead: totalEmailsRead.value,
+      totalGirlfriendEmailsRead: totalGirlfriendEmailsRead.value,
+      totalNigerianPrinceDeleted: totalNigerianPrinceDeleted.value,
+      currentStreak: currentStreak.value,
+  maxStreak: maxStreak.value,
+  turboSpamLevel: turboSpamLevel.value,
+  turboSpamInterval: turboSpamInterval.value,
+  turboSpamUpgradeCost: turboSpamUpgradeCost.value
     }));
   }
   const loaded = loadStats();
   const score = ref(loaded?.score ?? 0);
   const level = ref(loaded?.level ?? 1); // Maybe keep level for display, but not auto
   const pointsPerSpam = ref(loaded?.pointsPerSpam ?? 1);
-  const totalSpamDeleted = ref(0);
-  const totalEmailsRead = ref(0);
-  const totalGirlfriendEmailsRead = ref(0);
-  const totalNigerianPrinceDeleted = ref(0);
+  const totalSpamDeleted = ref(loaded?.totalSpamDeleted ?? 0);
+  const totalEmailsRead = ref(loaded?.totalEmailsRead ?? 0);
+  const totalGirlfriendEmailsRead = ref(loaded?.totalGirlfriendEmailsRead ?? 0);
+  const totalNigerianPrinceDeleted = ref(loaded?.totalNigerianPrinceDeleted ?? 0);
   const totalCoinsEarned = ref(loaded?.totalCoinsEarned ?? 0);
-  const currentStreak = ref(0);
-  const maxStreak = ref(0);
+  const currentStreak = ref(loaded?.currentStreak ?? 0);
+  const maxStreak = ref(loaded?.maxStreak ?? 0);
   const upgradeCost = ref(loaded?.upgradeCost ?? 10);
   const trashUpgradeCost = ref(loaded?.trashUpgradeCost ?? 20);
   const inboxUpgradeCost = ref(loaded?.inboxUpgradeCost ?? 30);
@@ -52,6 +61,28 @@ export const useStatsStore = defineStore('stats', () => {
   const maxInbox = ref(loaded?.maxInbox ?? 20);
   const maxSelectable = ref(loaded?.maxSelectable ?? 3);
   const EMAIL_SIZE_KB = 5; // Simulated size per email
+  // TurboSpam upgrade
+  const TURBO_MIN_INTERVAL = 1000; // ms, mínimo permitido
+  const TURBO_DEFAULT_INTERVAL = 3500; // ms, valor inicial
+  const TURBO_DEFAULT_COST = 100;
+  const TURBO_DECREASE = 0.9; // 10% menos por upgrade
+  const loadedTurboLevel = loaded?.turboSpamLevel ?? 0;
+  const loadedTurboInterval = loaded?.turboSpamInterval ?? TURBO_DEFAULT_INTERVAL;
+  const loadedTurboCost = loaded?.turboSpamUpgradeCost ?? TURBO_DEFAULT_COST;
+  const turboSpamLevel = ref(loadedTurboLevel);
+  const turboSpamInterval = ref(loadedTurboInterval);
+  const turboSpamUpgradeCost = ref(loadedTurboCost);
+  function buyTurboSpamUpgrade() {
+    if (score.value >= turboSpamUpgradeCost.value && turboSpamInterval.value > TURBO_MIN_INTERVAL) {
+      score.value -= turboSpamUpgradeCost.value;
+      turboSpamLevel.value += 1;
+      turboSpamInterval.value = Math.max(TURBO_MIN_INTERVAL, Math.floor(turboSpamInterval.value * TURBO_DECREASE));
+      turboSpamUpgradeCost.value = Math.floor(turboSpamUpgradeCost.value * 1.7);
+      saveStats();
+      const soundStore = useSoundStore();
+      soundStore.playBuySound();
+    }
+  }
   let soundTimeout = null;
 
   function addScore(points) {
@@ -157,10 +188,14 @@ export const useStatsStore = defineStore('stats', () => {
     maxSelectable.value = 3;
     saveStats();
   }
-  // Guarda automáticamente cuando cambian los upgrades y monedas
+  // Guarda automáticamente cuando cambian los upgrades, monedas y contadores de logros
   watch([
-    score, level, pointsPerSpam, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, totalCoinsEarned
+    score, level, pointsPerSpam, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, totalCoinsEarned,
+    totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, currentStreak, maxStreak,
+    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost
   ], saveStats);
 
-  return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset };
+  return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
+    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade
+  };
 });
