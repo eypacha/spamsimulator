@@ -67,7 +67,7 @@ export const useEmailStore = defineStore('email', () => {
         parsed.fromName = '💚 Cari';
         parsed.fromEmail = 'carinovia@gmail.com';
       }
-      emails.value.push(newEmail({ ...parsed, isSpam: spamType === 'spam' }));
+      emails.value.push(newEmail({ ...parsed, isSpam: spamType === 'spam', type: emailType }));
       // Reproducir sonido de nuevo email
       const soundStore = useSoundStore();
       soundStore.playNewEmail();
@@ -97,6 +97,9 @@ export const useEmailStore = defineStore('email', () => {
       if (email.isSpam) {
         statsStore.addScore(statsStore.pointsPerSpam);
         statsStore.recordCorrectDeletion();
+        if (email.type === 'nigerian prince') {
+          statsStore.recordNigerianPrinceDeletion();
+        }
       } else {
         statsStore.recordIncorrectDeletion();
       }

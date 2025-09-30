@@ -34,6 +34,7 @@ export function newEmail(parsed) {
         date: new Date().toLocaleDateString(),
         body: parsed.body || parsed.subject || '',
         isSpam: parsed.isSpam ?? false,
+        type: parsed.type || '',
         starred: false,
         read: false,
         trash: false

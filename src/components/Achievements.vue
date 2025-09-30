@@ -53,6 +53,15 @@ const achievements = computed(() => [
     unlocked: statsStore.totalSpamDeleted >= 100
   },
   {
+    id: 'spam-master',
+    name: 'Maestro del spam',
+    description: 'Borrar 1000 spam',
+    emoji: '🗑️',
+    target: 1000,
+    current: statsStore.totalSpamDeleted,
+    unlocked: statsStore.totalSpamDeleted >= 1000
+  },
+  {
     id: 'novice-reader',
     name: 'Lector casual',
     description: 'Leer 50 correos',
@@ -69,6 +78,15 @@ const achievements = computed(() => [
     target: 100,
     current: statsStore.totalEmailsRead,
     unlocked: statsStore.totalEmailsRead >= 100
+  },
+  {
+    id: 'expert-reader',
+    name: 'Lector experto',
+    description: 'Leer 1000 correos',
+    emoji: '📚',
+    target: 1000,
+    current: statsStore.totalEmailsRead,
+    unlocked: statsStore.totalEmailsRead >= 1000
   },
   {
     id: 'capitalist',
@@ -123,6 +141,24 @@ const achievements = computed(() => [
     target: 100,
     current: statsStore.totalGirlfriendEmailsRead,
     unlocked: statsStore.totalGirlfriendEmailsRead >= 100
-  }
+  },
+  {
+    id: 'nigerian-prince',
+    name: 'Príncipe de Nigeria',
+    description: 'Borrar 1000 emails del príncipe nigeriano',
+    emoji: '👑',
+    target: 1000,
+    current: statsStore.totalNigerianPrinceDeleted,
+    unlocked: statsStore.totalNigerianPrinceDeleted >= 1000
+  },
+  {
+    id: 'broken-heart',
+    name: 'Un poco mucho',
+    description: 'Lee 10000 correos destacados de tu novia',
+    emoji: '❤️‍🔥',
+    target: 10000,
+    current: statsStore.totalGirlfriendEmailsRead,
+    unlocked: statsStore.totalGirlfriendEmailsRead >= 10000
+  },
 ]);
 </script>
