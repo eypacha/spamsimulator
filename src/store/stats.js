@@ -56,7 +56,8 @@ export const useStatsStore = defineStore('stats', () => {
   const upgradeCost = ref(loaded?.upgradeCost ?? 10);
   const trashUpgradeCost = ref(loaded?.trashUpgradeCost ?? 20);
   const inboxUpgradeCost = ref(loaded?.inboxUpgradeCost ?? 30);
-  const selectionUpgradeCost = ref(loaded?.selectionUpgradeCost ?? 15);
+  // Aumentar el costo inicial de selección múltiple
+  const selectionUpgradeCost = ref(loaded?.selectionUpgradeCost ?? 40);
   const maxTrash = ref(loaded?.maxTrash ?? 5);
   const maxInbox = ref(loaded?.maxInbox ?? 20);
   const maxSelectable = ref(loaded?.maxSelectable ?? 3);
@@ -157,7 +158,8 @@ export const useStatsStore = defineStore('stats', () => {
     if (score.value >= selectionUpgradeCost.value) {
       score.value -= selectionUpgradeCost.value;
       maxSelectable.value += 1;
-      selectionUpgradeCost.value = Math.floor(selectionUpgradeCost.value * 1.5);
+  // Hacer el upgrade más caro (multiplicador mayor)
+  selectionUpgradeCost.value = Math.floor(selectionUpgradeCost.value * 2);
       saveStats();
       const soundStore = useSoundStore();
       soundStore.playBuySound();
