@@ -65,7 +65,7 @@ export const useEmailStore = defineStore('email', () => {
       // Excepción: si el tipo es girlfriend, usar nombre fijo
       if (emailType === 'girlfriend' && spamType === 'legit') {
         parsed.fromName = '💚 Cari';
-        parsed.fromEmail = 'caribufaino@gmail.com';
+        parsed.fromEmail = 'carinovia@gmail.com';
       }
       emails.value.push(newEmail({ ...parsed, isSpam: spamType === 'spam' }));
       // Reproducir sonido de nuevo email

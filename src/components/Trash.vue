@@ -16,7 +16,7 @@
       <template v-if="trashedEmails.length > 0">
         <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
           <Email v-for="email in trashedEmails" :key="email.id" :email="email" v-model="selectedEmails"
-            @click="openEmail(email)" />
+            @open="openEmail(email)" />
         </ul>
       </template>
       <template v-else>
@@ -66,7 +66,7 @@ const TRASH_MAX = 5;
 function openEmail(email) {
   selectedEmail.value = email;
   emailStore.setRead(email.id);
-  statsStore.markEmailAsRead();
+  statsStore.markEmailAsRead(email);
 }
 function confirmDeletePermanent(id) {
   pendingDeleteId = id;

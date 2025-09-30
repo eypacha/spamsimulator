@@ -54,7 +54,7 @@ const achievements = computed(() => [
   },
   {
     id: 'novice-reader',
-    name: 'Lector novato',
+    name: 'Lector casual',
     description: 'Leer 50 correos',
     emoji: '📖',
     target: 50,
@@ -63,7 +63,7 @@ const achievements = computed(() => [
   },
   {
     id: 'advanced-reader',
-    name: 'Lector avanzado',
+    name: 'Bibliófilo',
     description: 'Leer 100 correos',
     emoji: '📚',
     target: 100,
@@ -100,20 +100,29 @@ const achievements = computed(() => [
   {
     id: 'perfect',
     name: 'Perfecto',
-    description: 'Eliminar 20 emails seguidos sin errores',
-    emoji: '💯',
-    target: 20,
-    current: statsStore.maxStreak,
-    unlocked: statsStore.maxStreak >= 20
-  },
-  {
-    id: 'legend',
-    name: 'Leyenda',
     description: 'Eliminar 50 emails seguidos sin errores',
     emoji: '🌟',
     target: 50,
     current: statsStore.maxStreak,
     unlocked: statsStore.maxStreak >= 50
+  },
+  {
+    id: 'legend',
+    name: 'Leyenda',
+    description: 'Eliminar 100 emails seguidos sin errores',
+    emoji: '💯',
+    target: 100,
+    current: statsStore.maxStreak,
+    unlocked: statsStore.maxStreak >= 100
+  },
+  {
+    id: 'broken-heart',
+    name: 'El último romántico',
+    description: 'Lee 100 correos destacados de tu novia',
+    emoji: '💔',
+    target: 100,
+    current: statsStore.totalGirlfriendEmailsRead,
+    unlocked: statsStore.totalGirlfriendEmailsRead >= 100
   }
 ]);
 </script>
