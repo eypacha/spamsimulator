@@ -6,7 +6,7 @@
     <div class="flex-1 overflow-y-auto p-6">
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div v-for="achievement in achievements" :key="achievement.id"
-             class="bg-white p-4 rounded-lg shadow border-2 text-center"
+             class="bg-white p-4 border-2 text-center"
              :class="achievement.unlocked ? 'border-yellow-400' : 'border-gray-200 opacity-80'">
           <div class="flex flex-col items-center space-y-2">
             <span class="text-4xl">{{ achievement.emoji }}</span>

@@ -5,7 +5,7 @@
     </div>
     <div class="flex-1 overflow-y-auto p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-white p-4 rounded-lg shadow">
+        <div class="bg-white p-4 shadow">
           <h3 class="text-lg font-semibold">Dinero, dame dinero</h3>
           <p class="text-gray-600">Aumenta los puntos lo que ganas por eliminar spam.</p>
           <p class="text-sm">Actual: {{ statsStore.pointsPerSpam }} puntos</p>
@@ -14,7 +14,7 @@
             Comprar
           </button>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow">
+        <div class="bg-white p-4 shadow">
           <h3 class="text-lg font-semibold">Basura espacial</h3>
           <p class="text-gray-600">Aumenta el límite de emails en la papelera.</p>
           <p class="text-sm">Actual: {{ statsStore.getSpaceString(statsStore.maxTrash, 3) }}</p>
@@ -23,7 +23,7 @@
             Comprar
           </button>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow">
+        <div class="bg-white p-4 shadow">
           <h3 class="text-lg font-semibold">Come disco</h3>
           <p class="text-gray-600">Aumenta el límite de emails en la bandeja de entrada.</p>
           <p class="text-sm">Actual: {{ statsStore.getSpaceString(statsStore.maxInbox) }}</p>

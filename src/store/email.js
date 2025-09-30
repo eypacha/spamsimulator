@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { fetchEmailFromLLM, newEmail } from '../utils/emailApi.js';
 import { useSoundStore } from './sound.js';
@@ -7,7 +7,25 @@ import { EMAILS } from '../constants/emails.js';
 
 export const useEmailStore = defineStore('email', () => {
 
-  const emails = ref([]);
+  const EMAILS_STORAGE_KEY = 'spambot_emails';
+
+  function loadEmails() {
+    const saved = localStorage.getItem(EMAILS_STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  }
+
+  function saveEmails() {
+    localStorage.setItem(EMAILS_STORAGE_KEY, JSON.stringify(emails.value));
+  }
+
+  const emails = ref(loadEmails());
   const time = ref(0); // in seconds
   const inboxFull = ref(false);
   const inboxFullNotified = ref(false);
@@ -67,7 +85,8 @@ export const useEmailStore = defineStore('email', () => {
         parsed.fromName = '💚 Cari';
         parsed.fromEmail = 'carinovia@gmail.com';
       }
-      emails.value.push(newEmail({ ...parsed, isSpam: spamType === 'spam', type: emailType }));
+  emails.value.push(newEmail({ ...parsed, isSpam: spamType === 'spam', type: emailType }));
+  saveEmails();
       // Reproducir sonido de nuevo email
       const soundStore = useSoundStore();
       soundStore.playNewEmail();
@@ -81,18 +100,25 @@ export const useEmailStore = defineStore('email', () => {
 
   function toggleStar(id) {
     const email = emails.value.find(e => e.id === id);
-    if (email) email.starred = !email.starred;
+    if (email) {
+      email.starred = !email.starred;
+      saveEmails();
+    }
   }
 
   function setRead(id, value = true) {
     const email = emails.value.find(e => e.id === id);
-    if (email) email.read = value;
+    if (email) {
+      email.read = value;
+      saveEmails();
+    }
   }
 
   function moveToTrash(id) {
     const email = emails.value.find(e => e.id === id);
     if (email) {
       email.trash = true;
+      saveEmails();
       const statsStore = useStatsStore();
       if (email.isSpam) {
         statsStore.addScore(statsStore.pointsPerSpam);
@@ -104,6 +130,8 @@ export const useEmailStore = defineStore('email', () => {
         statsStore.recordIncorrectDeletion();
       }
     }
+  // Guarda automáticamente cuando cambian los emails (por si hay cambios no cubiertos)
+  watch(emails, saveEmails, { deep: true });
   }
 
   return { emails, time, inboxFull, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop };
