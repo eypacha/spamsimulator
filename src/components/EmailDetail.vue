@@ -10,6 +10,7 @@
     <div class="mb-6">
       <div class="text-base whitespace-pre-line" v-html="parsedBody"></div>
     </div>
+    <GoogleAd v-if="shouldShowAds" />
     <div class="flex gap-4 border-t pt-4">
       <button v-if="!email.trash" @click="onDelete" class="px-4 py-2 rounded bg-red-100 text-red-700 hover:bg-red-200"><i class="fas fa-trash"></i></button>
       <button v-else @click="onDeletePermanent" class="px-4 py-2 rounded bg-red-100 text-red-700 hover:bg-red-200"><i class="fas fa-times"></i></button>
@@ -22,9 +23,13 @@
 import { defineProps, defineEmits, computed } from 'vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { formatDate } from '@/utils/date';
+import { shouldShowAds as checkShouldShowAds } from '@/utils/ads';
+import GoogleAd from './GoogleAd.vue';
 
 const props = defineProps({ email: Object });
 const emit = defineEmits(['delete', 'star', 'deletePermanent']);
+
+const shouldShowAds = computed(() => checkShouldShowAds(props.email));
 
 function onDelete() {
   emit('delete', props.email.id);

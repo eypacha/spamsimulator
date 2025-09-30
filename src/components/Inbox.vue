@@ -16,7 +16,7 @@
       <template v-if="visibleEmails.length > 0">
         <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
           <Email v-for="email in visibleEmails" :key="email.id" :email="email" v-model="selectedEmails"
-            @toggle-star="emailStore.toggleStar" @click="openEmail(email)" />
+            @toggle-star="emailStore.toggleStar" @open="openEmail(email)" />
         </ul>
       </template>
       <template v-else>
@@ -80,7 +80,7 @@ watch(inboxFull, (newVal) => {
 function openEmail(email) {
   selectedEmail.value = email;
   emailStore.setRead(email.id);
-  statsStore.markEmailAsRead();
+  statsStore.markEmailAsRead(email);
 }
 
 function deleteEmail(id) {

@@ -3,7 +3,7 @@
     <div class="bg-gray-50 border-b ">
       <div class="flex items-center justify-between px-6 py-4 top-0 z-10">
         <span class="text-lg font-semibold text-gray-700">Papelera</span>
-        <span class="text-sm text-gray-500">{{ trashedEmails.length }}/{{ TRASH_MAX }} emails</span>
+        <span class="text-sm text-gray-500">{{ trashedEmails.length }} correos</span>
       </div>
       <div v-if="!selectedEmail" class="px-6 py-2">
         <button v-if="statsStore.maxSelectable !== 0" @click="selectFirstThree" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}</button>
@@ -61,7 +61,6 @@ const selectedEmail = ref(null);
 const selectedEmails = ref([]);
 const showConfirm = ref(false);
 let pendingDeleteId = null;
-const TRASH_MAX = 5;
 
 function openEmail(email) {
   selectedEmail.value = email;

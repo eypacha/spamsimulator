@@ -7,11 +7,11 @@
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div v-for="achievement in achievements" :key="achievement.id"
              class="bg-white p-4 rounded-lg shadow border-2 text-center"
-             :class="achievement.unlocked ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200'">
+             :class="achievement.unlocked ? 'border-yellow-400' : 'border-gray-200 opacity-80'">
           <div class="flex flex-col items-center space-y-2">
             <span class="text-4xl">{{ achievement.emoji }}</span>
             <div class="text-center">
-              <h3 class="text-lg font-semibold" :class="achievement.unlocked ? 'text-yellow-800' : 'text-gray-600'">
+              <h3 class="text-lg font-semibold text-gray-600">
                 {{ achievement.name }}
               </h3>
               <p class="text-sm text-gray-500">{{ achievement.description }}</p>
@@ -19,7 +19,12 @@
                 {{ achievement.current }}/{{ achievement.target }}
               </p>
             </div>
-            <span class="text-2xl">{{ achievement.unlocked ? '🏅' : '🔒' }}</span>
+            <div v-if="!achievement.unlocked" class="w-full bg-gray-200 rounded-full h-2">
+              <div class="bg-yellow-400 h-2 rounded-full transition-all duration-300" 
+                  :style="{ width: Math.min((achievement.current / achievement.target) * 100, 100) + '%' }">
+              </div>
+            </div>
+            <span :class="achievement.unlocked ? 'text-5xl' : 'text-2xl'">{{ achievement.unlocked ? '🏅' : '🔒' }}</span>
           </div>
         </div>
       </div>
