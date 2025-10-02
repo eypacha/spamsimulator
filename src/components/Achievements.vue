@@ -16,7 +16,7 @@
               </h3>
               <p class="text-sm text-gray-500">{{ achievement.description }}</p>
               <p class="text-xs text-gray-400 mt-1">
-                {{ achievement.current }}/{{ achievement.target }}
+                {{ Math.min(achievement.current, achievement.target) }}/{{ achievement.target }}
               </p>
             </div>
             <div v-if="!achievement.unlocked" class="w-full bg-gray-200 rounded-full h-2">
@@ -67,6 +67,15 @@ const achievements = computed(() => [
     unlocked: statsStore.totalSpamDeleted >= 1000
   },
   {
+    id: 'spam-buster',
+    name: 'Spambuster',
+    description: 'Borrar 10000 spam',
+    emoji: '🧽',
+    target: 10000,
+    current: statsStore.totalSpamDeleted,
+    unlocked: statsStore.totalSpamDeleted >= 10000
+  },
+  {
     id: 'novice-reader',
     name: 'Lector casual',
     description: 'Leer 50 correos',
@@ -95,7 +104,7 @@ const achievements = computed(() => [
   },
   {
     id: 'capitalist',
-    name: 'Capitalista',
+    name: 'Emp',
     description: 'Acumular 500 monedas',
     emoji: '💰',
     target: 500,
@@ -104,12 +113,22 @@ const achievements = computed(() => [
   },
   {
     id: 'millionaire',
-    name: 'Millonario',
+    name: 'Criptobró',
     description: 'Acumular 1000 monedas',
     emoji: '🤑',
     target: 1000,
     current: statsStore.totalCoinsEarned,
     unlocked: statsStore.totalCoinsEarned >= 1000
+  },
+
+  {
+    id: 'elon-zukerberg',
+    name: 'Elon Zukerberg',
+    description: 'Acumular 10000 monedas',
+    emoji: '💵',
+    target: 10000,
+    current: statsStore.totalCoinsEarned,
+    unlocked: statsStore.totalCoinsEarned >= 10000
   },
   {
     id: 'streak',
@@ -137,6 +156,33 @@ const achievements = computed(() => [
     target: 100,
     current: statsStore.maxStreak,
     unlocked: statsStore.maxStreak >= 100
+  },
+   {
+    id: 'sent-1',
+    name: 'Primer envío',
+    description: 'Envía tu primer correo',
+    emoji: '🖍️',
+    target: 1,
+    current: statsStore.totalEmailsSent,
+    unlocked: statsStore.totalEmailsSent >= 1
+  },
+  {
+    id: 'sent-10',
+    name: 'Correo social',
+    description: 'Envía 10 correos',
+    emoji: '🖋️',
+    target: 10,
+    current: statsStore.totalEmailsSent,
+    unlocked: statsStore.totalEmailsSent >= 10
+  },
+  {
+    id: 'sent-100',
+    name: 'Correo profesional',
+    description: 'Envía 100 correos',
+    emoji: '🖌️',
+    target: 100,
+    current: statsStore.totalEmailsSent,
+    unlocked: statsStore.totalEmailsSent >= 100
   },
   {
     id: 'broken-heart',

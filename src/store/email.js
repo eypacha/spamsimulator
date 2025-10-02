@@ -1,9 +1,9 @@
 import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
-import { fetchEmailFromLLM, newEmail } from '../utils/emailApi.js';
+import { newEmail } from '../utils/emailApi.js';
+import { EMAILS } from '../constants/emails.js';
 import { useSoundStore } from './sound.js';
 import { useStatsStore } from './stats.js';
-import { EMAILS } from '../constants/emails.js';
 
 export const useEmailStore = defineStore('email', () => {
 
@@ -63,37 +63,11 @@ export const useEmailStore = defineStore('email', () => {
     }
     inboxFull.value = false;
     inboxFullNotified.value = false;
-    // Determinar spam o legit
-    const spamType = Math.random() < 0.5 ? 'spam' : 'legit';
-    // Tipos para legit
-    const legitTypes = ['friend', 'girlfriend', 'office', 'family', 'support'];
-    // Tipos para spam
-    const spamTypes = ['promo', 'cine', 'newsletter', 'bank', 'spaship', 'social', 'phishing', 'nigerian prince', 'shopping', 'travel', 'school', 'health', 'event', 'subscription', 'update', 'alert', 'delivery', 'job', 'community'];
-    // Elegir tipo según spamType
-    const emailType = spamType === 'legit' ? legitTypes[Math.floor(Math.random() * legitTypes.length)] : spamTypes[Math.floor(Math.random() * spamTypes.length)];
-    // Idioma
-    let lang;
-    if (spamType === 'legit') {
-      lang = 'es';
-    } else {
-      const langs = ['es', 'en'];
-      lang = langs[Math.floor(Math.random() * langs.length)];
-    }
-    try {
-      const parsed = await fetchEmailFromLLM(spamType, emailType, lang);
-      // Excepción: si el tipo es girlfriend, usar nombre fijo
-      if (emailType === 'girlfriend' && spamType === 'legit') {
-        parsed.fromName = '💚 Cari';
-        parsed.fromEmail = 'carinovia@gmail.com';
-      }
-  emails.value.push(newEmail({ ...parsed, isSpam: spamType === 'spam', type: emailType }));
-  saveEmails();
-      // Reproducir sonido de nuevo email
-      const soundStore = useSoundStore();
-      soundStore.playNewEmail();
-    } catch (err) {
-      console.error('Error al pedir email:', err);
-    }
+    // Elegir un email random de las constantes
+    const randomEmail = EMAILS[Math.floor(Math.random() * EMAILS.length)];
+    emails.value.push(newEmail({ ...randomEmail }));
+    saveEmails();
+    soundStore.playNewEmail();
   }
 
   // Iniciar el GameLoop al montar el store

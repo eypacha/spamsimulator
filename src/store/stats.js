@@ -34,8 +34,9 @@ export const useStatsStore = defineStore('stats', () => {
       totalSpamDeleted: totalSpamDeleted.value,
       totalEmailsRead: totalEmailsRead.value,
       totalGirlfriendEmailsRead: totalGirlfriendEmailsRead.value,
-      totalNigerianPrinceDeleted: totalNigerianPrinceDeleted.value,
-      currentStreak: currentStreak.value,
+  totalNigerianPrinceDeleted: totalNigerianPrinceDeleted.value,
+  totalEmailsSent: totalEmailsSent.value,
+  currentStreak: currentStreak.value,
   maxStreak: maxStreak.value,
   turboSpamLevel: turboSpamLevel.value,
   turboSpamInterval: turboSpamInterval.value,
@@ -51,6 +52,11 @@ export const useStatsStore = defineStore('stats', () => {
   const totalGirlfriendEmailsRead = ref(loaded?.totalGirlfriendEmailsRead ?? 0);
   const totalNigerianPrinceDeleted = ref(loaded?.totalNigerianPrinceDeleted ?? 0);
   const totalCoinsEarned = ref(loaded?.totalCoinsEarned ?? 0);
+  const totalEmailsSent = ref(loaded?.totalEmailsSent ?? 0);
+  function recordEmailSent() {
+    totalEmailsSent.value += 1;
+    saveStats();
+  }
   const currentStreak = ref(loaded?.currentStreak ?? 0);
   const maxStreak = ref(loaded?.maxStreak ?? 0);
   const upgradeCost = ref(loaded?.upgradeCost ?? 10);
@@ -198,6 +204,6 @@ export const useStatsStore = defineStore('stats', () => {
   ], saveStats);
 
   return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
-    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade
+    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent
   };
 });

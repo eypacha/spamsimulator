@@ -56,6 +56,8 @@ import EmailDetail from './EmailDetail.vue';
 const emailStore = useEmailStore();
 const statsStore = useStatsStore();
 const { emails } = storeToRefs(emailStore);
+import { useSoundStore } from '../store/sound.js';
+const soundStore = useSoundStore();
 const trashedEmails = computed(() => emails.value.filter(e => e.trash).reverse());
 const selectedEmail = ref(null);
 const selectedEmails = ref([]);
@@ -77,6 +79,10 @@ function doDeletePermanent() {
   selectedEmail.value = null;
   showConfirm.value = false;
   pendingDeleteId = null;
+  // Si la papelera queda vacía, reproducir sonido
+  if (emails.value.filter(e => e.trash).length === 0) {
+    soundStore.playTrashSound();
+  }
 }
 
 function deleteSelected() {
@@ -85,6 +91,10 @@ function deleteSelected() {
     if (idx !== -1) emails.value.splice(idx, 1);
   });
   selectedEmails.value = [];
+  // Si la papelera queda vacía, reproducir sonido
+  if (emails.value.filter(e => e.trash).length === 0) {
+    soundStore.playTrashSound();
+  }
 }
 
 function selectFirstThree() {

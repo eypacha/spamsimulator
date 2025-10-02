@@ -16,6 +16,15 @@ export const useSoundStore = defineStore('sound', () => {
     volume: 0.8
   });
 
+  const sendSound = new Howl({
+    src: ['/sounds/send.wav'],
+    volume: 0.8
+  });
+
+  function playSendSound() {
+    sendSound.play();
+  }
+
   const buySound = new Howl({
     src: ['/sounds/ding.mp3'], // Agregar archivo
     volume: 0.7
@@ -25,6 +34,14 @@ export const useSoundStore = defineStore('sound', () => {
     src: ['/sounds/error.mp3'], // Agregar archivo
     volume: 1.0
   });
+
+  const trashSound = new Howl({
+      src: ['/sounds/trash.mp3'],
+      volume: 0.8
+    });
+    function playTrashSound() {
+      trashSound.play();
+    }
 
   // Funciones para reproducir sonidos
   function playNewEmail() {
@@ -63,6 +80,8 @@ export const useSoundStore = defineStore('sound', () => {
     playCoinSound,
     playBuySound,
     playErrorSound,
-    setVolume
+    setVolume,
+  playTrashSound,
+  playSendSound
   };
 });
