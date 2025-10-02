@@ -11,6 +11,7 @@
         <Trash v-else-if="selectedMenu === 'trash'"/>
         <Store v-else-if="selectedMenu === 'store'"/>
         <Achievements v-else-if="selectedMenu === 'achievements'"/>
+        <Settings v-else-if="selectedMenu === 'settings'"/>
         <section v-else>
           <div class="text-gray-400 text-center mt-20 text-lg">Selecciona una opción del menú</div>
         </section>
@@ -34,6 +35,7 @@ import Hud from '../components/Hud.vue';
 import Store from '../components/Store.vue';
 import Achievements from '../components/Achievements.vue';
 import ComposeEmail from '../components/ComposeEmail.vue';
+import Settings from '../components/Settings.vue';
 
 const selectedMenu = ref('inbox');
 const showCompose = ref(false);

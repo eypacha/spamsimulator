@@ -39,6 +39,7 @@ const menuOptions = [
   { key: 'trash', icon: '🗑️', label: 'Papelera' },
   { key: 'store', icon: '🛒', label: 'Tienda' },
   { key: 'achievements', icon: '🏆', label: 'Logros' },
+  { key: 'settings', icon: '⚙️', label: 'Settings' },
 ];
 
 const props = defineProps({
