@@ -178,5 +178,16 @@ const cards = computed(() => [
     disabled: statsStore.score < statsStore.groupSelectUpgradeCost || statsStore.groupSelectUnlocked,
     rounded: true,
   },
+  {
+    title: 'Atajos de Teclado',
+    description: '⌨️ Desbloquea atajos de teclado para navegar más rápido entre secciones.',
+    details: [
+      statsStore.keyboardShortcutsUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.keyboardShortcutsUpgradeCost} 🪙`,
+      statsStore.keyboardShortcutsUnlocked ? 'Atajos activados' : 'Navega más rápido'
+    ],
+    onClick: () => statsStore.buyKeyboardShortcutsUpgrade(),
+    disabled: statsStore.score < statsStore.keyboardShortcutsUpgradeCost || statsStore.keyboardShortcutsUnlocked,
+    rounded: true,
+  },
 ]);
 </script>

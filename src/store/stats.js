@@ -86,7 +86,10 @@ export const useStatsStore = defineStore('stats', () => {
       virusBombCooldown: abilitiesManager.virusBombCooldown.value,
       // Group Select
       groupSelectUnlocked: abilitiesManager.groupSelectUnlocked.value,
-      groupSelectUpgradeCost: abilitiesManager.groupSelectUpgradeCost.value
+      groupSelectUpgradeCost: abilitiesManager.groupSelectUpgradeCost.value,
+      // Keyboard Shortcuts
+      keyboardShortcutsUnlocked: abilitiesManager.keyboardShortcutsUnlocked.value,
+      keyboardShortcutsUpgradeCost: abilitiesManager.keyboardShortcutsUpgradeCost.value
     });
   }
 
@@ -114,7 +117,9 @@ export const useStatsStore = defineStore('stats', () => {
     virusBombCooldown,
     activateVirusBomb,
     groupSelectUnlocked,
-    groupSelectUpgradeCost
+    groupSelectUpgradeCost,
+    keyboardShortcutsUnlocked,
+    keyboardShortcutsUpgradeCost
   } = abilitiesManager;
 
   function buySpaceBarUpgrade() {
@@ -147,6 +152,10 @@ export const useStatsStore = defineStore('stats', () => {
 
   function buyGroupSelectUpgrade() {
     buyUpgradeHandler(groupSelectUpgradeCost, abilitiesManager.unlockGroupSelect, 1.5, !groupSelectUnlocked.value);
+  }
+
+  function buyKeyboardShortcutsUpgrade() {
+    buyUpgradeHandler(keyboardShortcutsUpgradeCost, abilitiesManager.unlockKeyboardShortcuts, 1.5, !keyboardShortcutsUnlocked.value);
   }
 
   // Combo upgrade - usando comboManager
@@ -290,6 +299,8 @@ export const useStatsStore = defineStore('stats', () => {
     // Virus Bomb Upgrade
     virusBombUnlocked, virusBombUpgradeCost, virusBombCooldown, activateVirusBomb, buyVirusBombUpgrade,
     // Group Select Upgrade
-    groupSelectUnlocked, groupSelectUpgradeCost, buyGroupSelectUpgrade
+    groupSelectUnlocked, groupSelectUpgradeCost, buyGroupSelectUpgrade,
+    // Keyboard Shortcuts Upgrade
+    keyboardShortcutsUnlocked, keyboardShortcutsUpgradeCost, buyKeyboardShortcutsUpgrade
   };
 });

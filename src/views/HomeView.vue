@@ -85,12 +85,62 @@ function handleResize() {
   if (isDesktop.value) sidebarOpen.value = true;
 }
 
+function handleKeydown(event) {
+  // Solo si los atajos están desbloqueados y se presiona Shift
+  if (!statsStore.keyboardShortcutsUnlocked || !event.shiftKey) return;
+  
+  const key = event.key.toUpperCase();
+  
+  switch(key) {
+    case 'Q':
+      if (statsStore.composeUnlocked) {
+        showCompose.value = true;
+        event.preventDefault();
+      }
+      break;
+    case 'W':
+      selectedMenu.value = 'inbox';
+      showCompose.value = false;
+      event.preventDefault();
+      break;
+    case 'E':
+      if (statsStore.starredUnlocked) {
+        selectedMenu.value = 'starred';
+        showCompose.value = false;
+        event.preventDefault();
+      }
+      break;
+    case 'R':
+      selectedMenu.value = 'trash';
+      showCompose.value = false;
+      event.preventDefault();
+      break;
+    case 'A':
+      selectedMenu.value = 'store';
+      showCompose.value = false;
+      event.preventDefault();
+      break;
+    case 'S':
+      selectedMenu.value = 'achievements';
+      showCompose.value = false;
+      event.preventDefault();
+      break;
+    case 'D':
+      selectedMenu.value = 'settings';
+      showCompose.value = false;
+      event.preventDefault();
+      break;
+  }
+}
+
 onMounted(() => {
   window.addEventListener('resize', handleResize);
+  window.addEventListener('keydown', handleKeydown);
   handleResize();
 });
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
+  window.removeEventListener('keydown', handleKeydown);
 });
 
 </script>

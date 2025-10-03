@@ -43,6 +43,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const groupSelectUnlocked = ref(loaded?.groupSelectUnlocked ?? false);
   const groupSelectUpgradeCost = ref(loaded?.groupSelectUpgradeCost ?? 150);
 
+  // Keyboard Shortcuts - Habilita atajos de teclado para navegación
+  const keyboardShortcutsUnlocked = ref(loaded?.keyboardShortcutsUnlocked ?? false);
+  const keyboardShortcutsUpgradeCost = ref(loaded?.keyboardShortcutsUpgradeCost ?? 120);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -73,6 +77,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockGroupSelect() {
     groupSelectUnlocked.value = true;
+  }
+
+  function unlockKeyboardShortcuts() {
+    keyboardShortcutsUnlocked.value = true;
   }
 
   // Reiniciar timers al cargar (para cooldowns guardados)
@@ -211,6 +219,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Group Select
     groupSelectUnlocked,
     groupSelectUpgradeCost,
-    unlockGroupSelect
+    unlockGroupSelect,
+    
+    // Keyboard Shortcuts
+    keyboardShortcutsUnlocked,
+    keyboardShortcutsUpgradeCost,
+    unlockKeyboardShortcuts
   };
 }

@@ -3,10 +3,19 @@
     <nav class="h-full flex flex-col py-6">
       <ul class="space-y-2">
         <li v-if="statsStore.composeUnlocked">
-          <button @click="$emit('openCompose')" class="w-full text-left px-6 py-3 transition hover:bg-gray-700 cursor-pointer">✍️ Redactar</button>
+          <button @click="$emit('openCompose')" class="w-full text-left px-6 py-3 transition hover:bg-gray-700 cursor-pointer">
+            ✍️ Redactar
+            <span v-if="statsStore.keyboardShortcutsUnlocked" class="text-xs text-gray-400 ml-1">(Shift+Q)</span>
+          </button>
         </li>
         <li v-for="item in menuOptions" :key="item.key">
-          <button @click="selectMenu(item.key)" :class="menuBtnClass(item.key)">{{ item.icon }} {{ item.label }}</button>
+          <button
+            @click="selectMenu(item.key)"
+            class="cursor-pointer w-full text-left px-6 py-3 transition flex items-center justify-between"
+            :class="selectedMenu === item.key ? 'bg-blue-600 text-white font-semibold' : 'hover:bg-gray-700'">
+            <span>{{ item.icon }} {{ item.label }}</span>
+            <span v-if="statsStore.keyboardShortcutsUnlocked && item.shortcut" class="text-xs text-gray-400">({{ item.shortcut }})</span>
+          </button>
         </li>
       </ul>
       
@@ -52,12 +61,12 @@ import { useStatsStore } from '../store/stats.js';
 
 // Opciones del menú (excepto Redactar)
 const allMenuOptions = [
-  { key: 'inbox', icon: '📥', label: 'Recibidos' },
-  { key: 'starred', icon: '⭐', label: 'Destacados', requiresUnlock: true },
-  { key: 'trash', icon: '🗑️', label: 'Papelera' },
-  { key: 'store', icon: '🛒', label: 'Tienda' },
-  { key: 'achievements', icon: '🏆', label: 'Logros' },
-  { key: 'settings', icon: '⚙️', label: 'Settings' },
+  { key: 'inbox', icon: '📥', label: 'Recibidos', shortcut: 'Shift+W' },
+  { key: 'starred', icon: '⭐', label: 'Destacados', requiresUnlock: true, shortcut: 'Shift+E' },
+  { key: 'trash', icon: '🗑️', label: 'Papelera', shortcut: 'Shift+R' },
+  { key: 'store', icon: '🛒', label: 'Tienda', shortcut: 'Shift+A' },
+  { key: 'achievements', icon: '🏆', label: 'Logros', shortcut: 'Shift+S' },
+  { key: 'settings', icon: '⚙️', label: 'Settings', shortcut: 'Shift+D' },
 ];
 
 const props = defineProps({
@@ -115,12 +124,5 @@ const trashProgressBarColor = computed(() => {
 
 function selectMenu(menu) {
   emit('selectMenu', menu);
-}
-
-function menuBtnClass(menu) {
-  return [
-    'cursor-pointer w-full text-left px-6 py-3 transition',
-    props.selectedMenu === menu ? 'bg-blue-600 text-white font-semibold' : 'hover:bg-gray-700',
-  ];
 }
 </script>
