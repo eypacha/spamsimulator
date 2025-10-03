@@ -18,7 +18,7 @@
           :class="sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0'"
           @click="sidebarOpen = false"
         ></div>
-        <!-- Sidebar Drawer SIEMPRE presente, animado con Tailwind -->
+
         <Sidebar
           :selectedMenu="selectedMenu"
           @selectMenu="handleSelectMenu"
