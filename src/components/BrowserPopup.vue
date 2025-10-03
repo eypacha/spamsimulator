@@ -1,6 +1,9 @@
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background: rgba(0,0,0,0.5);">
-    <div class="bg-white shadow-2xl w-full max-w-3xl h-[55vh] flex flex-col animate-popup border-2 border-gray-400 rounded-lg">
+  <div v-if="show" class="fixed inset-0 z-50 p-4" style="background: rgba(0,0,0,0.5);">
+    <div 
+      class="bg-white shadow-2xl w-full max-w-3xl h-[55vh] flex flex-col animate-popup border-2 border-gray-400 rounded-lg absolute"
+      :style="{ top: randomPosition.top, left: randomPosition.left }"
+    >
       <!-- Barra superior del navegador -->
       <div class="bg-gray-200 px-3 py-2 flex items-center gap-2 border-b border-gray-300">
         <!-- Barra de navegación -->
@@ -56,6 +59,9 @@ const templates = [PhishingPrize, VirusWarning, FakeBank, SurveyScam];
 // Seleccionar template aleatorio
 const currentTemplate = ref(null);
 
+// Posición aleatoria del popup
+const randomPosition = ref({ top: '50%', left: '50%' });
+
 const countdown = ref('00:10');
 let countdownInterval = null;
 
@@ -64,6 +70,16 @@ watch(() => props.show, (newVal) => {
   if (newVal) {
     // Seleccionar un template aleatorio cada vez que se abre el popup
     currentTemplate.value = templates[Math.floor(Math.random() * templates.length)];
+    
+    // Generar posición aleatoria
+    // Dejamos margen para que no se salga de la pantalla
+    const topPercent = Math.random() * 40 + 5; // Entre 5% y 45%
+    const leftPercent = Math.random() * 40 + 5; // Entre 5% y 45%
+    randomPosition.value = {
+      top: `${topPercent}%`,
+      left: `${leftPercent}%`
+    };
+    
     startCountdown();
   } else {
     stopCountdown();
