@@ -5,49 +5,24 @@
     </div>
     <div class="flex-1 overflow-y-auto p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div class="bg-white p-4 shadow">
-          <h3 class="text-lg font-semibold">Dinero, dame dinero</h3>
-          <p class="text-gray-600">Aumenta los puntos lo que ganas por eliminar spam.</p>
-          <p class="text-sm">Actual: {{ statsStore.pointsPerSpam }} puntos</p>
-          <p class="text-sm">Costo: {{ statsStore.upgradeCost }} 🪙</p>
-          <button @click="buyUpgrade" :disabled="statsStore.score < statsStore.upgradeCost" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400">
-            Comprar
-          </button>
-        </div>
-        <div class="bg-white p-4 shadow">
-          <h3 class="text-lg font-semibold">Basura espacial</h3>
-          <p class="text-gray-600">Aumenta el límite de emails en la papelera.</p>
-          <p class="text-sm">Actual: {{ statsStore.getSpaceString(statsStore.maxTrash, 3) }}</p>
-          <p class="text-sm">Costo: {{ statsStore.trashUpgradeCost }} 🪙</p>
-          <button @click="buyTrashUpgrade" :disabled="statsStore.score < statsStore.trashUpgradeCost" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400">
-            Comprar
-          </button>
-        </div>
-        <div class="bg-white p-4 shadow">
-          <h3 class="text-lg font-semibold">Come disco</h3>
-          <p class="text-gray-600">Aumenta el límite de emails en la bandeja de entrada.</p>
-          <p class="text-sm">Actual: {{ statsStore.getSpaceString(statsStore.maxInbox) }}</p>
-          <p class="text-sm">Costo: {{ statsStore.inboxUpgradeCost }} 🪙</p>
-          <button @click="buyInboxUpgrade" :disabled="statsStore.score < statsStore.inboxUpgradeCost" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400">
-            Comprar
-          </button>
-        </div>
-        <div class="bg-white p-4 rounded-lg shadow">
-          <h3 class="text-lg font-semibold">Selección múltiple</h3>
-          <p class="text-gray-600">Aumenta el número de emails que puedes seleccionar a la vez.</p>
-          <p class="text-sm">Actual: {{ statsStore.maxSelectable }} emails</p>
-          <p class="text-sm">Costo: {{ statsStore.selectionUpgradeCost }} 🪙</p>
-          <button @click="buySelectionUpgrade" :disabled="statsStore.score < statsStore.selectionUpgradeCost" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400">
-            Comprar
-          </button>
-        </div>
-        <div class="bg-white p-4 shadow">
-          <h3 class="text-lg font-semibold">TurboSpam</h3>
-          <p class="text-gray-600">Reduce el intervalo de llegada de emails un 10% (mínimo 1s).</p>
-          <p class="text-sm">Actual: {{ (statsStore.turboSpamInterval / 1000).toFixed(2) }} s</p>
-          <p class="text-sm">Nivel: {{ statsStore.turboSpamLevel }}</p>
-          <p class="text-sm">Costo: {{ statsStore.turboSpamUpgradeCost }} 🪙</p>
-          <button @click="buyTurboSpamUpgrade" :disabled="statsStore.score < statsStore.turboSpamUpgradeCost || statsStore.turboSpamInterval <= 1000" class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400">
+        <div
+          v-for="card in cards"
+          :key="card.title"
+          class="bg-white p-4 shadow flex flex-col h-full gap-5"
+          :class="card.rounded ? 'rounded-lg' : ''"
+        >
+          <div>
+            <h3 class="text-lg font-semibold">{{ card.title }}</h3>
+            <p class="text-gray-600">{{ card.description }}</p>
+            <template v-for="(line, idx) in card.details" :key="idx">
+              <p class="text-sm">{{ line }}</p>
+            </template>
+          </div>
+          <button
+            @click="card.onClick"
+            :disabled="card.disabled"
+            class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 mt-auto"
+          >
             Comprar
           </button>
         </div>
@@ -58,26 +33,61 @@
 
 <script setup>
 import { useStatsStore } from '../store/stats.js';
+import { computed } from 'vue';
 
 const statsStore = useStatsStore();
 
-function buyUpgrade() {
-  statsStore.buyUpgrade();
-}
-
-function buyTrashUpgrade() {
-  statsStore.buyTrashUpgrade();
-}
-
-function buyInboxUpgrade() {
-  statsStore.buyInboxUpgrade();
-}
-
-function buySelectionUpgrade() {
-  statsStore.buySelectionUpgrade();
-}
-
-function buyTurboSpamUpgrade() {
-  statsStore.buyTurboSpamUpgrade();
-}
+const cards = computed(() => [
+  {
+    title: 'Dinero, dame dinero',
+    description: 'Aumenta los puntos lo que ganas por eliminar spam.',
+    details: [
+      `Actual: ${statsStore.pointsPerSpam} puntos`,
+      `Costo: ${statsStore.upgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyUpgrade(),
+    disabled: statsStore.score < statsStore.upgradeCost,
+  },
+  {
+    title: 'Basura espacial',
+    description: 'Aumenta el límite de emails en la papelera.',
+    details: [
+      `Actual: ${statsStore.getSpaceString(statsStore.maxTrash, 3)}`,
+      `Costo: ${statsStore.trashUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyTrashUpgrade(),
+    disabled: statsStore.score < statsStore.trashUpgradeCost,
+  },
+  {
+    title: 'Come disco',
+    description: 'Aumenta el límite de emails en la bandeja de entrada.',
+    details: [
+      `Actual: ${statsStore.getSpaceString(statsStore.maxInbox)}`,
+      `Costo: ${statsStore.inboxUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyInboxUpgrade(),
+    disabled: statsStore.score < statsStore.inboxUpgradeCost,
+  },
+  {
+    title: 'Selección múltiple',
+    description: 'Aumenta el número de emails que puedes seleccionar a la vez.',
+    details: [
+      `Actual: ${statsStore.maxSelectable} emails`,
+      `Costo: ${statsStore.selectionUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buySelectionUpgrade(),
+    disabled: statsStore.score < statsStore.selectionUpgradeCost,
+    rounded: true,
+  },
+  {
+    title: 'TurboSpam',
+    description: 'Reduce el intervalo de llegada de emails un 10% (mínimo 1s).',
+    details: [
+      `Actual: ${(statsStore.turboSpamInterval / 1000).toFixed(2)} s`,
+      `Costo: ${statsStore.turboSpamUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyTurboSpamUpgrade(),
+    disabled: statsStore.score < statsStore.turboSpamUpgradeCost || statsStore.turboSpamInterval <= 1000,
+  },
+]);
 </script>
