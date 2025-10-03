@@ -31,19 +31,36 @@ export const useEmailStore = defineStore('email', () => {
   const inboxFullNotified = ref(false);
   let gameLoopTimeout = null;
   let timeInterval = null;
+  let spamFrenzyInterval = null;
 
   const statsStore = useStatsStore();
   const soundStore = useSoundStore();
 
   function scheduleNextEmail() {
-
-    const randomDelay = Math.floor(Math.random() * 500); 
+    const randomDelay = Math.floor(Math.random() * 500);
+    let interval = statsStore.turboSpamInterval;
     gameLoopTimeout = setTimeout(async () => {
       await new Promise(res => setTimeout(res, randomDelay));
       await fetchEmail();
       scheduleNextEmail();
-    }, statsStore.turboSpamInterval);
+    }, interval);
   }
+
+  // Observa el estado de Spam Frenzy y dispara emails extra durante el efecto
+  watch(
+    () => statsStore.spamFrenzyActive,
+    (active) => {
+      if (active) {
+        if (spamFrenzyInterval) clearInterval(spamFrenzyInterval);
+        spamFrenzyInterval = setInterval(() => {
+          fetchEmail();
+        }, 400); // cada 400ms llega un email extra
+      } else {
+        if (spamFrenzyInterval) clearInterval(spamFrenzyInterval);
+        spamFrenzyInterval = null;
+      }
+    }
+  );
 
   function startGameLoop() {
     if (gameLoopTimeout) return;

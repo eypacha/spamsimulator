@@ -10,6 +10,16 @@
         <button @click="deleteSelected" :disabled="selectedEmails.length === 0"
           class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed">Eliminar
           ({{ selectedEmails.length }})</button>
+        <button
+          v-if="statsStore.spamFrenzyUnlocked"
+          @click="statsStore.activateSpamFrenzy()"
+          :disabled="statsStore.spamFrenzyActive || statsStore.spamFrenzyCooldown > 0"
+          class="px-4 py-2 rounded bg-pink-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed"
+          :class="statsStore.spamFrenzyActive ? 'animate-pulse pulse-fast' : 'hover:bg-pink-700'"
+        >
+          Spam Frenzy
+          <span v-if="statsStore.spamFrenzyCooldown > 0"> ({{ statsStore.spamFrenzyCooldown }})</span>
+        </button>
       </div>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">

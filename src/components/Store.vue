@@ -21,7 +21,7 @@
           <button
             @click="card.onClick"
             :disabled="card.disabled"
-            class="mt-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 disabled:bg-gray-400 mt-auto"
+            class="mt-2 px-4 py-2 bg-green-500 cursor-pointer text-white rounded hover:bg-green-600 disabled:bg-gray-400 mt-auto"
           >
             Comprar
           </button>
@@ -67,6 +67,16 @@ const cards = computed(() => [
     ],
     onClick: () => statsStore.buyInboxUpgrade(),
     disabled: statsStore.score < statsStore.inboxUpgradeCost,
+  },
+  {
+    title: 'Spam Frenzy',
+    description: 'Activa un modo especial donde el spam llega más rápido.',
+    details: [
+      statsStore.spamFrenzyUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spamFrenzyUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buySpamFrenzyUpgrade(),
+    disabled: statsStore.score < statsStore.spamFrenzyUpgradeCost || statsStore.spamFrenzyUnlocked,
+    rounded: true,
   },
   {
     title: 'Selección múltiple',

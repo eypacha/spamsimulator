@@ -25,11 +25,19 @@ import { useStatsStore } from '../store/stats.js';
 const statsStore = useStatsStore();
 
 
+
 const score = computed(() => statsStore.score);
 const totalSpamDeleted = computed(() => statsStore.totalSpamDeleted);
 const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);
+const spamFrenzyUnlocked = computed(() => statsStore.spamFrenzyUnlocked);
+const spamFrenzyActive = computed(() => statsStore.spamFrenzyActive);
+const spamFrenzyTime = computed(() => statsStore.spamFrenzyTime);
 const scoreAnimating = ref(false);
+
+function activateSpamFrenzy() {
+  statsStore.activateSpamFrenzy();
+}
 
 watch(score, () => {
   scoreAnimating.value = true;

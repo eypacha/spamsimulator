@@ -4,11 +4,103 @@ import { useSoundStore } from './sound.js';
 import { formatStorage } from '../utils/storage.js';
 
 export const useStatsStore = defineStore('stats', () => {
+  // --- Storage helpers must be defined first ---
+  const STATS_STORAGE_KEY = 'spambot_stats';
+  function loadStats() {
+    const saved = localStorage.getItem(STATS_STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+  function saveStats() {
+    localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify({
+      score: score.value,
+      level: level.value,
+      pointsPerSpam: pointsPerSpam.value,
+      upgradeCost: upgradeCost.value,
+      trashUpgradeCost: trashUpgradeCost.value,
+      inboxUpgradeCost: inboxUpgradeCost.value,
+      selectionUpgradeCost: selectionUpgradeCost.value,
+      maxTrash: maxTrash.value,
+      maxInbox: maxInbox.value,
+      maxSelectable: maxSelectable.value,
+      totalCoinsEarned: totalCoinsEarned.value,
+      totalSpamDeleted: totalSpamDeleted.value,
+      totalEmailsRead: totalEmailsRead.value,
+      totalGirlfriendEmailsRead: totalGirlfriendEmailsRead.value,
+      totalNigerianPrinceDeleted: totalNigerianPrinceDeleted.value,
+      totalEmailsSent: totalEmailsSent.value,
+      currentStreak: currentStreak.value,
+      maxStreak: maxStreak.value,
+      turboSpamLevel: turboSpamLevel.value,
+      turboSpamInterval: turboSpamInterval.value,
+      turboSpamUpgradeCost: turboSpamUpgradeCost.value,
+      // Combo
+      comboUnlocked: comboUnlocked.value,
+      comboUpgradeCost: comboUpgradeCost.value,
+      comboMultiplier: comboMultiplier.value,
+      comboCount: comboCount.value,
+      // Spam Frenzy
+      spamFrenzyUnlocked: spamFrenzyUnlocked.value,
+      spamFrenzyUpgradeCost: spamFrenzyUpgradeCost.value,
+      spamFrenzyCooldown: spamFrenzyCooldown.value,
+      spamFrenzyActive: spamFrenzyActive.value,
+      spamFrenzyTime: spamFrenzyTime.value
+    }));
+  }
+  // Primero cargar stats guardados
+  const loaded = loadStats();
+  // Cooldown para Spam Frenzy
+  // Spam Frenzy upgrade
+  const spamFrenzyUnlocked = ref(loaded?.spamFrenzyUnlocked ?? false);
+  const spamFrenzyUpgradeCost = ref(loaded?.spamFrenzyUpgradeCost ?? 200);
+  const spamFrenzyCooldown = ref(loaded?.spamFrenzyCooldown ?? 0); // segundos restantes de cooldown
+  const spamFrenzyActive = ref(loaded?.spamFrenzyActive ?? false);
+  const spamFrenzyTime = ref(loaded?.spamFrenzyTime ?? 0); // segundos restantes
+
+  function buySpamFrenzyUpgrade() {
+    if (score.value >= spamFrenzyUpgradeCost.value && !spamFrenzyUnlocked.value) {
+      score.value -= spamFrenzyUpgradeCost.value;
+      spamFrenzyUnlocked.value = true;
+      saveStats();
+      const soundStore = useSoundStore();
+      soundStore.playBuySound();
+    }
+  }
+
+  function activateSpamFrenzy() {
+    if (!spamFrenzyUnlocked.value || spamFrenzyActive.value || spamFrenzyCooldown.value > 0) return;
+    spamFrenzyActive.value = true;
+    spamFrenzyTime.value = 3;
+    // Cooldown de 60 segundos
+    spamFrenzyCooldown.value = 60;
+    // Timer para el efecto
+    const interval = setInterval(() => {
+      spamFrenzyTime.value--;
+      if (spamFrenzyTime.value <= 0) {
+        spamFrenzyActive.value = false;
+        clearInterval(interval);
+      }
+    }, 1000);
+    // Timer para el cooldown
+    const cdInterval = setInterval(() => {
+      spamFrenzyCooldown.value--;
+      if (spamFrenzyCooldown.value <= 0) {
+        clearInterval(cdInterval);
+      }
+    }, 1000);
+    saveStats();
+  }
   // Combo upgrade
-  const comboUnlocked = ref(false);
-  const comboUpgradeCost = ref(150);
-  const comboMultiplier = ref(1); // 1, 2, 3, 5
-  const comboCount = ref(0); // para llevar el conteo
+  const comboUnlocked = ref(loaded?.comboUnlocked ?? false);
+  const comboUpgradeCost = ref(loaded?.comboUpgradeCost ?? 150);
+  const comboMultiplier = ref(loaded?.comboMultiplier ?? 1); // 1, 2, 3, 5
+  const comboCount = ref(loaded?.comboCount ?? 0); // para llevar el conteo
 
   function buyComboUpgrade() {
     if (score.value >= comboUpgradeCost.value && !comboUnlocked.value) {
@@ -36,46 +128,7 @@ export const useStatsStore = defineStore('stats', () => {
     }
     saveStats();
   }
-  const STATS_STORAGE_KEY = 'spambot_stats';
-
-  function loadStats() {
-    const saved = localStorage.getItem(STATS_STORAGE_KEY);
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  function saveStats() {
-    localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify({
-      score: score.value,
-      level: level.value,
-      pointsPerSpam: pointsPerSpam.value,
-      upgradeCost: upgradeCost.value,
-      trashUpgradeCost: trashUpgradeCost.value,
-      inboxUpgradeCost: inboxUpgradeCost.value,
-      selectionUpgradeCost: selectionUpgradeCost.value,
-      maxTrash: maxTrash.value,
-      maxInbox: maxInbox.value,
-      maxSelectable: maxSelectable.value,
-      totalCoinsEarned: totalCoinsEarned.value,
-      totalSpamDeleted: totalSpamDeleted.value,
-      totalEmailsRead: totalEmailsRead.value,
-      totalGirlfriendEmailsRead: totalGirlfriendEmailsRead.value,
-  totalNigerianPrinceDeleted: totalNigerianPrinceDeleted.value,
-  totalEmailsSent: totalEmailsSent.value,
-  currentStreak: currentStreak.value,
-  maxStreak: maxStreak.value,
-  turboSpamLevel: turboSpamLevel.value,
-  turboSpamInterval: turboSpamInterval.value,
-  turboSpamUpgradeCost: turboSpamUpgradeCost.value
-    }));
-  }
-  const loaded = loadStats();
+  // const loaded = loadStats(); // Already declared at the top
   const score = ref(loaded?.score ?? 0);
   const level = ref(loaded?.level ?? 1); // Maybe keep level for display, but not auto
   const pointsPerSpam = ref(loaded?.pointsPerSpam ?? 1);
@@ -244,6 +297,7 @@ export const useStatsStore = defineStore('stats', () => {
 
   return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
-    comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade
+    comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
+    spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown
   };
 });
