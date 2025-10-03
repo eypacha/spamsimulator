@@ -36,7 +36,10 @@ export const useEmailStore = defineStore('email', () => {
   const soundStore = useSoundStore();
 
   function scheduleNextEmail() {
+
+    const randomDelay = Math.floor(Math.random() * 500); 
     gameLoopTimeout = setTimeout(async () => {
+      await new Promise(res => setTimeout(res, randomDelay));
       await fetchEmail();
       scheduleNextEmail();
     }, statsStore.turboSpamInterval);
