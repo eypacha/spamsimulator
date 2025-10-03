@@ -56,7 +56,7 @@ const templates = [PhishingPrize, VirusWarning, FakeBank, SurveyScam];
 // Seleccionar template aleatorio
 const currentTemplate = ref(null);
 
-const countdown = ref('05:00');
+const countdown = ref('00:10');
 let countdownInterval = null;
 
 // Countdown para páginas spam
@@ -71,8 +71,8 @@ watch(() => props.show, (newVal) => {
 });
 
 function startCountdown() {
-  let minutes = 4;
-  let seconds = 59;
+  let minutes = 0;
+  let seconds = 10;
   
   countdownInterval = setInterval(() => {
     if (seconds === 0) {
@@ -95,7 +95,7 @@ function stopCountdown() {
     clearInterval(countdownInterval);
     countdownInterval = null;
   }
-  countdown.value = '05:00';
+  countdown.value = '00:10';
 }
 
 onUnmounted(() => {
