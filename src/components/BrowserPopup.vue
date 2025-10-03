@@ -1,8 +1,8 @@
 <template>
   <div v-if="show" class="fixed inset-0 z-50 flex items-center justify-center p-4" style="background: rgba(0,0,0,0.5);">
-    <div class="bg-white shadow-2xl w-full max-w-4xl h-[70vh] flex flex-col animate-popup border-2 border-gray-400 rounded-lg">
+    <div class="bg-white shadow-2xl w-full max-w-3xl h-[55vh] flex flex-col animate-popup border-2 border-gray-400 rounded-lg">
       <!-- Barra superior del navegador -->
-      <div class="bg-gray-200 px-3 py-2 flex items-center gap-2 border-b border-gray-300 rounded-t-lg">
+      <div class="bg-gray-200 px-3 py-2 flex items-center gap-2 border-b border-gray-300">
         <!-- Barra de navegación -->
         <div class="flex-1 flex items-center gap-2">
           <button class="text-gray-600 hover:text-gray-800 px-2">⟳</button>
@@ -43,11 +43,6 @@
           </button>
           <div class="mt-4 text-sm text-gray-500">
             ⏰ Esta oferta expira en: <span class="text-red-600 font-bold">{{ countdown }}</span>
-          </div>
-          <div class="grid grid-cols-3 gap-4 mt-8">
-            <div class="text-4xl animate-spin-slow">💰</div>
-            <div class="text-4xl animate-bounce">🎉</div>
-            <div class="text-4xl animate-pulse">✨</div>
           </div>
         </div>
       </div>
