@@ -3,21 +3,27 @@ import { Howl, Howler } from 'howler';
 
 export const useSoundStore = defineStore('sound', () => {
   // Configurar Howler global
-  Howler.volume(0.5); // Volumen global al 50%
+  Howler.volume(0.9); // Volumen global al 50%
+
+  // Helper para construir rutas de assets considerando el BASE_URL
+  const getAssetPath = (path) => {
+    const base = import.meta.env.BASE_URL || '/';
+    return base + path.replace(/^\//, '');
+  };
 
   // Definir sonidos (placeholders, agregar archivos reales en public/sounds/)
   const newEmailSound = new Howl({
-    src: ['/sounds/new-email.wav'], // Agregar archivo
+    src: [getAssetPath('sounds/new-email.wav')],
     volume: 0.8
   });
 
   const coinSound = new Howl({
-    src: ['/sounds/coin.mp3'], // Agregar archivo
+    src: [getAssetPath('sounds/coin.mp3')],
     volume: 0.8
   });
 
   const sendSound = new Howl({
-    src: ['/sounds/send.wav'],
+    src: [getAssetPath('sounds/send.wav')],
     volume: 0.8
   });
 
@@ -26,17 +32,17 @@ export const useSoundStore = defineStore('sound', () => {
   }
 
   const buySound = new Howl({
-    src: ['/sounds/ding.mp3'], // Agregar archivo
+    src: [getAssetPath('sounds/ding.mp3')],
     volume: 0.7
   });
 
   const errorSound = new Howl({
-    src: ['/sounds/error.mp3'], // Agregar archivo
+    src: [getAssetPath('sounds/error.mp3')],
     volume: 1.0
   });
 
   const trashSound = new Howl({
-      src: ['/sounds/trash.mp3'],
+      src: [getAssetPath('sounds/trash.mp3')],
       volume: 0.8
     });
     function playTrashSound() {
@@ -44,7 +50,7 @@ export const useSoundStore = defineStore('sound', () => {
     }
 
   const virusSound = new Howl({
-    src: ['/sounds/virus.wav'],
+    src: [getAssetPath('sounds/virus.wav')],
     volume: 1,
     onload: function() {
       console.log('Virus sound loaded successfully');
