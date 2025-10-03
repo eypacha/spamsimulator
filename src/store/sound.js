@@ -1,9 +1,18 @@
 import { defineStore } from 'pinia';
 import { Howl, Howler } from 'howler';
+import { ref, watch } from 'vue';
 
 export const useSoundStore = defineStore('sound', () => {
+  // Estado para activar/desactivar efectos de sonido
+  const soundEnabled = ref(localStorage.getItem('soundEnabled') !== 'false');
+
+  // Guardar preferencia en localStorage cuando cambie
+  watch(soundEnabled, (newValue) => {
+    localStorage.setItem('soundEnabled', String(newValue));
+  });
+
   // Configurar Howler global
-  Howler.volume(0.9);
+  Howler.volume(0.5); // Volumen global al 50%
 
   const getAssetPath = (path) => {
     const base = import.meta.env.BASE_URL || '/';
@@ -63,33 +72,50 @@ export const useSoundStore = defineStore('sound', () => {
   });
   
   function playVirusSound() {
+    if (!soundEnabled.value) return;
     console.log('Playing virus sound...');
     virusSound.play();
   }
 
   // Funciones para reproducir sonidos
   function playNewEmail() {
+    if (!soundEnabled.value) return;
     newEmailSound.play();
   }
 
   function playDelete() {
+    if (!soundEnabled.value) return;
     deleteSound.play();
   }
 
   function playStar() {
+    if (!soundEnabled.value) return;
     starSound.play();
   }
 
   function playCoinSound() {
+    if (!soundEnabled.value) return;
     coinSound.play();
   }
 
   function playBuySound() {
+    if (!soundEnabled.value) return;
     buySound.play();
   }
 
   function playErrorSound() {
+    if (!soundEnabled.value) return;
     errorSound.play();
+  }
+
+  function playSendSound() {
+    if (!soundEnabled.value) return;
+    sendSound.play();
+  }
+
+  function playTrashSound() {
+    if (!soundEnabled.value) return;
+    trashSound.play();
   }
 
   // Función para cambiar volumen global
@@ -97,7 +123,13 @@ export const useSoundStore = defineStore('sound', () => {
     Howler.volume(volume);
   }
 
+  // Función para activar/desactivar sonidos
+  function toggleSound() {
+    soundEnabled.value = !soundEnabled.value;
+  }
+
   return {
+    soundEnabled,
     playNewEmail,
     playDelete,
     playStar,
@@ -107,6 +139,7 @@ export const useSoundStore = defineStore('sound', () => {
     setVolume,
     playTrashSound,
     playSendSound,
-    playVirusSound
+    playVirusSound,
+    toggleSound
   };
 });
