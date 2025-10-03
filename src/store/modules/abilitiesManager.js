@@ -34,6 +34,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const starredUnlocked = ref(loaded?.starredUnlocked ?? false);
   const starredUpgradeCost = ref(loaded?.starredUpgradeCost ?? 75);
 
+  // Virus Bomb - Habilidad de convertir emails legítimos en spam
+  const virusBombUnlocked = ref(loaded?.virusBombUnlocked ?? false);
+  const virusBombUpgradeCost = ref(loaded?.virusBombUpgradeCost ?? 250);
+  const virusBombCooldown = ref(loaded?.virusBombCooldown ?? 0);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -56,6 +61,74 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockStarred() {
     starredUnlocked.value = true;
+  }
+
+  function unlockVirusBomb() {
+    virusBombUnlocked.value = true;
+  }
+
+  // Reiniciar timers al cargar (para cooldowns guardados)
+  function initializeCooldowns() {
+    // Virus Bomb cooldown
+    if (virusBombCooldown.value > 0) {
+      const cdInterval = setInterval(() => {
+        virusBombCooldown.value--;
+        if (virusBombCooldown.value <= 0) {
+          clearInterval(cdInterval);
+          saveAllStats();
+        }
+      }, 1000);
+    }
+
+    // Spam Frenzy cooldown
+    if (spamFrenzyCooldown.value > 0) {
+      const cdInterval = setInterval(() => {
+        spamFrenzyCooldown.value--;
+        if (spamFrenzyCooldown.value <= 0) {
+          clearInterval(cdInterval);
+          saveAllStats();
+        }
+      }, 1000);
+    }
+
+    // Spam Frenzy active timer
+    if (spamFrenzyActive.value && spamFrenzyTime.value > 0) {
+      const interval = setInterval(() => {
+        spamFrenzyTime.value--;
+        if (spamFrenzyTime.value <= 0) {
+          spamFrenzyActive.value = false;
+          clearInterval(interval);
+          saveAllStats();
+        }
+      }, 1000);
+    }
+  }
+
+  // Inicializar cooldowns al cargar el módulo
+  initializeCooldowns();
+
+  function activateVirusBomb(convertEmailsCallback) {
+    if (!virusBombUnlocked.value || virusBombCooldown.value > 0) return false;
+    
+    // Ejecutar la conversión de emails (callback proporcionado por emailStore)
+    const converted = convertEmailsCallback();
+    
+    if (converted) {
+      virusBombCooldown.value = 90; // Cooldown de 90 segundos
+
+      // Timer para el cooldown
+      const cdInterval = setInterval(() => {
+        virusBombCooldown.value--;
+        if (virusBombCooldown.value <= 0) {
+          clearInterval(cdInterval);
+        }
+      }, 1000);
+
+      saveAllStats();
+      return true;
+    }
+    
+    return false;
   }
 
   function activateSpamFrenzy() {
@@ -118,6 +191,13 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Starred
     starredUnlocked,
     starredUpgradeCost,
-    unlockStarred
+    unlockStarred,
+    
+    // Virus Bomb
+    virusBombUnlocked,
+    virusBombUpgradeCost,
+    virusBombCooldown,
+    unlockVirusBomb,
+    activateVirusBomb
   };
 }

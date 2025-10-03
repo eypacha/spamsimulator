@@ -20,6 +20,15 @@
           Spam Frenzy
           <span v-if="statsStore.spamFrenzyCooldown > 0"> ({{ statsStore.spamFrenzyCooldown }})</span>
         </button>
+        <button
+          v-if="statsStore.virusBombUnlocked"
+          @click="handleVirusBomb"
+          :disabled="statsStore.virusBombCooldown > 0"
+          class="px-4 py-2 rounded bg-purple-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-purple-700"
+        >
+          💣 Virus Bomb
+          <span v-if="statsStore.virusBombCooldown > 0"> ({{ statsStore.virusBombCooldown }})</span>
+        </button>
       </div>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
@@ -121,5 +130,10 @@ function deleteSelected() {
 
 function selectFirstThree() {
   selectedEmails.value = visibleEmails.value.slice(0, statsStore.maxSelectable).map(e => e.id);
+}
+
+function handleVirusBomb() {
+  // Ejecutar el Virus Bomb, pasando la función de conversión del emailStore
+  statsStore.activateVirusBomb(() => emailStore.convertLegitimateToSpam());
 }
 </script>

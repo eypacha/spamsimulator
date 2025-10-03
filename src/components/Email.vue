@@ -1,7 +1,7 @@
 <template>
   <li :class="[
-    'flex items-center px-6 py-2 cursor-pointer transition',
-    email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'
+    'flex items-center px-6 py-2 cursor-pointer transition-all duration-300',
+    email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100')
   ]" @click="$emit('open')">
     <input type="checkbox" :checked="modelValue.includes(email.id)" :value="email.id" @click.stop @change="onChange" class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
     <span v-if="statsStore.starredUnlocked" class="mr-2 cursor-pointer" @click.stop="toggleStar">

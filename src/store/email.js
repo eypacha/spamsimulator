@@ -129,5 +129,43 @@ export const useEmailStore = defineStore('email', () => {
   watch(emails, saveEmails, { deep: true });
   }
 
-  return { emails, time, inboxFull, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop };
+  function convertLegitimateToSpam() {
+    // Encontrar emails legítimos (no spam) que no estén en la papelera
+    const legitimateEmails = emails.value.filter(e => !e.isSpam && !e.trash);
+    
+    if (legitimateEmails.length === 0) {
+      // No hay ningún email legítimo para convertir
+      return false;
+    }
+
+    // Seleccionar hasta 5 emails aleatorios (o todos los disponibles si son menos)
+    const shuffled = [...legitimateEmails].sort(() => Math.random() - 0.5);
+    const toConvert = shuffled.slice(0, Math.min(5, legitimateEmails.length));
+
+    // Reproducir sonido de virus inmediatamente
+    soundStore.playVirusSound();
+
+    // Convertir a spam con delays progresivos (efecto de infección)
+    toConvert.forEach((email, index) => {
+      setTimeout(() => {
+        email.isSpam = true;
+        email.virusFlash = true; // Agregar flag temporal para el flash
+        // Opcionalmente cambiar el tipo a algo genérico de spam
+        if (!email.type || email.type === 'girlfriend' || email.type === 'work') {
+          email.type = 'spam';
+        }
+        saveEmails();
+        
+        // Remover el flash después de 800ms
+        setTimeout(() => {
+          email.virusFlash = false;
+          saveEmails();
+        }, 800);
+      }, index * 300); // 300ms entre cada conversión
+    });
+
+    return true;
+  }
+
+  return { emails, time, inboxFull, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop, convertLegitimateToSpam };
 });

@@ -43,6 +43,25 @@ export const useSoundStore = defineStore('sound', () => {
       trashSound.play();
     }
 
+  const virusSound = new Howl({
+    src: ['/sounds/virus.wav'],
+    volume: 1,
+    onload: function() {
+      console.log('Virus sound loaded successfully');
+    },
+    onloaderror: function(id, error) {
+      console.error('Error loading virus sound:', error);
+    },
+    onplayerror: function(id, error) {
+      console.error('Error playing virus sound:', error);
+    }
+  });
+  
+  function playVirusSound() {
+    console.log('Playing virus sound...');
+    virusSound.play();
+  }
+
   // Funciones para reproducir sonidos
   function playNewEmail() {
     newEmailSound.play();
@@ -81,7 +100,8 @@ export const useSoundStore = defineStore('sound', () => {
     playBuySound,
     playErrorSound,
     setVolume,
-  playTrashSound,
-  playSendSound
+    playTrashSound,
+    playSendSound,
+    playVirusSound
   };
 });

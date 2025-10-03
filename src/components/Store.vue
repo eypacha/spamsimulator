@@ -156,5 +156,16 @@ const cards = computed(() => [
     disabled: statsStore.score < statsStore.spamFrenzyUpgradeCost || statsStore.spamFrenzyUnlocked,
     rounded: true,
   },
+  {
+    title: 'Virus Bomb',
+    description: '💣 Convierte 5 emails legítimos en spam. Cooldown: 90s.',
+    details: [
+      statsStore.virusBombUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.virusBombUpgradeCost} 🪙`,
+      statsStore.virusBombUnlocked ? 'Habilidad activa' : 'Más puntos, más caos'
+    ],
+    onClick: () => statsStore.buyVirusBombUpgrade(),
+    disabled: statsStore.score < statsStore.virusBombUpgradeCost || statsStore.virusBombUnlocked,
+    rounded: true,
+  },
 ]);
 </script>
