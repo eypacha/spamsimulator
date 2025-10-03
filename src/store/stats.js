@@ -83,7 +83,10 @@ export const useStatsStore = defineStore('stats', () => {
       // Virus Bomb
       virusBombUnlocked: abilitiesManager.virusBombUnlocked.value,
       virusBombUpgradeCost: abilitiesManager.virusBombUpgradeCost.value,
-      virusBombCooldown: abilitiesManager.virusBombCooldown.value
+      virusBombCooldown: abilitiesManager.virusBombCooldown.value,
+      // Group Select
+      groupSelectUnlocked: abilitiesManager.groupSelectUnlocked.value,
+      groupSelectUpgradeCost: abilitiesManager.groupSelectUpgradeCost.value
     });
   }
 
@@ -109,7 +112,9 @@ export const useStatsStore = defineStore('stats', () => {
     virusBombUnlocked,
     virusBombUpgradeCost,
     virusBombCooldown,
-    activateVirusBomb
+    activateVirusBomb,
+    groupSelectUnlocked,
+    groupSelectUpgradeCost
   } = abilitiesManager;
 
   function buySpaceBarUpgrade() {
@@ -139,6 +144,11 @@ export const useStatsStore = defineStore('stats', () => {
   function buyVirusBombUpgrade() {
     buyUpgradeHandler(virusBombUpgradeCost, abilitiesManager.unlockVirusBomb, 1.5, !virusBombUnlocked.value);
   }
+
+  function buyGroupSelectUpgrade() {
+    buyUpgradeHandler(groupSelectUpgradeCost, abilitiesManager.unlockGroupSelect, 1.5, !groupSelectUnlocked.value);
+  }
+
   // Combo upgrade - usando comboManager
   const comboManager = createComboManager(loaded, saveAllStats);
   const { comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, updateCombo } = comboManager;
@@ -278,6 +288,8 @@ export const useStatsStore = defineStore('stats', () => {
     // Starred Upgrade
     starredUnlocked, starredUpgradeCost, buyStarredUpgrade,
     // Virus Bomb Upgrade
-    virusBombUnlocked, virusBombUpgradeCost, virusBombCooldown, activateVirusBomb, buyVirusBombUpgrade
+    virusBombUnlocked, virusBombUpgradeCost, virusBombCooldown, activateVirusBomb, buyVirusBombUpgrade,
+    // Group Select Upgrade
+    groupSelectUnlocked, groupSelectUpgradeCost, buyGroupSelectUpgrade
   };
 });

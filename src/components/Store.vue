@@ -158,13 +158,24 @@ const cards = computed(() => [
   },
   {
     title: 'Virus Bomb',
-    description: '💣 Convierte 5 emails legítimos en spam. Cooldown: 90s.',
+    description: '💣 Convierte 5 emails legítimos en spam. Cooldown: 60s.',
     details: [
       statsStore.virusBombUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.virusBombUpgradeCost} 🪙`,
       statsStore.virusBombUnlocked ? 'Habilidad activa' : 'Más puntos, más caos'
     ],
     onClick: () => statsStore.buyVirusBombUpgrade(),
     disabled: statsStore.score < statsStore.virusBombUpgradeCost || statsStore.virusBombUnlocked,
+    rounded: true,
+  },
+  {
+    title: 'Selección Grupal',
+    description: '📦 Al seleccionar un email, selecciona todo el grupo consecutivo del mismo tipo (SPAM/NO SPAM).',
+    details: [
+      statsStore.groupSelectUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.groupSelectUpgradeCost} 🪙`,
+      statsStore.groupSelectUnlocked ? 'Grupos activados' : 'Selecciona por grupos'
+    ],
+    onClick: () => statsStore.buyGroupSelectUpgrade(),
+    disabled: statsStore.score < statsStore.groupSelectUpgradeCost || statsStore.groupSelectUnlocked,
     rounded: true,
   },
 ]);

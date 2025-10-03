@@ -39,6 +39,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const virusBombUpgradeCost = ref(loaded?.virusBombUpgradeCost ?? 250);
   const virusBombCooldown = ref(loaded?.virusBombCooldown ?? 0);
 
+  // Group Select - Selecciona grupos consecutivos del mismo tipo
+  const groupSelectUnlocked = ref(loaded?.groupSelectUnlocked ?? false);
+  const groupSelectUpgradeCost = ref(loaded?.groupSelectUpgradeCost ?? 150);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -65,6 +69,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockVirusBomb() {
     virusBombUnlocked.value = true;
+  }
+
+  function unlockGroupSelect() {
+    groupSelectUnlocked.value = true;
   }
 
   // Reiniciar timers al cargar (para cooldowns guardados)
@@ -114,7 +122,7 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     const converted = convertEmailsCallback();
     
     if (converted) {
-      virusBombCooldown.value = 90; // Cooldown de 90 segundos
+      virusBombCooldown.value = 60; // Cooldown de 60 segundos
 
       // Timer para el cooldown
       const cdInterval = setInterval(() => {
@@ -135,8 +143,8 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     if (!spamFrenzyUnlocked.value || spamFrenzyActive.value || spamFrenzyCooldown.value > 0) return;
     
     spamFrenzyActive.value = true;
-    spamFrenzyTime.value = 3;
-    spamFrenzyCooldown.value = 60; // Cooldown de 60 segundos
+    spamFrenzyTime.value = 5;
+    spamFrenzyCooldown.value = 30;
 
     // Timer para el efecto (duración de 3 segundos)
     const interval = setInterval(() => {
@@ -198,6 +206,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     virusBombUpgradeCost,
     virusBombCooldown,
     unlockVirusBomb,
-    activateVirusBomb
+    activateVirusBomb,
+    
+    // Group Select
+    groupSelectUnlocked,
+    groupSelectUpgradeCost,
+    unlockGroupSelect
   };
 }

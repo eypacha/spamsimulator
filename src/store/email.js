@@ -140,7 +140,7 @@ export const useEmailStore = defineStore('email', () => {
 
     // Seleccionar hasta 5 emails aleatorios (o todos los disponibles si son menos)
     const shuffled = [...legitimateEmails].sort(() => Math.random() - 0.5);
-    const toReplace = shuffled.slice(0, Math.min(5, legitimateEmails.length));
+    const toReplace = shuffled.slice(0, Math.min(7, legitimateEmails.length));
 
     // Obtener emails de spam de la lista de constantes
     const spamEmails = EMAILS.filter(e => e.isSpam);

@@ -23,8 +23,10 @@ import { defineProps, defineEmits, computed } from 'vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { formatDate } from '@/utils/date';
 import { useStatsStore } from '../store/stats.js';
+import { useEmailStore } from '../store/email.js';
 
 const statsStore = useStatsStore();
+const emailStore = useEmailStore();
 
 const props = defineProps({
   email: Object,
@@ -33,7 +35,7 @@ const props = defineProps({
     default: () => []
   }
 });
-const emit = defineEmits(['update:modelValue', 'update:starred']);
+const emit = defineEmits(['update:modelValue', 'update:starred', 'open']);
 
 // Solo mostrar el color rojo si el detector está desbloqueado Y es spam
 const shouldShowSpamColor = computed(() => {
@@ -44,12 +46,57 @@ function onChange(event) {
   const checked = event.target.checked;
   const value = props.email.id;
   let newValue = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
+  
   if (checked) {
-    if (!newValue.includes(value)) newValue.push(value);
+    // Si Group Select está desbloqueado, seleccionar todo el grupo
+    if (statsStore.groupSelectUnlocked) {
+      const groupEmails = getEmailGroup(value);
+      groupEmails.forEach(id => {
+        if (!newValue.includes(id)) newValue.push(id);
+      });
+    } else {
+      // Comportamiento normal
+      if (!newValue.includes(value)) newValue.push(value);
+    }
   } else {
+    // Al deseleccionar, siempre eliminar solo el email individual
     newValue = newValue.filter(id => id !== value);
   }
+  
   emit('update:modelValue', newValue);
+}
+
+function getEmailGroup(emailId) {
+  // Obtener todos los emails visibles
+  const visibleEmails = emailStore.emails.filter(e => !e.trash).reverse();
+  
+  // Encontrar el índice del email actual
+  const index = visibleEmails.findIndex(e => e.id === emailId);
+  if (index === -1) return [emailId];
+  
+  const currentEmail = visibleEmails[index];
+  const isSpam = currentEmail.isSpam;
+  const group = [emailId];
+  
+  // Buscar hacia arriba (emails anteriores)
+  for (let i = index - 1; i >= 0; i--) {
+    if (visibleEmails[i].isSpam === isSpam) {
+      group.unshift(visibleEmails[i].id);
+    } else {
+      break;
+    }
+  }
+  
+  // Buscar hacia abajo (emails siguientes)
+  for (let i = index + 1; i < visibleEmails.length; i++) {
+    if (visibleEmails[i].isSpam === isSpam) {
+      group.push(visibleEmails[i].id);
+    } else {
+      break;
+    }
+  }
+  
+  return group;
 }
 
 
