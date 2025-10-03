@@ -17,10 +17,7 @@ export function createComboManager(loaded, saveAllStats) {
     
     if (success) {
       comboCount.value++;
-      if (comboCount.value >= 100) comboMultiplier.value = 50;
-      else if (comboCount.value >= 50) comboMultiplier.value = 20;
-      else if (comboCount.value >= 30) comboMultiplier.value = 10;
-      else if (comboCount.value >= 20) comboMultiplier.value = 5;
+      if (comboCount.value >= 20) comboMultiplier.value = 5;
       else if (comboCount.value >= 10) comboMultiplier.value = 3;
       else if (comboCount.value >= 5) comboMultiplier.value = 2;
       else comboMultiplier.value = 1;
