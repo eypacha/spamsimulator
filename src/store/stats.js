@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { useSoundStore } from './sound.js';
 import { formatStorage } from '../utils/storage.js';
 import { loadStats, saveStats } from '../utils/statsStorage.js';
+import { createUpgradeHandler } from './modules/upgradeManager.js';
 import {
   EMAIL_SIZE_KB,
   TURBO_MIN_INTERVAL,
@@ -69,12 +70,9 @@ export const useStatsStore = defineStore('stats', () => {
   const spaceBarUpgradeCost = ref(loaded?.spaceBarUpgradeCost ?? 50);
 
   function buySpaceBarUpgrade() {
-    if (score.value >= spaceBarUpgradeCost.value && !spaceBarUnlocked.value) {
-      score.value -= spaceBarUpgradeCost.value;
+    buyUpgradeHandler(spaceBarUpgradeCost, () => {
       spaceBarUnlocked.value = true;
-      saveAllStats();
-      useSoundStore().playBuySound();
-    }
+    }, 1.5, !spaceBarUnlocked.value);
   }
   // Cooldown para Spam Frenzy
   // Spam Frenzy upgrade
@@ -85,13 +83,9 @@ export const useStatsStore = defineStore('stats', () => {
   const spamFrenzyTime = ref(loaded?.spamFrenzyTime ?? 0); // segundos restantes
 
   function buySpamFrenzyUpgrade() {
-    if (score.value >= spamFrenzyUpgradeCost.value && !spamFrenzyUnlocked.value) {
-      score.value -= spamFrenzyUpgradeCost.value;
+    buyUpgradeHandler(spamFrenzyUpgradeCost, () => {
       spamFrenzyUnlocked.value = true;
-      saveAllStats();
-      const soundStore = useSoundStore();
-      soundStore.playBuySound();
-    }
+    }, 1.5, !spamFrenzyUnlocked.value);
   }
 
   function activateSpamFrenzy() {
@@ -124,15 +118,11 @@ export const useStatsStore = defineStore('stats', () => {
   const comboCount = ref(loaded?.comboCount ?? 0); // para llevar el conteo
 
   function buyComboUpgrade() {
-    if (score.value >= comboUpgradeCost.value && !comboUnlocked.value) {
-      score.value -= comboUpgradeCost.value;
+    buyUpgradeHandler(comboUpgradeCost, () => {
       comboUnlocked.value = true;
       comboMultiplier.value = 1;
       comboCount.value = 0;
-      saveAllStats();
-      const soundStore = useSoundStore();
-      soundStore.playBuySound();
-    }
+    }, 1.5, !comboUnlocked.value);
   }
 
   function updateCombo(success) {
@@ -151,6 +141,8 @@ export const useStatsStore = defineStore('stats', () => {
   }
   // const loaded = loadStats(); // Already declared at the top
   const score = ref(loaded?.score ?? 0);
+  const soundStore = useSoundStore();
+  const buyUpgradeHandler = createUpgradeHandler(score, saveAllStats, soundStore);
   const level = ref(loaded?.level ?? 1); // Maybe keep level for display, but not auto
   const pointsPerSpam = ref(loaded?.pointsPerSpam ?? 1);
   const totalSpamDeleted = ref(loaded?.totalSpamDeleted ?? 0);
@@ -181,15 +173,10 @@ export const useStatsStore = defineStore('stats', () => {
   const turboSpamInterval = ref(loadedTurboInterval);
   const turboSpamUpgradeCost = ref(loadedTurboCost);
   function buyTurboSpamUpgrade() {
-    if (score.value >= turboSpamUpgradeCost.value && turboSpamInterval.value > TURBO_MIN_INTERVAL) {
-      score.value -= turboSpamUpgradeCost.value;
+    buyUpgradeHandler(turboSpamUpgradeCost, () => {
       turboSpamLevel.value += 1;
       turboSpamInterval.value = Math.max(TURBO_MIN_INTERVAL, Math.floor(turboSpamInterval.value * TURBO_DECREASE));
-      turboSpamUpgradeCost.value = Math.floor(turboSpamUpgradeCost.value * 1.7);
-      saveAllStats();
-      const soundStore = useSoundStore();
-      soundStore.playBuySound();
-    }
+    }, 1.7, turboSpamInterval.value > TURBO_MIN_INTERVAL);
   }
   let soundTimeout = null;
 
@@ -236,48 +223,19 @@ export const useStatsStore = defineStore('stats', () => {
   }
 
   function buyUpgrade() {
-    if (score.value >= upgradeCost.value) {
-      score.value -= upgradeCost.value;
-      pointsPerSpam.value += 1;
-      upgradeCost.value = Math.floor(upgradeCost.value * 1.5); // Increase cost
-      saveAllStats();
-      const soundStore = useSoundStore();
-      soundStore.playBuySound();
-    }
+    buyUpgradeHandler(upgradeCost, () => pointsPerSpam.value += 1);
   }
 
   function buyTrashUpgrade() {
-    if (score.value >= trashUpgradeCost.value) {
-      score.value -= trashUpgradeCost.value;
-      maxTrash.value += 5;
-      trashUpgradeCost.value = Math.floor(trashUpgradeCost.value * 1.5);
-      saveAllStats();
-      const soundStore = useSoundStore();
-      soundStore.playBuySound();
-    }
+    buyUpgradeHandler(trashUpgradeCost, () => maxTrash.value += 5);
   }
 
   function buyInboxUpgrade() {
-    if (score.value >= inboxUpgradeCost.value) {
-      score.value -= inboxUpgradeCost.value;
-      maxInbox.value += 10;
-      inboxUpgradeCost.value = Math.floor(inboxUpgradeCost.value * 1.5);
-      saveAllStats();
-      const soundStore = useSoundStore();
-      soundStore.playBuySound();
-    }
+    buyUpgradeHandler(inboxUpgradeCost, () => maxInbox.value += 10);
   }
 
   function buySelectionUpgrade() {
-    if (score.value >= selectionUpgradeCost.value) {
-      score.value -= selectionUpgradeCost.value;
-      maxSelectable.value += 1;
-      // Hacer el upgrade más caro (multiplicador mayor)
-      selectionUpgradeCost.value = Math.floor(selectionUpgradeCost.value * 2);
-      saveAllStats();
-      const soundStore = useSoundStore();
-      soundStore.playBuySound();
-    }
+    buyUpgradeHandler(selectionUpgradeCost, () => maxSelectable.value += 1, 2);
   }
 
   function getSpaceString(emailCount, sizeKB = EMAIL_SIZE_KB) {
