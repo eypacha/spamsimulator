@@ -5,6 +5,8 @@ import { formatStorage } from '../utils/storage.js';
 import { loadStats, saveStats } from '../utils/statsStorage.js';
 import { createUpgradeHandler } from './modules/upgradeManager.js';
 import { createComboManager } from './modules/comboManager.js';
+import { createAbilitiesManager } from './modules/abilitiesManager.js';
+import { createStatsTracker } from './modules/statsTracker.js';
 import {
   EMAIL_SIZE_KB,
   TURBO_MIN_INTERVAL,
@@ -38,14 +40,14 @@ export const useStatsStore = defineStore('stats', () => {
       maxTrash: maxTrash.value,
       maxInbox: maxInbox.value,
       maxSelectable: maxSelectable.value,
-      totalCoinsEarned: totalCoinsEarned.value,
-      totalSpamDeleted: totalSpamDeleted.value,
-      totalEmailsRead: totalEmailsRead.value,
-      totalGirlfriendEmailsRead: totalGirlfriendEmailsRead.value,
-      totalNigerianPrinceDeleted: totalNigerianPrinceDeleted.value,
-      totalEmailsSent: totalEmailsSent.value,
-      currentStreak: currentStreak.value,
-      maxStreak: maxStreak.value,
+      totalCoinsEarned: statsTracker.totalCoinsEarned.value,
+      totalSpamDeleted: statsTracker.totalSpamDeleted.value,
+      totalEmailsRead: statsTracker.totalEmailsRead.value,
+      totalGirlfriendEmailsRead: statsTracker.totalGirlfriendEmailsRead.value,
+      totalNigerianPrinceDeleted: statsTracker.totalNigerianPrinceDeleted.value,
+      totalEmailsSent: statsTracker.totalEmailsSent.value,
+      currentStreak: statsTracker.currentStreak.value,
+      maxStreak: statsTracker.maxStreak.value,
       turboSpamLevel: turboSpamLevel.value,
       turboSpamInterval: turboSpamInterval.value,
       turboSpamUpgradeCost: turboSpamUpgradeCost.value,
@@ -55,62 +57,36 @@ export const useStatsStore = defineStore('stats', () => {
       comboMultiplier: comboMultiplier.value,
       comboCount: comboCount.value,
       // Spam Frenzy
-      spamFrenzyUnlocked: spamFrenzyUnlocked.value,
-      spamFrenzyUpgradeCost: spamFrenzyUpgradeCost.value,
-      spamFrenzyCooldown: spamFrenzyCooldown.value,
-      spamFrenzyActive: spamFrenzyActive.value,
-      spamFrenzyTime: spamFrenzyTime.value,
+      spamFrenzyUnlocked: abilitiesManager.spamFrenzyUnlocked.value,
+      spamFrenzyUpgradeCost: abilitiesManager.spamFrenzyUpgradeCost.value,
+      spamFrenzyCooldown: abilitiesManager.spamFrenzyCooldown.value,
+      spamFrenzyActive: abilitiesManager.spamFrenzyActive.value,
+      spamFrenzyTime: abilitiesManager.spamFrenzyTime.value,
       // Space Bar
-      spaceBarUnlocked: spaceBarUnlocked.value,
-      spaceBarUpgradeCost: spaceBarUpgradeCost.value
+      spaceBarUnlocked: abilitiesManager.spaceBarUnlocked.value,
+      spaceBarUpgradeCost: abilitiesManager.spaceBarUpgradeCost.value
     });
   }
 
-    // Upgrade para barra de espacio en la bandeja de entrada
-  const spaceBarUnlocked = ref(loaded?.spaceBarUnlocked ?? false);
-  const spaceBarUpgradeCost = ref(loaded?.spaceBarUpgradeCost ?? 50);
+  // Abilities Manager - maneja habilidades especiales (SpamFrenzy y SpaceBar)
+  const abilitiesManager = createAbilitiesManager(loaded, saveAllStats);
+  const { 
+    spamFrenzyUnlocked, 
+    spamFrenzyUpgradeCost, 
+    spamFrenzyCooldown, 
+    spamFrenzyActive, 
+    spamFrenzyTime,
+    activateSpamFrenzy,
+    spaceBarUnlocked,
+    spaceBarUpgradeCost
+  } = abilitiesManager;
 
   function buySpaceBarUpgrade() {
-    buyUpgradeHandler(spaceBarUpgradeCost, () => {
-      spaceBarUnlocked.value = true;
-    }, 1.5, !spaceBarUnlocked.value);
+    buyUpgradeHandler(spaceBarUpgradeCost, abilitiesManager.unlockSpaceBar, 1.5, !spaceBarUnlocked.value);
   }
-  // Cooldown para Spam Frenzy
-  // Spam Frenzy upgrade
-  const spamFrenzyUnlocked = ref(loaded?.spamFrenzyUnlocked ?? false);
-  const spamFrenzyUpgradeCost = ref(loaded?.spamFrenzyUpgradeCost ?? 200);
-  const spamFrenzyCooldown = ref(loaded?.spamFrenzyCooldown ?? 0); // segundos restantes de cooldown
-  const spamFrenzyActive = ref(loaded?.spamFrenzyActive ?? false);
-  const spamFrenzyTime = ref(loaded?.spamFrenzyTime ?? 0); // segundos restantes
 
   function buySpamFrenzyUpgrade() {
-    buyUpgradeHandler(spamFrenzyUpgradeCost, () => {
-      spamFrenzyUnlocked.value = true;
-    }, 1.5, !spamFrenzyUnlocked.value);
-  }
-
-  function activateSpamFrenzy() {
-    if (!spamFrenzyUnlocked.value || spamFrenzyActive.value || spamFrenzyCooldown.value > 0) return;
-    spamFrenzyActive.value = true;
-    spamFrenzyTime.value = 3;
-    // Cooldown de 60 segundos
-    spamFrenzyCooldown.value = 60;
-    // Timer para el efecto
-    const interval = setInterval(() => {
-      spamFrenzyTime.value--;
-      if (spamFrenzyTime.value <= 0) {
-        spamFrenzyActive.value = false;
-        clearInterval(interval);
-      }
-    }, 1000);
-    // Timer para el cooldown
-    const cdInterval = setInterval(() => {
-      spamFrenzyCooldown.value--;
-      if (spamFrenzyCooldown.value <= 0) {
-        clearInterval(cdInterval);
-      }
-    }, 1000);
-    saveAllStats();
+    buyUpgradeHandler(spamFrenzyUpgradeCost, abilitiesManager.unlockSpamFrenzy, 1.5, !spamFrenzyUnlocked.value);
   }
   // Combo upgrade - usando comboManager
   const comboManager = createComboManager(loaded, saveAllStats);
@@ -119,24 +95,27 @@ export const useStatsStore = defineStore('stats', () => {
   function buyComboUpgrade() {
     buyUpgradeHandler(comboUpgradeCost, comboManager.resetCombo, 1.5, !comboUnlocked.value);
   }
+  // Stats Tracker - maneja estadísticas y eventos del juego
+  const statsTracker = createStatsTracker(loaded, saveAllStats);
+  const {
+    totalSpamDeleted,
+    totalEmailsRead,
+    totalGirlfriendEmailsRead,
+    totalNigerianPrinceDeleted,
+    totalCoinsEarned,
+    totalEmailsSent,
+    currentStreak,
+    maxStreak,
+    recordEmailSent,
+    markEmailAsRead
+  } = statsTracker;
+
   // const loaded = loadStats(); // Already declared at the top
   const score = ref(loaded?.score ?? 0);
   const soundStore = useSoundStore();
   const buyUpgradeHandler = createUpgradeHandler(score, saveAllStats, soundStore);
   const level = ref(loaded?.level ?? 1); // Maybe keep level for display, but not auto
   const pointsPerSpam = ref(loaded?.pointsPerSpam ?? 1);
-  const totalSpamDeleted = ref(loaded?.totalSpamDeleted ?? 0);
-  const totalEmailsRead = ref(loaded?.totalEmailsRead ?? 0);
-  const totalGirlfriendEmailsRead = ref(loaded?.totalGirlfriendEmailsRead ?? 0);
-  const totalNigerianPrinceDeleted = ref(loaded?.totalNigerianPrinceDeleted ?? 0);
-  const totalCoinsEarned = ref(loaded?.totalCoinsEarned ?? 0);
-  const totalEmailsSent = ref(loaded?.totalEmailsSent ?? 0);
-  function recordEmailSent() {
-    totalEmailsSent.value += 1;
-    saveAllStats();
-  }
-  const currentStreak = ref(loaded?.currentStreak ?? 0);
-  const maxStreak = ref(loaded?.maxStreak ?? 0);
   const upgradeCost = ref(loaded?.upgradeCost ?? UPGRADE_COST);
   const trashUpgradeCost = ref(loaded?.trashUpgradeCost ?? TRASH_UPGRADE_COST);
   const inboxUpgradeCost = ref(loaded?.inboxUpgradeCost ?? INBOX_UPGRADE_COST);
@@ -166,8 +145,8 @@ export const useStatsStore = defineStore('stats', () => {
       realPoints = points * comboMultiplier.value;
     }
     score.value += realPoints;
-    totalCoinsEarned.value += realPoints;
-    totalSpamDeleted.value += 1;
+    statsTracker.incrementCoinsEarned(realPoints);
+    statsTracker.incrementSpamDeleted();
     saveAllStats();
     // Throttle sound to avoid multiple plays
     if (soundTimeout) clearTimeout(soundTimeout);
@@ -177,29 +156,18 @@ export const useStatsStore = defineStore('stats', () => {
     }, 100);
   }
 
-  function markEmailAsRead(email) {
-    totalEmailsRead.value += 1;
-    if (email.fromEmail === 'caririchardson@gmail.com') {
-      totalGirlfriendEmailsRead.value += 1;
-    }
-  }
-
   function recordCorrectDeletion() {
-    currentStreak.value += 1;
-    if (currentStreak.value > maxStreak.value) {
-      maxStreak.value = currentStreak.value;
-    }
+    statsTracker.recordCorrectDeletion();
     updateCombo(true);
   }
 
   function recordIncorrectDeletion() {
-    currentStreak.value = 0;
+    statsTracker.recordIncorrectDeletion();
     updateCombo(false);
   }
 
   function recordNigerianPrinceDeletion() {
-    totalNigerianPrinceDeleted.value += 1;
-    saveAllStats();
+    statsTracker.recordNigerianPrinceDeletion();
   }
 
   function buyUpgrade() {
@@ -226,13 +194,7 @@ export const useStatsStore = defineStore('stats', () => {
     score.value = 0;
     level.value = 1;
     pointsPerSpam.value = 1;
-    totalSpamDeleted.value = 0;
-    totalEmailsRead.value = 0;
-    totalGirlfriendEmailsRead.value = 0;
-    totalNigerianPrinceDeleted.value = 0;
-    totalCoinsEarned.value = 0;
-    currentStreak.value = 0;
-    maxStreak.value = 0;
+    statsTracker.resetStats();
     upgradeCost.value = UPGRADE_COST;
     trashUpgradeCost.value = TRASH_UPGRADE_COST;
     inboxUpgradeCost.value = INBOX_UPGRADE_COST;
