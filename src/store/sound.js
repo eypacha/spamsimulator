@@ -3,9 +3,8 @@ import { Howl, Howler } from 'howler';
 
 export const useSoundStore = defineStore('sound', () => {
   // Configurar Howler global
-  Howler.volume(0.9); // Volumen global al 50%
+  Howler.volume(0.9);
 
-  // Helper para construir rutas de assets considerando el BASE_URL
   const getAssetPath = (path) => {
     const base = import.meta.env.BASE_URL || '/';
     return base + path.replace(/^\//, '');
