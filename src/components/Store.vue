@@ -33,7 +33,7 @@ const statsStore = useStatsStore();
 const cards = computed(() => [
   {
     title: 'Dinero, dame dinero',
-    description: 'Aumenta los puntos lo que ganas por eliminar spam.',
+    description: '💰 Aumenta los puntos lo que ganas por eliminar spam.',
     details: [
       `Actual: ${statsStore.pointsPerSpam} puntos`,
       `Costo: ${statsStore.upgradeCost} 🪙`,
@@ -43,7 +43,7 @@ const cards = computed(() => [
   },
   {
     title: 'Basura espacial',
-    description: 'Aumenta el límite de emails en la papelera.',
+    description: '🗑️ Aumenta el límite de emails en la papelera.',
     details: [
       `Actual: ${statsStore.getSpaceString(statsStore.maxTrash, 3)}`,
       `Costo: ${statsStore.trashUpgradeCost} 🪙`,
@@ -53,7 +53,7 @@ const cards = computed(() => [
   },
   {
     title: 'Come disco',
-    description: 'Aumenta el límite de emails en la bandeja de entrada.',
+    description: '📥 Aumenta el límite de emails en la bandeja de entrada.',
     details: [
       `Actual: ${statsStore.getSpaceString(statsStore.maxInbox)}`,
       `Costo: ${statsStore.inboxUpgradeCost} 🪙`,
@@ -63,7 +63,7 @@ const cards = computed(() => [
   },
   {
     title: 'Selección múltiple',
-    description: 'Aumenta el número de emails que puedes seleccionar a la vez.',
+    description: '☑️ Aumenta el número de emails que puedes seleccionar a la vez.',
     details: [
       `Actual: ${statsStore.maxSelectable} emails`,
       `Costo: ${statsStore.selectionUpgradeCost} 🪙`,
@@ -74,7 +74,7 @@ const cards = computed(() => [
   },
   {
     title: 'Detector de Spam',
-    description: 'Marca visualmente los emails de spam en color rojo.',
+    description: '🔴 Marca visualmente los emails de spam en color rojo.',
     details: [
       statsStore.spamDetectorUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spamDetectorUpgradeCost} 🪙`,
       statsStore.spamDetectorUnlocked ? 'Los spam ahora se ven en rojo' : 'Todos los emails se ven iguales'
@@ -85,7 +85,7 @@ const cards = computed(() => [
   },
   {
     title: 'Redactar',
-    description: 'Desbloquea la capacidad de redactar y enviar emails.',
+    description: '✍️ Desbloquea la capacidad de redactar y enviar emails.',
     details: [
       statsStore.composeUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.composeUpgradeCost} 🪙`,
       statsStore.composeUnlocked ? 'Puedes enviar emails' : 'No puedes enviar emails'
@@ -96,7 +96,7 @@ const cards = computed(() => [
   },
   {
     title: 'Destacar',
-    description: 'Desbloquea la capacidad de marcar emails como destacados.',
+    description: '⭐ Desbloquea la capacidad de marcar emails como destacados.',
     details: [
       statsStore.starredUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.starredUpgradeCost} 🪙`,
       statsStore.starredUnlocked ? 'Puedes destacar emails' : 'No puedes destacar emails'
@@ -107,7 +107,7 @@ const cards = computed(() => [
   },
   {
     title: 'Barra de espacio',
-    description: 'Desbloquea la barra de progreso de espacio en la bandeja de entrada.',
+    description: '📊 Desbloquea la barra de progreso de espacio en la bandeja de entrada.',
     details: [
       statsStore.spaceBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spaceBarUpgradeCost} 🪙`,
     ],
@@ -117,7 +117,7 @@ const cards = computed(() => [
   },
   {
     title: 'Barra de papelera',
-    description: 'Desbloquea la barra de progreso de espacio en la papelera.',
+    description: '📊 Desbloquea la barra de progreso de espacio en la papelera.',
     details: [
       statsStore.trashBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.trashBarUpgradeCost} 🪙`,
     ],
@@ -127,7 +127,7 @@ const cards = computed(() => [
   },
   {
     title: 'TurboSpam',
-    description: 'Reduce el intervalo de llegada de emails un 10% (mínimo 1s).',
+    description: '⚡ Reduce el intervalo de llegada de emails un 10% (mínimo 1s).',
     details: [
       `Actual: ${(statsStore.turboSpamInterval / 1000).toFixed(2)} s`,
       `Costo: ${statsStore.turboSpamUpgradeCost} 🪙`,
@@ -137,7 +137,7 @@ const cards = computed(() => [
   },
   {
     title: 'Combos',
-    description: '¡Gana multiplicador de puntos por eliminar spam seguido!',
+    description: '🔥 ¡Gana multiplicador de puntos por eliminar spam seguido!',
     details: [
       `Combo actual: x${statsStore.comboMultiplier ?? 1}`,
       `Costo: ${statsStore.comboUpgradeCost} 🪙`,
@@ -148,7 +148,7 @@ const cards = computed(() => [
   },
   {
     title: 'Spam Frenzy',
-    description: 'Activa un modo especial donde el spam llega más rápido.',
+    description: '💥 Activa un modo especial donde el spam llega más rápido.',
     details: [
       statsStore.spamFrenzyUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spamFrenzyUpgradeCost} 🪙`,
     ],
