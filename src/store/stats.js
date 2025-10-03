@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { useSoundStore } from './sound.js';
 import { formatStorage } from '../utils/storage.js';
 import { loadStats, saveStats } from '../utils/statsStorage.js';
+import { calculatePointsPerSpamIncrement, calculateUpgradeCostMultiplier, calculateTrashCapacityIncrement, calculateInboxCapacityIncrement, calculateSelectionIncrement, calculateSelectionCostMultiplier } from '../utils/balancing.js';
 import { createUpgradeHandler } from './modules/upgradeManager.js';
 import { createComboManager } from './modules/comboManager.js';
 import { createAbilitiesManager } from './modules/abilitiesManager.js';
@@ -167,19 +168,25 @@ export const useStatsStore = defineStore('stats', () => {
   }
 
   function buyUpgrade() {
-    buyUpgradeHandler(upgradeCost, () => pointsPerSpam.value += 1);
+    const increment = calculatePointsPerSpamIncrement(pointsPerSpam.value);
+    const costMultiplier = calculateUpgradeCostMultiplier(pointsPerSpam.value);
+    buyUpgradeHandler(upgradeCost, () => pointsPerSpam.value += increment, costMultiplier);
   }
 
   function buyTrashUpgrade() {
-    buyUpgradeHandler(trashUpgradeCost, () => maxTrash.value += 5);
+    const increment = calculateTrashCapacityIncrement(maxTrash.value);
+    buyUpgradeHandler(trashUpgradeCost, () => maxTrash.value += increment);
   }
 
   function buyInboxUpgrade() {
-    buyUpgradeHandler(inboxUpgradeCost, () => maxInbox.value += 10);
+    const increment = calculateInboxCapacityIncrement(maxInbox.value);
+    buyUpgradeHandler(inboxUpgradeCost, () => maxInbox.value += increment);
   }
 
   function buySelectionUpgrade() {
-    buyUpgradeHandler(selectionUpgradeCost, () => maxSelectable.value += 1, 2);
+    const increment = calculateSelectionIncrement(maxSelectable.value);
+    const costMultiplier = calculateSelectionCostMultiplier(maxSelectable.value);
+    buyUpgradeHandler(selectionUpgradeCost, () => maxSelectable.value += increment, costMultiplier);
   }
 
   function getSpaceString(emailCount, sizeKB = EMAIL_SIZE_KB) {
