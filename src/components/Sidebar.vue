@@ -3,9 +3,9 @@
     <nav class="h-full flex flex-col py-6">
       <ul class="space-y-2">
         <li v-if="statsStore.composeUnlocked">
-          <button @click="$emit('openCompose')" class="w-full text-left px-6 py-3 transition hover:bg-gray-700 cursor-pointer">
-            ✍️ Redactar
-            <span v-if="statsStore.keyboardShortcutsUnlocked" class="text-xs text-gray-400 ml-1">(Shift+Q)</span>
+          <button @click="$emit('openCompose')" class="w-full text-left px-6 py-3 transition hover:bg-gray-700 cursor-pointer flex items-center justify-between">
+            <span>✍️ Redactar</span>
+            <span v-if="statsStore.keyboardShortcutsUnlocked" class="text-xs text-gray-400">(Shift+Q)</span>
           </button>
         </li>
         <li v-for="item in menuOptions" :key="item.key">
