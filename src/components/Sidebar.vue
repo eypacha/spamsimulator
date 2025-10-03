@@ -1,5 +1,5 @@
 <template>
-  <aside class="w-64 text-white flex-shrink-0 h-full">
+  <aside class="w-64 bg-gray-800 text-white flex-shrink-0 h-full">
     <nav class="h-full flex flex-col py-6">
       <ul class="space-y-2">
         <li>

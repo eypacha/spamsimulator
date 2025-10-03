@@ -23,7 +23,7 @@
           :selectedMenu="selectedMenu"
           @selectMenu="handleSelectMenu"
           @openCompose="showCompose = true"
-          class="z-50 h-full absolute top-0 left-0 transition-transform duration-300 bg-gray-800 pointer-events-auto"
+          class="z-50 h-full absolute top-0 left-0 transition-transform duration-300 pointer-events-auto"
           :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
         />
       </div>
