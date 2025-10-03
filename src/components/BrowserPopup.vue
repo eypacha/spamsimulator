@@ -76,10 +76,15 @@
 
 <script setup>
 import { ref, computed, watch, onUnmounted } from 'vue';
+import { useStatsStore } from '../store/stats.js';
+import { useEmailStore } from '../store/email.js';
 import PhishingPrize from './browser-templates/PhishingPrize.vue';
 import VirusWarning from './browser-templates/VirusWarning.vue';
 import FakeBank from './browser-templates/FakeBank.vue';
 import SurveyScam from './browser-templates/SurveyScam.vue';
+
+const statsStore = useStatsStore();
+const emailStore = useEmailStore();
 
 const props = defineProps({
   show: Boolean,
@@ -119,6 +124,26 @@ function getRandomPosition() {
 
 // Función para crear un popup adicional
 function createAdditionalPopup() {
+  // Penalización: descontar 50% de los puntos por spam (como monedas), mínimo 1
+  const penalty = Math.max(1, Math.floor(statsStore.pointsPerSpam / 2));
+  
+  // Restar monedas
+  if (statsStore.score >= penalty) {
+    statsStore.score -= penalty;
+  } else {
+    statsStore.score = 0;
+  }
+  
+  // Restar puntos (estrellitas)
+  if (statsStore.totalSpamDeleted >= penalty) {
+    statsStore.totalSpamDeleted -= penalty;
+  } else {
+    statsStore.totalSpamDeleted = 0;
+  }
+  
+  // Generar un nuevo email
+  emailStore.fetchEmail();
+  
   const newPopup = {
     template: templates[Math.floor(Math.random() * templates.length)],
     position: getRandomPosition(),
@@ -173,6 +198,26 @@ function closePopup() {
 // Countdown para páginas spam
 watch(() => props.show, (newVal) => {
   if (newVal) {
+    // Penalización del popup principal: descontar 50% de los puntos por spam (como monedas), mínimo 1
+    const penalty = Math.max(1, Math.floor(statsStore.pointsPerSpam / 2));
+    
+    // Restar monedas
+    if (statsStore.score >= penalty) {
+      statsStore.score -= penalty;
+    } else {
+      statsStore.score = 0;
+    }
+    
+    // Restar puntos (estrellitas)
+    if (statsStore.totalSpamDeleted >= penalty) {
+      statsStore.totalSpamDeleted -= penalty;
+    } else {
+      statsStore.totalSpamDeleted = 0;
+    }
+    
+    // Generar un nuevo email para el popup principal
+    emailStore.fetchEmail();
+    
     // Seleccionar un template aleatorio cada vez que se abre el popup
     currentTemplate.value = templates[Math.floor(Math.random() * templates.length)];
     
