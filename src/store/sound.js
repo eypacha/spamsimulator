@@ -11,8 +11,7 @@ export const useSoundStore = defineStore('sound', () => {
     localStorage.setItem('soundEnabled', String(newValue));
   });
 
-  // Configurar Howler global
-  Howler.volume(0.5); // Volumen global al 50%
+  Howler.volume(0.8);
 
   const getAssetPath = (path) => {
     const base = import.meta.env.BASE_URL || '/';
