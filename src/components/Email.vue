@@ -4,7 +4,7 @@
     email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'
   ]" @click="$emit('open')">
     <input type="checkbox" :checked="modelValue.includes(email.id)" :value="email.id" @click.stop @change="onChange" class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
-    <span class="mr-2 cursor-pointer" @click.stop="toggleStar">
+    <span v-if="statsStore.starredUnlocked" class="mr-2 cursor-pointer" @click.stop="toggleStar">
       <i :class="email.starred ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-400'" aria-label="Destacar"></i>
     </span>
     <span

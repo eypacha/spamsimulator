@@ -5,9 +5,16 @@
       <span class="text-sm text-gray-500">{{ starredEmails.length }} correos</span>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
-      <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
-        <Email v-for="email in starredEmails" :key="email.id" :email="email" @open="openEmail(email)" />
-      </ul>
+      <template v-if="starredEmails.length > 0">
+        <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
+          <Email v-for="email in starredEmails" :key="email.id" :email="email" @open="openEmail(email)" />
+        </ul>
+      </template>
+      <template v-else>
+        <div class="flex items-center justify-center h-full">
+          <div class="text-2xl text-gray-400 font-semibold text-center">¡No hay emails destacados!<br/>⭐ Marca algunos como favoritos</div>
+        </div>
+      </template>
     </div>
     <div v-else class="flex-1 overflow-y-auto">
       <button @click="selectedEmail = null" class="my-4 ml-6 px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">←</button>

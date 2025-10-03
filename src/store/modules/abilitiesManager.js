@@ -30,6 +30,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const composeUnlocked = ref(loaded?.composeUnlocked ?? false);
   const composeUpgradeCost = ref(loaded?.composeUpgradeCost ?? 100);
 
+  // Starred - Habilidad de destacar emails
+  const starredUnlocked = ref(loaded?.starredUnlocked ?? false);
+  const starredUpgradeCost = ref(loaded?.starredUpgradeCost ?? 75);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -48,6 +52,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockCompose() {
     composeUnlocked.value = true;
+  }
+
+  function unlockStarred() {
+    starredUnlocked.value = true;
   }
 
   function activateSpamFrenzy() {
@@ -105,6 +113,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Compose
     composeUnlocked,
     composeUpgradeCost,
-    unlockCompose
+    unlockCompose,
+    
+    // Starred
+    starredUnlocked,
+    starredUpgradeCost,
+    unlockStarred
   };
 }

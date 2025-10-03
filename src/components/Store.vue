@@ -95,6 +95,17 @@ const cards = computed(() => [
     rounded: true,
   },
   {
+    title: 'Destacar',
+    description: 'Desbloquea la capacidad de marcar emails como destacados.',
+    details: [
+      statsStore.starredUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.starredUpgradeCost} 🪙`,
+      statsStore.starredUnlocked ? 'Puedes destacar emails' : 'No puedes destacar emails'
+    ],
+    onClick: () => statsStore.buyStarredUpgrade(),
+    disabled: statsStore.score < statsStore.starredUpgradeCost || statsStore.starredUnlocked,
+    rounded: true,
+  },
+  {
     title: 'Barra de espacio',
     description: 'Desbloquea la barra de progreso de espacio en la bandeja de entrada.',
     details: [

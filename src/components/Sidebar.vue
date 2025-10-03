@@ -50,9 +50,9 @@ import { useEmailStore } from '../store/email.js';
 import { useStatsStore } from '../store/stats.js';
 
 // Opciones del menú (excepto Redactar)
-const menuOptions = [
+const allMenuOptions = [
   { key: 'inbox', icon: '📥', label: 'Recibidos' },
-  { key: 'starred', icon: '⭐', label: 'Destacados' },
+  { key: 'starred', icon: '⭐', label: 'Destacados', requiresUnlock: true },
   { key: 'trash', icon: '🗑️', label: 'Papelera' },
   { key: 'store', icon: '🛒', label: 'Tienda' },
   { key: 'achievements', icon: '🏆', label: 'Logros' },
@@ -66,6 +66,16 @@ const emit = defineEmits(['selectMenu']);
 
 const emailStore = useEmailStore();
 const statsStore = useStatsStore();
+
+// Filtrar opciones del menú según los unlocks
+const menuOptions = computed(() => {
+  return allMenuOptions.filter(item => {
+    if (item.requiresUnlock) {
+      return statsStore.starredUnlocked;
+    }
+    return true;
+  });
+});
 
 const visibleEmails = computed(() => emailStore.emails.filter(e => !e.trash));
 const trashedEmails = computed(() => emailStore.emails.filter(e => e.trash));
