@@ -140,27 +140,38 @@ export const useEmailStore = defineStore('email', () => {
 
     // Seleccionar hasta 5 emails aleatorios (o todos los disponibles si son menos)
     const shuffled = [...legitimateEmails].sort(() => Math.random() - 0.5);
-    const toConvert = shuffled.slice(0, Math.min(5, legitimateEmails.length));
+    const toReplace = shuffled.slice(0, Math.min(5, legitimateEmails.length));
+
+    // Obtener emails de spam de la lista de constantes
+    const spamEmails = EMAILS.filter(e => e.isSpam);
 
     // Reproducir sonido de virus inmediatamente
     soundStore.playVirusSound();
 
-    // Convertir a spam con delays progresivos (efecto de infección)
-    toConvert.forEach((email, index) => {
+    // Reemplazar emails con delays progresivos (efecto de infección)
+    toReplace.forEach((email, index) => {
       setTimeout(() => {
-        email.isSpam = true;
-        email.virusFlash = true; // Agregar flag temporal para el flash
-        // Opcionalmente cambiar el tipo a algo genérico de spam
-        if (!email.type || email.type === 'girlfriend' || email.type === 'work') {
-          email.type = 'spam';
-        }
+        // Seleccionar un email de spam aleatorio
+        const randomSpam = spamEmails[Math.floor(Math.random() * spamEmails.length)];
+        
+        // Marcar temporalmente para flash visual
+        email.virusFlash = true;
         saveEmails();
         
-        // Remover el flash después de 800ms
+        // Después de 400ms, reemplazar el contenido
         setTimeout(() => {
+          // Mantener el ID original pero reemplazar todo el contenido
+          email.subject = randomSpam.subject;
+          email.fromName = randomSpam.fromName;
+          email.fromEmail = randomSpam.fromEmail;
+          email.body = randomSpam.body;
+          email.isSpam = true;
+          email.type = randomSpam.type;
+          email.read = false; // Marcar como no leído
           email.virusFlash = false;
+          
           saveEmails();
-        }, 800);
+        }, 400);
       }, index * 300); // 300ms entre cada conversión
     });
 
