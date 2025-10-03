@@ -127,13 +127,13 @@ const cards = computed(() => [
   },
   {
     title: 'TurboSpam',
-    description: '⚡ Reduce el intervalo de llegada de emails un 10% (mínimo 1s).',
+    description: '⚡ Reduce el intervalo de llegada de emails un 10% (mínimo 0.5s).',
     details: [
       `Actual: ${(statsStore.turboSpamInterval / 1000).toFixed(2)} s`,
       `Costo: ${statsStore.turboSpamUpgradeCost} 🪙`,
     ],
     onClick: () => statsStore.buyTurboSpamUpgrade(),
-    disabled: statsStore.score < statsStore.turboSpamUpgradeCost || statsStore.turboSpamInterval <= 1000,
+    disabled: statsStore.score < statsStore.turboSpamUpgradeCost || statsStore.turboSpamInterval <= 500,
   },
   {
     title: 'Combos',

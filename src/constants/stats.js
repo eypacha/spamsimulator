@@ -4,7 +4,7 @@
 export const EMAIL_SIZE_KB = 5; // Simulated size per email
 
 // TurboSpam upgrade
-export const TURBO_MIN_INTERVAL = 1000; // ms, mínimo permitido
+export const TURBO_MIN_INTERVAL = 500; // ms, mínimo permitido (0.5s)
 export const TURBO_DEFAULT_INTERVAL = 3500; // ms, valor inicial
 export const TURBO_DEFAULT_COST = 100;
 export const TURBO_DECREASE = 0.9; // 10% menos por upgrade
