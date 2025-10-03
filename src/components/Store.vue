@@ -79,6 +79,17 @@ const cards = computed(() => [
     disabled: statsStore.score < statsStore.selectionUpgradeCost,
     rounded: true,
   },
+    {
+    title: 'Combos',
+    description: '¡Gana multiplicador de puntos por eliminar spam seguido!',
+    details: [
+      `Combo actual: x${statsStore.comboMultiplier ?? 1}`,
+      `Costo: ${statsStore.comboUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyComboUpgrade(),
+    disabled: statsStore.score < statsStore.comboUpgradeCost || statsStore.comboUnlocked,
+    rounded: true,
+  },
   {
     title: 'TurboSpam',
     description: 'Reduce el intervalo de llegada de emails un 10% (mínimo 1s).',

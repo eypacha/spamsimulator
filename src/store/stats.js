@@ -4,6 +4,38 @@ import { useSoundStore } from './sound.js';
 import { formatStorage } from '../utils/storage.js';
 
 export const useStatsStore = defineStore('stats', () => {
+  // Combo upgrade
+  const comboUnlocked = ref(false);
+  const comboUpgradeCost = ref(150);
+  const comboMultiplier = ref(1); // 1, 2, 3, 5
+  const comboCount = ref(0); // para llevar el conteo
+
+  function buyComboUpgrade() {
+    if (score.value >= comboUpgradeCost.value && !comboUnlocked.value) {
+      score.value -= comboUpgradeCost.value;
+      comboUnlocked.value = true;
+      comboMultiplier.value = 1;
+      comboCount.value = 0;
+      saveStats();
+      const soundStore = useSoundStore();
+      soundStore.playBuySound();
+    }
+  }
+
+  function updateCombo(success) {
+    if (!comboUnlocked.value) return;
+    if (success) {
+      comboCount.value++;
+      if (comboCount.value >= 20) comboMultiplier.value = 5;
+      else if (comboCount.value >= 10) comboMultiplier.value = 3;
+      else if (comboCount.value >= 5) comboMultiplier.value = 2;
+      else comboMultiplier.value = 1;
+    } else {
+      comboCount.value = 0;
+      comboMultiplier.value = 1;
+    }
+    saveStats();
+  }
   const STATS_STORAGE_KEY = 'spambot_stats';
 
   function loadStats() {
@@ -93,8 +125,12 @@ export const useStatsStore = defineStore('stats', () => {
   let soundTimeout = null;
 
   function addScore(points) {
-    score.value += points;
-    totalCoinsEarned.value += points;
+    let realPoints = points;
+    if (comboUnlocked.value) {
+      realPoints = points * comboMultiplier.value;
+    }
+    score.value += realPoints;
+    totalCoinsEarned.value += realPoints;
     totalSpamDeleted.value += 1;
     saveStats();
     // Throttle sound to avoid multiple plays
@@ -117,10 +153,12 @@ export const useStatsStore = defineStore('stats', () => {
     if (currentStreak.value > maxStreak.value) {
       maxStreak.value = currentStreak.value;
     }
+    updateCombo(true);
   }
 
   function recordIncorrectDeletion() {
     currentStreak.value = 0;
+    updateCombo(false);
   }
 
   function recordNigerianPrinceDeletion() {
@@ -200,10 +238,12 @@ export const useStatsStore = defineStore('stats', () => {
   watch([
     score, level, pointsPerSpam, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, totalCoinsEarned,
     totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, currentStreak, maxStreak,
-    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost
+    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost,
+    comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount
   ], saveStats);
 
   return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
-    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent
+    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
+    comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade
   };
 });

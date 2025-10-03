@@ -1,3 +1,4 @@
+/* Pulse más rápido para el multiplicador de combo */
 @import "tailwindcss";
 @import "./utilities.css";
 @import "./primevue.css";
@@ -17,4 +18,8 @@ body {
   font-optical-sizing: auto;
   font-style: normal;
   font-variation-settings: "wdth" 87.5;
+}
+
+.pulse-fast {
+  animation-duration: 0.5s !important;
 }
