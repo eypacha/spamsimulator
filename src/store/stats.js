@@ -107,7 +107,7 @@ export const useStatsStore = defineStore('stats', () => {
 
   function markEmailAsRead(email) {
     totalEmailsRead.value += 1;
-    if (email.fromEmail === 'carinovia@gmail.com') {
+    if (email.fromEmail === 'caririchardson@gmail.com') {
       totalGirlfriendEmailsRead.value += 1;
     }
   }

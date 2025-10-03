@@ -75,7 +75,14 @@ function confirmDeletePermanent(id) {
 }
 function doDeletePermanent() {
   const idx = emails.value.findIndex(e => e.id === pendingDeleteId);
-  if (idx !== -1) emails.value.splice(idx, 1);
+  if (idx !== -1) {
+    // Si es nigerianprince, sumar progreso
+    const email = emails.value[idx];
+    if (email.type === 'nigerianprince') {
+      statsStore.recordNigerianPrinceDeletion();
+    }
+    emails.value.splice(idx, 1);
+  }
   selectedEmail.value = null;
   showConfirm.value = false;
   pendingDeleteId = null;
@@ -88,7 +95,13 @@ function doDeletePermanent() {
 function deleteSelected() {
   selectedEmails.value.forEach(id => {
     const idx = emails.value.findIndex(e => e.id === id);
-    if (idx !== -1) emails.value.splice(idx, 1);
+    if (idx !== -1) {
+      const email = emails.value[idx];
+      if (email.type === 'nigerianprince') {
+        statsStore.recordNigerianPrinceDeletion();
+      }
+      emails.value.splice(idx, 1);
+    }
   });
   selectedEmails.value = [];
   // Si la papelera queda vacía, reproducir sonido

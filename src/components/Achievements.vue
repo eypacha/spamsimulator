@@ -104,7 +104,7 @@ const achievements = computed(() => [
   },
   {
     id: 'capitalist',
-    name: 'Emp',
+    name: 'Ricky',
     description: 'Acumular 500 monedas',
     emoji: '💰',
     target: 500,
