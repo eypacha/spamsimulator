@@ -2,23 +2,30 @@ import { ref, computed, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { useSoundStore } from './sound.js';
 import { formatStorage } from '../utils/storage.js';
+import { loadStats, saveStats } from '../utils/statsStorage.js';
+import {
+  EMAIL_SIZE_KB,
+  TURBO_MIN_INTERVAL,
+  TURBO_DEFAULT_INTERVAL,
+  TURBO_DEFAULT_COST,
+  TURBO_DECREASE,
+  UPGRADE_COST,
+  TRASH_UPGRADE_COST,
+  INBOX_UPGRADE_COST,
+  SELECTION_UPGRADE_COST,
+  MAX_TRASH,
+  MAX_INBOX,
+  MAX_SELECTABLE
+} from '../constants/stats.js';
 
 export const useStatsStore = defineStore('stats', () => {
-  // --- Storage helpers must be defined first ---
-  const STATS_STORAGE_KEY = 'spambot_stats';
-  function loadStats() {
-    const saved = localStorage.getItem(STATS_STORAGE_KEY);
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return null;
-      }
-    }
-    return null;
-  }
-  function saveStats() {
-    localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify({
+  // --- Storage helpers are now imported from utils/statsStorage.js ---
+  // Primero cargar stats guardados
+  const loaded = loadStats();
+
+  // Helper to save all stats state
+  function saveAllStats() {
+    saveStats({
       score: score.value,
       level: level.value,
       pointsPerSpam: pointsPerSpam.value,
@@ -51,10 +58,8 @@ export const useStatsStore = defineStore('stats', () => {
       spamFrenzyCooldown: spamFrenzyCooldown.value,
       spamFrenzyActive: spamFrenzyActive.value,
       spamFrenzyTime: spamFrenzyTime.value
-    }));
+    });
   }
-  // Primero cargar stats guardados
-  const loaded = loadStats();
   // Cooldown para Spam Frenzy
   // Spam Frenzy upgrade
   const spamFrenzyUnlocked = ref(loaded?.spamFrenzyUnlocked ?? false);
@@ -67,7 +72,7 @@ export const useStatsStore = defineStore('stats', () => {
     if (score.value >= spamFrenzyUpgradeCost.value && !spamFrenzyUnlocked.value) {
       score.value -= spamFrenzyUpgradeCost.value;
       spamFrenzyUnlocked.value = true;
-      saveStats();
+      saveAllStats();
       const soundStore = useSoundStore();
       soundStore.playBuySound();
     }
@@ -94,7 +99,7 @@ export const useStatsStore = defineStore('stats', () => {
         clearInterval(cdInterval);
       }
     }, 1000);
-    saveStats();
+    saveAllStats();
   }
   // Combo upgrade
   const comboUnlocked = ref(loaded?.comboUnlocked ?? false);
@@ -108,7 +113,7 @@ export const useStatsStore = defineStore('stats', () => {
       comboUnlocked.value = true;
       comboMultiplier.value = 1;
       comboCount.value = 0;
-      saveStats();
+      saveAllStats();
       const soundStore = useSoundStore();
       soundStore.playBuySound();
     }
@@ -126,7 +131,7 @@ export const useStatsStore = defineStore('stats', () => {
       comboCount.value = 0;
       comboMultiplier.value = 1;
     }
-    saveStats();
+    saveAllStats();
   }
   // const loaded = loadStats(); // Already declared at the top
   const score = ref(loaded?.score ?? 0);
@@ -140,24 +145,19 @@ export const useStatsStore = defineStore('stats', () => {
   const totalEmailsSent = ref(loaded?.totalEmailsSent ?? 0);
   function recordEmailSent() {
     totalEmailsSent.value += 1;
-    saveStats();
+    saveAllStats();
   }
   const currentStreak = ref(loaded?.currentStreak ?? 0);
   const maxStreak = ref(loaded?.maxStreak ?? 0);
-  const upgradeCost = ref(loaded?.upgradeCost ?? 10);
-  const trashUpgradeCost = ref(loaded?.trashUpgradeCost ?? 20);
-  const inboxUpgradeCost = ref(loaded?.inboxUpgradeCost ?? 30);
+  const upgradeCost = ref(loaded?.upgradeCost ?? UPGRADE_COST);
+  const trashUpgradeCost = ref(loaded?.trashUpgradeCost ?? TRASH_UPGRADE_COST);
+  const inboxUpgradeCost = ref(loaded?.inboxUpgradeCost ?? INBOX_UPGRADE_COST);
   // Aumentar el costo inicial de selección múltiple
-  const selectionUpgradeCost = ref(loaded?.selectionUpgradeCost ?? 40);
-  const maxTrash = ref(loaded?.maxTrash ?? 5);
-  const maxInbox = ref(loaded?.maxInbox ?? 20);
-  const maxSelectable = ref(loaded?.maxSelectable ?? 3);
-  const EMAIL_SIZE_KB = 5; // Simulated size per email
+  const selectionUpgradeCost = ref(loaded?.selectionUpgradeCost ?? SELECTION_UPGRADE_COST);
+  const maxTrash = ref(loaded?.maxTrash ?? MAX_TRASH);
+  const maxInbox = ref(loaded?.maxInbox ?? MAX_INBOX);
+  const maxSelectable = ref(loaded?.maxSelectable ?? MAX_SELECTABLE);
   // TurboSpam upgrade
-  const TURBO_MIN_INTERVAL = 1000; // ms, mínimo permitido
-  const TURBO_DEFAULT_INTERVAL = 3500; // ms, valor inicial
-  const TURBO_DEFAULT_COST = 100;
-  const TURBO_DECREASE = 0.9; // 10% menos por upgrade
   const loadedTurboLevel = loaded?.turboSpamLevel ?? 0;
   const loadedTurboInterval = loaded?.turboSpamInterval ?? TURBO_DEFAULT_INTERVAL;
   const loadedTurboCost = loaded?.turboSpamUpgradeCost ?? TURBO_DEFAULT_COST;
@@ -170,7 +170,7 @@ export const useStatsStore = defineStore('stats', () => {
       turboSpamLevel.value += 1;
       turboSpamInterval.value = Math.max(TURBO_MIN_INTERVAL, Math.floor(turboSpamInterval.value * TURBO_DECREASE));
       turboSpamUpgradeCost.value = Math.floor(turboSpamUpgradeCost.value * 1.7);
-      saveStats();
+      saveAllStats();
       const soundStore = useSoundStore();
       soundStore.playBuySound();
     }
@@ -185,7 +185,7 @@ export const useStatsStore = defineStore('stats', () => {
     score.value += realPoints;
     totalCoinsEarned.value += realPoints;
     totalSpamDeleted.value += 1;
-    saveStats();
+    saveAllStats();
     // Throttle sound to avoid multiple plays
     if (soundTimeout) clearTimeout(soundTimeout);
     soundTimeout = setTimeout(() => {
@@ -216,6 +216,7 @@ export const useStatsStore = defineStore('stats', () => {
 
   function recordNigerianPrinceDeletion() {
     totalNigerianPrinceDeleted.value += 1;
+    saveAllStats();
   }
 
   function buyUpgrade() {
@@ -223,7 +224,7 @@ export const useStatsStore = defineStore('stats', () => {
       score.value -= upgradeCost.value;
       pointsPerSpam.value += 1;
       upgradeCost.value = Math.floor(upgradeCost.value * 1.5); // Increase cost
-      saveStats();
+      saveAllStats();
       const soundStore = useSoundStore();
       soundStore.playBuySound();
     }
@@ -234,7 +235,7 @@ export const useStatsStore = defineStore('stats', () => {
       score.value -= trashUpgradeCost.value;
       maxTrash.value += 5;
       trashUpgradeCost.value = Math.floor(trashUpgradeCost.value * 1.5);
-      saveStats();
+      saveAllStats();
       const soundStore = useSoundStore();
       soundStore.playBuySound();
     }
@@ -245,7 +246,7 @@ export const useStatsStore = defineStore('stats', () => {
       score.value -= inboxUpgradeCost.value;
       maxInbox.value += 10;
       inboxUpgradeCost.value = Math.floor(inboxUpgradeCost.value * 1.5);
-      saveStats();
+      saveAllStats();
       const soundStore = useSoundStore();
       soundStore.playBuySound();
     }
@@ -255,9 +256,9 @@ export const useStatsStore = defineStore('stats', () => {
     if (score.value >= selectionUpgradeCost.value) {
       score.value -= selectionUpgradeCost.value;
       maxSelectable.value += 1;
-  // Hacer el upgrade más caro (multiplicador mayor)
-  selectionUpgradeCost.value = Math.floor(selectionUpgradeCost.value * 2);
-      saveStats();
+      // Hacer el upgrade más caro (multiplicador mayor)
+      selectionUpgradeCost.value = Math.floor(selectionUpgradeCost.value * 2);
+      saveAllStats();
       const soundStore = useSoundStore();
       soundStore.playBuySound();
     }
@@ -278,14 +279,14 @@ export const useStatsStore = defineStore('stats', () => {
     totalCoinsEarned.value = 0;
     currentStreak.value = 0;
     maxStreak.value = 0;
-    upgradeCost.value = 10;
-    trashUpgradeCost.value = 20;
-    inboxUpgradeCost.value = 30;
-    selectionUpgradeCost.value = 15;
-    maxTrash.value = 5;
-    maxInbox.value = 20;
-    maxSelectable.value = 3;
-    saveStats();
+    upgradeCost.value = UPGRADE_COST;
+    trashUpgradeCost.value = TRASH_UPGRADE_COST;
+    inboxUpgradeCost.value = INBOX_UPGRADE_COST;
+    selectionUpgradeCost.value = SELECTION_UPGRADE_COST;
+    maxTrash.value = MAX_TRASH;
+    maxInbox.value = MAX_INBOX;
+    maxSelectable.value = MAX_SELECTABLE;
+    saveAllStats();
   }
   // Guarda automáticamente cuando cambian los upgrades, monedas y contadores de logros
   watch([
@@ -293,7 +294,7 @@ export const useStatsStore = defineStore('stats', () => {
     totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, currentStreak, maxStreak,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount
-  ], saveStats);
+  ], saveAllStats);
 
   return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
