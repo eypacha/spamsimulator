@@ -7,6 +7,8 @@ import { createUpgradeHandler } from './modules/upgradeManager.js';
 import { createComboManager } from './modules/comboManager.js';
 import { createAbilitiesManager } from './modules/abilitiesManager.js';
 import { createStatsTracker } from './modules/statsTracker.js';
+import { createTurboSpamManager } from './modules/turboSpamManager.js';
+import { createScoreManager } from './modules/scoreManager.js';
 import {
   EMAIL_SIZE_KB,
   TURBO_MIN_INTERVAL,
@@ -48,9 +50,9 @@ export const useStatsStore = defineStore('stats', () => {
       totalEmailsSent: statsTracker.totalEmailsSent.value,
       currentStreak: statsTracker.currentStreak.value,
       maxStreak: statsTracker.maxStreak.value,
-      turboSpamLevel: turboSpamLevel.value,
-      turboSpamInterval: turboSpamInterval.value,
-      turboSpamUpgradeCost: turboSpamUpgradeCost.value,
+      turboSpamLevel: turboSpamManager.turboSpamLevel.value,
+      turboSpamInterval: turboSpamManager.turboSpamInterval.value,
+      turboSpamUpgradeCost: turboSpamManager.turboSpamUpgradeCost.value,
       // Combo
       comboUnlocked: comboUnlocked.value,
       comboUpgradeCost: comboUpgradeCost.value,
@@ -124,36 +126,30 @@ export const useStatsStore = defineStore('stats', () => {
   const maxTrash = ref(loaded?.maxTrash ?? MAX_TRASH);
   const maxInbox = ref(loaded?.maxInbox ?? MAX_INBOX);
   const maxSelectable = ref(loaded?.maxSelectable ?? MAX_SELECTABLE);
-  // TurboSpam upgrade
-  const loadedTurboLevel = loaded?.turboSpamLevel ?? 0;
-  const loadedTurboInterval = loaded?.turboSpamInterval ?? TURBO_DEFAULT_INTERVAL;
-  const loadedTurboCost = loaded?.turboSpamUpgradeCost ?? TURBO_DEFAULT_COST;
-  const turboSpamLevel = ref(loadedTurboLevel);
-  const turboSpamInterval = ref(loadedTurboInterval);
-  const turboSpamUpgradeCost = ref(loadedTurboCost);
+
+  // TurboSpam Manager - maneja el upgrade de turbo spam
+  const turboSpamManager = createTurboSpamManager(loaded, {
+    TURBO_MIN_INTERVAL,
+    TURBO_DEFAULT_INTERVAL,
+    TURBO_DEFAULT_COST,
+    TURBO_DECREASE
+  });
+  const { turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost } = turboSpamManager;
+
   function buyTurboSpamUpgrade() {
-    buyUpgradeHandler(turboSpamUpgradeCost, () => {
-      turboSpamLevel.value += 1;
-      turboSpamInterval.value = Math.max(TURBO_MIN_INTERVAL, Math.floor(turboSpamInterval.value * TURBO_DECREASE));
-    }, 1.7, turboSpamInterval.value > TURBO_MIN_INTERVAL);
+    buyUpgradeHandler(
+      turboSpamUpgradeCost, 
+      turboSpamManager.upgradeTurboSpam, 
+      1.7, 
+      turboSpamManager.canUpgrade()
+    );
   }
-  let soundTimeout = null;
+
+  // Score Manager - maneja la puntuación con multiplicadores y sonidos
+  const scoreManager = createScoreManager(comboUnlocked, comboMultiplier, statsTracker, saveAllStats, soundStore);
 
   function addScore(points) {
-    let realPoints = points;
-    if (comboUnlocked.value) {
-      realPoints = points * comboMultiplier.value;
-    }
-    score.value += realPoints;
-    statsTracker.incrementCoinsEarned(realPoints);
-    statsTracker.incrementSpamDeleted();
-    saveAllStats();
-    // Throttle sound to avoid multiple plays
-    if (soundTimeout) clearTimeout(soundTimeout);
-    soundTimeout = setTimeout(() => {
-      const soundStore = useSoundStore();
-      soundStore.playCoinSound();
-    }, 100);
+    scoreManager.addScore(score, points);
   }
 
   function recordCorrectDeletion() {
