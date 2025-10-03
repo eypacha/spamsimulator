@@ -21,7 +21,7 @@
       </template>
       <template v-else>
         <div class="flex items-center justify-center h-full">
-          <div class="text-2xl text-gray-400 font-semibold">¡Nada en la papelera! Todo limpio 🚀</div>
+          <div class="text-2xl text-gray-400 font-semibold text-center">¡Nada en la papelera!<br/>Todo limpio 🚀</div>
         </div>
       </template>
     </div>

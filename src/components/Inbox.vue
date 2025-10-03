@@ -21,7 +21,7 @@
       </template>
       <template v-else>
         <div class="flex items-center justify-center h-full">
-          <div class="text-2xl text-gray-400 font-semibold">¡Tu bandeja está vacía! Disfruta tu día 😊</div>
+          <div class="text-2xl text-gray-400 font-semibold text-center">¡Tu bandeja está vacía!<br/> Disfruta tu día 😊</div>
         </div>
       </template>
     </div>
