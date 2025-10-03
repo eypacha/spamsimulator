@@ -2,7 +2,7 @@
   <aside class="w-64 bg-gray-800 text-white flex-shrink-0 h-full">
     <nav class="h-full flex flex-col py-6">
       <ul class="space-y-2">
-        <li>
+        <li v-if="statsStore.composeUnlocked">
           <button @click="$emit('openCompose')" class="w-full text-left px-6 py-3 transition hover:bg-gray-700 cursor-pointer">✍️ Redactar</button>
         </li>
         <li v-for="item in menuOptions" :key="item.key">

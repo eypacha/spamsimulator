@@ -84,6 +84,17 @@ const cards = computed(() => [
     rounded: true,
   },
   {
+    title: 'Redactar',
+    description: 'Desbloquea la capacidad de redactar y enviar emails.',
+    details: [
+      statsStore.composeUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.composeUpgradeCost} 🪙`,
+      statsStore.composeUnlocked ? 'Puedes enviar emails' : 'No puedes enviar emails'
+    ],
+    onClick: () => statsStore.buyComposeUpgrade(),
+    disabled: statsStore.score < statsStore.composeUpgradeCost || statsStore.composeUnlocked,
+    rounded: true,
+  },
+  {
     title: 'Barra de espacio',
     description: 'Desbloquea la barra de progreso de espacio en la bandeja de entrada.',
     details: [

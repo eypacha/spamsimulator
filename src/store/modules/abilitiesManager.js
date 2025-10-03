@@ -26,6 +26,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const trashBarUnlocked = ref(loaded?.trashBarUnlocked ?? false);
   const trashBarUpgradeCost = ref(loaded?.trashBarUpgradeCost ?? 60);
 
+  // Compose - Habilidad de redactar emails
+  const composeUnlocked = ref(loaded?.composeUnlocked ?? false);
+  const composeUpgradeCost = ref(loaded?.composeUpgradeCost ?? 100);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -40,6 +44,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockTrashBar() {
     trashBarUnlocked.value = true;
+  }
+
+  function unlockCompose() {
+    composeUnlocked.value = true;
   }
 
   function activateSpamFrenzy() {
@@ -92,6 +100,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Trash Bar
     trashBarUnlocked,
     trashBarUpgradeCost,
-    unlockTrashBar
+    unlockTrashBar,
+    
+    // Compose
+    composeUnlocked,
+    composeUpgradeCost,
+    unlockCompose
   };
 }

@@ -74,6 +74,7 @@ function handleSelectMenu(menu) {
 }
 
 function onSendEmail(emailData) {
+  if (!statsStore.composeUnlocked) return;
   soundStore.playSendSound();
   statsStore.recordEmailSent();
   showCompose.value = false;
