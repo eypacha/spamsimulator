@@ -8,7 +8,7 @@
       <div class="text-gray-400 text-xs mb-2">Fecha: {{ formatDate(email.id) }}</div>
     </div>
     <div class="mb-6">
-      <div class="text-base whitespace-pre-line" v-html="parsedBody"></div>
+      <div class="text-base whitespace-pre-line" v-html="parsedBody" @click="handleLinkClick"></div>
     </div>
     <GoogleAd v-if="shouldShowAds" />
     <div class="flex gap-4 border-t pt-4">
@@ -16,20 +16,31 @@
       <button v-else @click="onDeletePermanent" class="px-4 py-2 rounded bg-red-100 text-red-700 hover:bg-red-200"><i class="fas fa-times"></i></button>
       <button v-if="!email.trash && statsStore.starredUnlocked" @click="onStar" class="px-4 py-2 rounded bg-yellow-100 text-yellow-700 hover:bg-yellow-200"><i :class="email.starred ? 'fas fa-star' : 'far fa-star'" ></i></button>
     </div>
+    
+    <!-- Browser Popup -->
+    <BrowserPopup 
+      :show="showBrowser" 
+      :url="clickedUrl" 
+      @close="showBrowser = false"
+    />
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue';
+import { defineProps, defineEmits, computed, ref } from 'vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { formatDate } from '@/utils/date';
 import { shouldShowAds as checkShouldShowAds } from '@/utils/ads';
 import GoogleAd from './GoogleAd.vue';
+import BrowserPopup from './BrowserPopup.vue';
 import { useStatsStore } from '../store/stats.js';
 
 const statsStore = useStatsStore();
 const props = defineProps({ email: Object });
 const emit = defineEmits(['delete', 'star', 'deletePermanent']);
+
+const showBrowser = ref(false);
+const clickedUrl = ref('');
 
 const shouldShowAds = computed(() => checkShouldShowAds(props.email));
 
@@ -41,6 +52,15 @@ function onDeletePermanent() {
 }
 function onStar() {
   emit('star', props.email.id);
+}
+
+function handleLinkClick(event) {
+  const target = event.target;
+  if (target.tagName === 'SPAN' && target.dataset.url) {
+    event.preventDefault();
+    clickedUrl.value = target.dataset.url;
+    showBrowser.value = true;
+  }
 }
 
 // Regex para URLs (simplificado)
@@ -63,12 +83,12 @@ const parsedBody = computed(() => {
   body = body.replace(mdLinkRegexRobust, (match, text, url) => {
     console.log('[DEBUG] Markdown link match:', { match, text, url });
     markdownLinks.push(url);
-    return `<span style='color:#2563eb;text-decoration:underline;cursor:pointer'>${text}</span>`;
+    return `<span data-url="${url}" style='color:#2563eb;text-decoration:underline;cursor:pointer'>${text}</span>`;
   });
   // URLs sueltas, pero ignoramos las que ya están en markdownLinks
   body = body.replace(urlRegex, url => {
     if (markdownLinks.includes(url)) return url; // ya parseado
-    return `<span style='color:#2563eb;text-decoration:underline;cursor:pointer'>${url}</span>`;
+    return `<span data-url="${url}" style='color:#2563eb;text-decoration:underline;cursor:pointer'>${url}</span>`;
   });
   // Bold
   body = body.replace(boldRegex, (match, g1, g2) => `<span style='font-weight:bold;'>${g1 || g2}</span>`);
