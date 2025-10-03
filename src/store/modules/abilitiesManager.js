@@ -22,6 +22,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const spamDetectorUnlocked = ref(loaded?.spamDetectorUnlocked ?? false);
   const spamDetectorUpgradeCost = ref(loaded?.spamDetectorUpgradeCost ?? 80);
 
+  // Trash Bar - Barra de espacio de papelera
+  const trashBarUnlocked = ref(loaded?.trashBarUnlocked ?? false);
+  const trashBarUpgradeCost = ref(loaded?.trashBarUpgradeCost ?? 60);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -32,6 +36,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockSpamDetector() {
     spamDetectorUnlocked.value = true;
+  }
+
+  function unlockTrashBar() {
+    trashBarUnlocked.value = true;
   }
 
   function activateSpamFrenzy() {
@@ -79,6 +87,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Spam Detector
     spamDetectorUnlocked,
     spamDetectorUpgradeCost,
-    unlockSpamDetector
+    unlockSpamDetector,
+    
+    // Trash Bar
+    trashBarUnlocked,
+    trashBarUpgradeCost,
+    unlockTrashBar
   };
 }

@@ -11,16 +11,33 @@
       </ul>
       
       <!-- Barra de progreso del espacio -->
-      <div v-if="statsStore.spaceBarUnlocked" class="mt-auto px-6">
-        <div class="text-sm text-gray-300 mb-2">Espacio de Bandeja</div>
-        <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
-          <div 
-            :class="['h-2 rounded-full transition-all duration-300', progressBarColor]" 
-            :style="{ width: progressPercentage + '%' }"
-          ></div>
+      <div v-if="statsStore.spaceBarUnlocked" class="mt-auto px-6 space-y-4">
+        <!-- Barra de Bandeja de Entrada -->
+        <div>
+          <div class="text-sm text-gray-300 mb-2">Espacio de Bandeja</div>
+          <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
+            <div 
+              :class="['h-2 rounded-full transition-all duration-300', inboxProgressBarColor]" 
+              :style="{ width: inboxProgressPercentage + '%' }"
+            ></div>
+          </div>
+          <div class="text-xs text-gray-400 text-center">
+            {{ currentInboxSpace }} / {{ maxInboxSpace }}
+          </div>
         </div>
-        <div class="text-xs text-gray-400 text-center">
-          {{ currentSpace }} / {{ maxSpace }}
+
+        <!-- Barra de Papelera -->
+        <div v-if="statsStore.trashBarUnlocked">
+          <div class="text-sm text-gray-300 mb-2">Espacio de Papelera</div>
+          <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
+            <div 
+              :class="['h-2 rounded-full transition-all duration-300', trashProgressBarColor]" 
+              :style="{ width: trashProgressPercentage + '%' }"
+            ></div>
+          </div>
+          <div class="text-xs text-gray-400 text-center">
+            {{ currentTrashSpace }} / {{ maxTrashSpace }}
+          </div>
         </div>
       </div>
     </nav>
@@ -51,17 +68,35 @@ const emailStore = useEmailStore();
 const statsStore = useStatsStore();
 
 const visibleEmails = computed(() => emailStore.emails.filter(e => !e.trash));
+const trashedEmails = computed(() => emailStore.emails.filter(e => e.trash));
 
-const currentSpace = computed(() => statsStore.getSpaceString(visibleEmails.value.length));
-const maxSpace = computed(() => statsStore.getSpaceString(statsStore.maxInbox));
-const progressPercentage = computed(() => {
+// Inbox space calculations
+const currentInboxSpace = computed(() => statsStore.getSpaceString(visibleEmails.value.length));
+const maxInboxSpace = computed(() => statsStore.getSpaceString(statsStore.maxInbox));
+const inboxProgressPercentage = computed(() => {
   const used = visibleEmails.value.length;
   const max = statsStore.maxInbox;
   return max > 0 ? Math.min((used / max) * 100, 100) : 0;
 });
 
-const progressBarColor = computed(() => {
-  const percentage = progressPercentage.value;
+const inboxProgressBarColor = computed(() => {
+  const percentage = inboxProgressPercentage.value;
+  if (percentage < 50) return 'bg-green-500';
+  if (percentage < 90) return 'bg-yellow-500';
+  return 'bg-red-500';
+});
+
+// Trash space calculations
+const currentTrashSpace = computed(() => statsStore.getSpaceString(trashedEmails.value.length, 3));
+const maxTrashSpace = computed(() => statsStore.getSpaceString(statsStore.maxTrash, 3));
+const trashProgressPercentage = computed(() => {
+  const used = trashedEmails.value.length;
+  const max = statsStore.maxTrash;
+  return max > 0 ? Math.min((used / max) * 100, 100) : 0;
+});
+
+const trashProgressBarColor = computed(() => {
+  const percentage = trashProgressPercentage.value;
   if (percentage < 50) return 'bg-green-500';
   if (percentage < 90) return 'bg-yellow-500';
   return 'bg-red-500';

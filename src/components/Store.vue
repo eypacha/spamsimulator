@@ -94,6 +94,16 @@ const cards = computed(() => [
     rounded: true,
   },
   {
+    title: 'Barra de papelera',
+    description: 'Desbloquea la barra de progreso de espacio en la papelera.',
+    details: [
+      statsStore.trashBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.trashBarUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyTrashBarUpgrade(),
+    disabled: statsStore.score < statsStore.trashBarUpgradeCost || statsStore.trashBarUnlocked,
+    rounded: true,
+  },
+  {
     title: 'TurboSpam',
     description: 'Reduce el intervalo de llegada de emails un 10% (mínimo 1s).',
     details: [
