@@ -5,7 +5,7 @@
       ¡¡¡ADVERTENCIA!!!
     </h1>
     <p class="text-2xl font-semibold">
-      ¡Has ganado un iPhone 15 Pro Max!
+      ¡Has ganado {{ prize }}!
     </p>
     <p class="text-lg text-gray-700">
       Para reclamar tu premio, haz clic en el botón de abajo e introduce tus datos bancarios.
@@ -20,10 +20,41 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+
 defineProps({
   countdown: {
     type: String,
     default: '05:00'
   }
+});
+
+const prizes = [
+  'un iPhone 15 Pro Max',
+  'un MacBook Pro M3',
+  'una PlayStation 5',
+  'un Tesla Model 3',
+  'un iPad Pro 12.9"',
+  'una Xbox Series X',
+  'un Apple Watch Ultra',
+  'un Samsung Galaxy S24 Ultra',
+  '$10,000 USD en efectivo',
+  'un viaje a Dubai todo pagado',
+  'una Nintendo Switch OLED',
+  'un dron DJI Mavic Pro',
+  'unos AirPods Max',
+  'una TV Samsung 85" 8K',
+  'un iPhone 14 Pro + AirPods',
+  'una bicicleta eléctrica Tesla',
+  'un kit completo de gaming RGB',
+  'una cámara Canon EOS R5',
+  'un año de Netflix Premium GRATIS',
+  'una moto Harley-Davidson'
+];
+
+const prize = ref('');
+
+onMounted(() => {
+  prize.value = prizes[Math.floor(Math.random() * prizes.length)];
 });
 </script>
