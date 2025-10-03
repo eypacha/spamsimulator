@@ -57,8 +57,24 @@ export const useStatsStore = defineStore('stats', () => {
       spamFrenzyUpgradeCost: spamFrenzyUpgradeCost.value,
       spamFrenzyCooldown: spamFrenzyCooldown.value,
       spamFrenzyActive: spamFrenzyActive.value,
-      spamFrenzyTime: spamFrenzyTime.value
+      spamFrenzyTime: spamFrenzyTime.value,
+      // Space Bar
+      spaceBarUnlocked: spaceBarUnlocked.value,
+      spaceBarUpgradeCost: spaceBarUpgradeCost.value
     });
+  }
+
+    // Upgrade para barra de espacio en la bandeja de entrada
+  const spaceBarUnlocked = ref(loaded?.spaceBarUnlocked ?? false);
+  const spaceBarUpgradeCost = ref(loaded?.spaceBarUpgradeCost ?? 50);
+
+  function buySpaceBarUpgrade() {
+    if (score.value >= spaceBarUpgradeCost.value && !spaceBarUnlocked.value) {
+      score.value -= spaceBarUpgradeCost.value;
+      spaceBarUnlocked.value = true;
+      saveAllStats();
+      useSoundStore().playBuySound();
+    }
   }
   // Cooldown para Spam Frenzy
   // Spam Frenzy upgrade
@@ -299,6 +315,8 @@ export const useStatsStore = defineStore('stats', () => {
   return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
-    spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown
+    spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,
+    // Space Bar Upgrade
+    spaceBarUnlocked, spaceBarUpgradeCost, buySpaceBarUpgrade
   };
 });

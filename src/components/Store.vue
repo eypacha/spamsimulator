@@ -5,12 +5,8 @@
     </div>
     <div class="flex-1 overflow-y-auto p-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        <div
-          v-for="card in cards"
-          :key="card.title"
-          class="bg-white p-4 shadow flex flex-col h-full gap-5"
-          :class="card.rounded ? 'rounded-lg' : ''"
-        >
+        <div v-for="card in cards" :key="card.title" class="bg-white p-4 shadow flex flex-col h-full gap-5"
+          :class="card.rounded ? 'rounded-lg' : ''">
           <div>
             <h3 class="text-lg font-semibold">{{ card.title }}</h3>
             <p class="text-gray-600">{{ card.description }}</p>
@@ -18,11 +14,8 @@
               <p class="text-sm">{{ line }}</p>
             </template>
           </div>
-          <button
-            @click="card.onClick"
-            :disabled="card.disabled"
-            class="mt-2 px-4 py-2 bg-green-500 cursor-pointer text-white rounded hover:bg-green-600 disabled:bg-gray-400 mt-auto"
-          >
+          <button @click="card.onClick" :disabled="card.disabled"
+            class="mt-2 px-4 py-2 bg-green-500 cursor-pointer text-white rounded hover:bg-green-600 disabled:bg-gray-400 mt-auto">
             Comprar
           </button>
         </div>
@@ -69,16 +62,6 @@ const cards = computed(() => [
     disabled: statsStore.score < statsStore.inboxUpgradeCost,
   },
   {
-    title: 'Spam Frenzy',
-    description: 'Activa un modo especial donde el spam llega más rápido.',
-    details: [
-      statsStore.spamFrenzyUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spamFrenzyUpgradeCost} 🪙`,
-    ],
-    onClick: () => statsStore.buySpamFrenzyUpgrade(),
-    disabled: statsStore.score < statsStore.spamFrenzyUpgradeCost || statsStore.spamFrenzyUnlocked,
-    rounded: true,
-  },
-  {
     title: 'Selección múltiple',
     description: 'Aumenta el número de emails que puedes seleccionar a la vez.',
     details: [
@@ -89,15 +72,14 @@ const cards = computed(() => [
     disabled: statsStore.score < statsStore.selectionUpgradeCost,
     rounded: true,
   },
-    {
-    title: 'Combos',
-    description: '¡Gana multiplicador de puntos por eliminar spam seguido!',
+  {
+    title: 'Barra de espacio',
+    description: 'Desbloquea la barra de progreso de espacio en la bandeja de entrada.',
     details: [
-      `Combo actual: x${statsStore.comboMultiplier ?? 1}`,
-      `Costo: ${statsStore.comboUpgradeCost} 🪙`,
+      statsStore.spaceBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spaceBarUpgradeCost} 🪙`,
     ],
-    onClick: () => statsStore.buyComboUpgrade(),
-    disabled: statsStore.score < statsStore.comboUpgradeCost || statsStore.comboUnlocked,
+    onClick: () => statsStore.buySpaceBarUpgrade(),
+    disabled: statsStore.score < statsStore.spaceBarUpgradeCost || statsStore.spaceBarUnlocked,
     rounded: true,
   },
   {
@@ -109,6 +91,27 @@ const cards = computed(() => [
     ],
     onClick: () => statsStore.buyTurboSpamUpgrade(),
     disabled: statsStore.score < statsStore.turboSpamUpgradeCost || statsStore.turboSpamInterval <= 1000,
+  },
+  {
+    title: 'Combos',
+    description: '¡Gana multiplicador de puntos por eliminar spam seguido!',
+    details: [
+      `Combo actual: x${statsStore.comboMultiplier ?? 1}`,
+      `Costo: ${statsStore.comboUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyComboUpgrade(),
+    disabled: statsStore.score < statsStore.comboUpgradeCost || statsStore.comboUnlocked,
+    rounded: true,
+  },
+  {
+    title: 'Spam Frenzy',
+    description: 'Activa un modo especial donde el spam llega más rápido.',
+    details: [
+      statsStore.spamFrenzyUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spamFrenzyUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buySpamFrenzyUpgrade(),
+    disabled: statsStore.score < statsStore.spamFrenzyUpgradeCost || statsStore.spamFrenzyUnlocked,
+    rounded: true,
   },
 ]);
 </script>

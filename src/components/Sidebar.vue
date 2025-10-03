@@ -11,7 +11,7 @@
       </ul>
       
       <!-- Barra de progreso del espacio -->
-      <div class="mt-auto px-6">
+      <div v-if="statsStore.spaceBarUnlocked" class="mt-auto px-6">
         <div class="text-sm text-gray-300 mb-2">Espacio de Bandeja</div>
         <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
           <div 
