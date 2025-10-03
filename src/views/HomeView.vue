@@ -11,19 +11,22 @@
           class="relative"
         />
       </template>
-      <transition name="fade">
-        <div v-if="sidebarOpen && !isDesktop" class="fixed inset-0 z-40 flex">
-          <!-- Backdrop -->
-          <div class="absolute inset-0 bg-[#0004]" @click="sidebarOpen = false"></div>
-          <!-- Sidebar Drawer -->
-          <Sidebar
-            :selectedMenu="selectedMenu"
-            @selectMenu="handleSelectMenu"
-            @openCompose="showCompose = true"
-            class="fixed top-0 left-0 z-50 h-full transition-transform duration-300"
-          />
-        </div>
-      </transition>
+      <div v-if="!isDesktop" class="fixed inset-0 z-40 flex pointer-events-none">
+        <!-- Backdrop -->
+        <div 
+          class="absolute inset-0 bg-[#0004] transition-opacity duration-300"
+          :class="sidebarOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0'"
+          @click="sidebarOpen = false"
+        ></div>
+        <!-- Sidebar Drawer SIEMPRE presente, animado con Tailwind -->
+        <Sidebar
+          :selectedMenu="selectedMenu"
+          @selectMenu="handleSelectMenu"
+          @openCompose="showCompose = true"
+          class="z-50 h-full absolute top-0 left-0 transition-transform duration-300 bg-gray-800 pointer-events-auto"
+          :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+        />
+      </div>
       <!-- Main Panel -->
       <main class="flex-1 max-w-full">
         <Inbox v-if="selectedMenu === 'inbox'"/>
