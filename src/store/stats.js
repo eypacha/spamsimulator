@@ -67,7 +67,10 @@ export const useStatsStore = defineStore('stats', () => {
       spamFrenzyTime: abilitiesManager.spamFrenzyTime.value,
       // Space Bar
       spaceBarUnlocked: abilitiesManager.spaceBarUnlocked.value,
-      spaceBarUpgradeCost: abilitiesManager.spaceBarUpgradeCost.value
+      spaceBarUpgradeCost: abilitiesManager.spaceBarUpgradeCost.value,
+      // Spam Detector
+      spamDetectorUnlocked: abilitiesManager.spamDetectorUnlocked.value,
+      spamDetectorUpgradeCost: abilitiesManager.spamDetectorUpgradeCost.value
     });
   }
 
@@ -81,7 +84,9 @@ export const useStatsStore = defineStore('stats', () => {
     spamFrenzyTime,
     activateSpamFrenzy,
     spaceBarUnlocked,
-    spaceBarUpgradeCost
+    spaceBarUpgradeCost,
+    spamDetectorUnlocked,
+    spamDetectorUpgradeCost
   } = abilitiesManager;
 
   function buySpaceBarUpgrade() {
@@ -90,6 +95,10 @@ export const useStatsStore = defineStore('stats', () => {
 
   function buySpamFrenzyUpgrade() {
     buyUpgradeHandler(spamFrenzyUpgradeCost, abilitiesManager.unlockSpamFrenzy, 1.5, !spamFrenzyUnlocked.value);
+  }
+
+  function buySpamDetectorUpgrade() {
+    buyUpgradeHandler(spamDetectorUpgradeCost, abilitiesManager.unlockSpamDetector, 1.5, !spamDetectorUnlocked.value);
   }
   // Combo upgrade - usando comboManager
   const comboManager = createComboManager(loaded, saveAllStats);
@@ -220,6 +229,8 @@ export const useStatsStore = defineStore('stats', () => {
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
     spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,
     // Space Bar Upgrade
-    spaceBarUnlocked, spaceBarUpgradeCost, buySpaceBarUpgrade
+    spaceBarUnlocked, spaceBarUpgradeCost, buySpaceBarUpgrade,
+    // Spam Detector Upgrade
+    spamDetectorUnlocked, spamDetectorUpgradeCost, buySpamDetectorUpgrade
   };
 });

@@ -18,12 +18,20 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const spaceBarUnlocked = ref(loaded?.spaceBarUnlocked ?? false);
   const spaceBarUpgradeCost = ref(loaded?.spaceBarUpgradeCost ?? 50);
 
+  // Spam Detector - Marca visualmente los emails de spam
+  const spamDetectorUnlocked = ref(loaded?.spamDetectorUnlocked ?? false);
+  const spamDetectorUpgradeCost = ref(loaded?.spamDetectorUpgradeCost ?? 80);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
 
   function unlockSpaceBar() {
     spaceBarUnlocked.value = true;
+  }
+
+  function unlockSpamDetector() {
+    spamDetectorUnlocked.value = true;
   }
 
   function activateSpamFrenzy() {
@@ -66,6 +74,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Space Bar
     spaceBarUnlocked,
     spaceBarUpgradeCost,
-    unlockSpaceBar
+    unlockSpaceBar,
+    
+    // Spam Detector
+    spamDetectorUnlocked,
+    spamDetectorUpgradeCost,
+    unlockSpamDetector
   };
 }

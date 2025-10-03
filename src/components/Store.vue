@@ -73,6 +73,17 @@ const cards = computed(() => [
     rounded: true,
   },
   {
+    title: 'Detector de Spam',
+    description: 'Marca visualmente los emails de spam en color rojo.',
+    details: [
+      statsStore.spamDetectorUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spamDetectorUpgradeCost} 🪙`,
+      statsStore.spamDetectorUnlocked ? 'Los spam ahora se ven en rojo' : 'Todos los emails se ven iguales'
+    ],
+    onClick: () => statsStore.buySpamDetectorUpgrade(),
+    disabled: statsStore.score < statsStore.spamDetectorUpgradeCost || statsStore.spamDetectorUnlocked,
+    rounded: true,
+  },
+  {
     title: 'Barra de espacio',
     description: 'Desbloquea la barra de progreso de espacio en la bandeja de entrada.',
     details: [

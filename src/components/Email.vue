@@ -9,7 +9,7 @@
     </span>
     <span
       class="w-50 truncate whitespace-nowrap mr-3"
-      :style="email.isSpam ? 'color: #e53935; font-weight: bold;' : 'color: #6b7280;'"
+      :style="shouldShowSpamColor ? 'color: #e53935; font-weight: bold;' : 'color: #6b7280;'"
     >
       {{ email.fromName }}
     </span>
@@ -19,9 +19,12 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps, defineEmits, computed } from 'vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { formatDate } from '@/utils/date';
+import { useStatsStore } from '../store/stats.js';
+
+const statsStore = useStatsStore();
 
 const props = defineProps({
   email: Object,
@@ -31,6 +34,11 @@ const props = defineProps({
   }
 });
 const emit = defineEmits(['update:modelValue', 'update:starred']);
+
+// Solo mostrar el color rojo si el detector está desbloqueado Y es spam
+const shouldShowSpamColor = computed(() => {
+  return props.email.isSpam && statsStore.spamDetectorUnlocked;
+});
 
 function onChange(event) {
   const checked = event.target.checked;
