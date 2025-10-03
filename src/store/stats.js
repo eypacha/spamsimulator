@@ -4,6 +4,7 @@ import { useSoundStore } from './sound.js';
 import { formatStorage } from '../utils/storage.js';
 import { loadStats, saveStats } from '../utils/statsStorage.js';
 import { createUpgradeHandler } from './modules/upgradeManager.js';
+import { createComboManager } from './modules/comboManager.js';
 import {
   EMAIL_SIZE_KB,
   TURBO_MIN_INTERVAL,
@@ -111,33 +112,12 @@ export const useStatsStore = defineStore('stats', () => {
     }, 1000);
     saveAllStats();
   }
-  // Combo upgrade
-  const comboUnlocked = ref(loaded?.comboUnlocked ?? false);
-  const comboUpgradeCost = ref(loaded?.comboUpgradeCost ?? 150);
-  const comboMultiplier = ref(loaded?.comboMultiplier ?? 1); // 1, 2, 3, 5
-  const comboCount = ref(loaded?.comboCount ?? 0); // para llevar el conteo
+  // Combo upgrade - usando comboManager
+  const comboManager = createComboManager(loaded, saveAllStats);
+  const { comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, updateCombo } = comboManager;
 
   function buyComboUpgrade() {
-    buyUpgradeHandler(comboUpgradeCost, () => {
-      comboUnlocked.value = true;
-      comboMultiplier.value = 1;
-      comboCount.value = 0;
-    }, 1.5, !comboUnlocked.value);
-  }
-
-  function updateCombo(success) {
-    if (!comboUnlocked.value) return;
-    if (success) {
-      comboCount.value++;
-      if (comboCount.value >= 20) comboMultiplier.value = 5;
-      else if (comboCount.value >= 10) comboMultiplier.value = 3;
-      else if (comboCount.value >= 5) comboMultiplier.value = 2;
-      else comboMultiplier.value = 1;
-    } else {
-      comboCount.value = 0;
-      comboMultiplier.value = 1;
-    }
-    saveAllStats();
+    buyUpgradeHandler(comboUpgradeCost, comboManager.resetCombo, 1.5, !comboUnlocked.value);
   }
   // const loaded = loadStats(); // Already declared at the top
   const score = ref(loaded?.score ?? 0);
