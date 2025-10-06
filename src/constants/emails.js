@@ -1,12 +1,13 @@
 // Categorías disponibles (ejemplos): 
 // Legit: "work", "friend", "ticket", "finance", "personal", "health", "newsletter", "booking", "admin"
 // Spam/Phish: "promo", "scam", "investment", "phishing", "malicious", "social", "fraud"
-const GIRLFRIEND_FROM_NAME = "💚 Cari"
-const GIRLFRIEND_FROM_EMAIL = "caririchardson@gmail.com"
+const GIRLFRIEND_FROM_NAME = "💚 Cari";
+const GIRLFRIEND_FROM_EMAIL = "carinacariño@gmail.com";
+const BESTFRIEND_FROM_NAME = "Leo";;
+const BESTFRIEND_FROM_EMAIL = "leo.garcia@gmail.com";
 
 export const EMAILS = [
   { subject: 'Bienvenido a tu correo y novedades.', fromName: 'Soporte Técnico', fromEmail: 'soporte@teatrolaestacion.com', body: 'Te damos la bienvenida a tu nuevo correo. Aquí recibirás novedades y soporte.', isSpam: false, type: 'admin' },
-  { subject: 'Recordatorio: ensayo mañana 18:30', fromName: 'María López', fromEmail: 'maria.lopez@gmail.com', body: 'Hola — no olvides el ensayo de mañana en el Centro Cultural a las 18:30. Traé el vestuario rojo.', isSpam: false, type: 'friend' },
   { subject: 'Tu entrada para Festival Callejero 2025', fromName: 'Boletos Festival', fromEmail: 'ventas@boletosbaires.com', body: 'Adjuntamos la entrada en PDF. Presentala en el acceso y disfrutá del show.', isSpam: false, type: 'ticket' },
   { subject: 'Actualización de pago recibida', fromName: 'Administración - Giras', fromEmail: 'contabilidad@organizacioncultural.org', body: 'Hemos recibido tu pago. El comprobante está adjunto. Gracias por confiar en nosotros.', isSpam: false, type: 'finance' },
   { subject: 'Fotos del último montaje', fromName: 'Lucas Fernández', fromEmail: 'lucas.fernandez@outlook.com', body: 'Te paso el enlace con las fotos del último montaje. Elegí las que quieras para el press kit.', isSpam: false, type: 'personal' },
@@ -15,7 +16,6 @@ export const EMAILS = [
   { subject: 'Re: Propuesta artística — disponibilidad', fromName: 'Ana Torres', fromEmail: 'ana.torres@gmail.com', body: 'Gracias por la propuesta. Estoy disponible en noviembre; ¿probamos fechas y logística?', isSpam: false, type: 'work' },
   { subject: 'Factura electrónica enviada', fromName: 'Servicios Técnicos SRL', fromEmail: 'facturacion@serviciostecnicos.com', body: 'Adjuntamos la factura electrónica correspondiente al servicio de sonido del 10/09/2025.', isSpam: false, type: 'finance' },
   { subject: 'Invitación: charla sobre producción independiente', fromName: 'Red de Festivales', fromEmail: 'equipo@redfestivales.org', body: 'Te invitamos a participar de la charla el 12/10. Cupos limitados — confirmá asistencia.', isSpam: false, type: 'booking' },
-  { subject: 'Confirmación de ensayo — miércoles 08/10', fromName: 'Martín García', fromEmail: 'martin.garcia@gmail.com', body: 'Confirmo ensayo el miércoles a las 19:00 en el Centro Cultural. Llevo la utilería y el vestuario.', isSpam: false, type: 'friend' },
   { subject: 'Factura pago servicio de sonido', fromName: 'Sonido y Luces SRL', fromEmail: 'facturacion@sonidoyluces.ar', body: 'Adjuntamos factura electrónica por el servicio prestado el 10/09. Por favor confirmar recepción.', isSpam: false, type: 'finance' },
   { subject: 'Turno médico confirmado — Dra. Pérez', fromName: 'Clínica Central', fromEmail: 'turnos@clinicacentral.com', body: 'Su turno con la Dra. Pérez fue confirmado para el 07/10 a las 11:00. Llegar 10 min antes.', isSpam: false, type: 'health' },
   { subject: 'Entradas: Festival Callejero — 12/10', fromName: 'Boletos Festival', fromEmail: 'entradas@boletosfestival.com', body: 'Adjuntamos tus entradas en PDF. Presentalas en la entrada principal el día del evento.', isSpam: false, type: 'ticket' },
@@ -89,7 +89,6 @@ export const EMAILS = [
   { subject: 'Confirmación de reserva 🏨', fromName: 'Hotel Plaza', fromEmail: 'reservas@hotelplaza.com', body: 'Su reserva ha sido confirmada. Check-in: 22/09 a partir de las 14:00.', isSpam: false, type: 'booking' },
   { subject: 'Clases de inglés reprogramadas', fromName: 'Instituto de Idiomas', fromEmail: 'clases@idiomas.com', body: 'Las clases del viernes se pasan al lunes 12/09.', isSpam: false, type: 'education' },
   { subject: 'Factura de teléfono móvil', fromName: 'MovilNet', fromEmail: 'facturacion@movilnet.com', body: 'La factura de septiembre ya está disponible en la app.', isSpam: false, type: 'finance' },
-  { subject: 'Fiesta de cumpleaños 🎉', fromName: 'Pedro González', fromEmail: 'pedro.gonzalez@hotmail.com', body: 'Te espero el sábado a las 21:00 en casa para festejar.', isSpam: false, type: 'friend' },
   { subject: 'Resultados de examen médico', fromName: 'Laboratorio Central', fromEmail: 'resultados@labcentral.com', body: 'Sus resultados están disponibles en la plataforma online.', isSpam: false, type: 'health' },
   { subject: 'Recordatorio de pago alquiler', fromName: 'Administración Martínez', fromEmail: 'info@administracionmartinez.com', body: 'Le recordamos que el pago vence el 10/09.', isSpam: false, type: 'finance' },
   { subject: 'Aviso de servicio técnico 📱', fromName: 'ElectroFix', fromEmail: 'soporte@electrofix.com', body: 'Su turno de reparación de celular está confirmado para el 09/09.', isSpam: false, type: 'supplier' },
@@ -131,6 +130,17 @@ export const EMAILS = [
   { subject: 'Belly rubs time', fromName: GIRLFRIEND_FROM_NAME, fromEmail: GIRLFRIEND_FROM_EMAIL, body: 'Modo pancita arriba: https://postimg.cc/20Acde6Q2lq', isSpam: false, type: 'girlfriend', content: 'picture', url: 'cats/20.jpg' },
   { subject: 'Recordá llamar a mamá', fromName: GIRLFRIEND_FROM_NAME, fromEmail: GIRLFRIEND_FROM_EMAIL, body: 'Hoy es el cumple de mamá, no te olvides de saludarla.', isSpam: false, type: 'girlfriend' },
   { subject: 'Buenas noches 😘', fromName: GIRLFRIEND_FROM_NAME, fromEmail: GIRLFRIEND_FROM_EMAIL, body: 'Que descanses y sueñes lindo.', isSpam: false, type: 'girlfriend' },
+
+  { subject: 'Tenés que ver esto 😂', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Bro, no podés perderte este Tiny Desk de 31 Minutos, es oro puro: https://www.youtube.com/watch?v=UEqTIwRrWvA', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=UEqTIwRrWvA' },
+  { subject: 'Relajate un toque', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Poné esto de fondo, Minecraft ASMR para desconectar del mundo: https://www.youtube.com/watch?v=AwdrXKbjBoE', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=AwdrXKbjBoE' },
+  { subject: 'Ideal para laburar tranqui ☔', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Mirá este longplay de Minecraft con lluvia, te juro que te baja el estrés: https://www.youtube.com/watch?v=Dy3VtjcHdCs', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=Dy3VtjcHdCs' },
+  { subject: 'Old but gold 🎸', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Un clásico que nunca muere: Pink Floyd - Another Brick in the Wall. Subí el volumen: https://www.youtube.com/watch?v=bZwxTX2pWmw', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=bZwxTX2pWmw' },
+  { subject: 'Te juro que es un temazo nuevo', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'No lo vas a poder sacar de la cabeza, escuchá esto 🔥 https://www.youtube.com/watch?v=dQw4w9WgXcQ', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
+  { subject: 'Esto es arte de verdad', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Nunca pensé que unos títeres podían emocionar tanto. 31 Minutos Tiny Desk: https://www.youtube.com/watch?v=UEqTIwRrWvA', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=UEqTIwRrWvA' },
+  { subject: 'Ruido blanco gamer 😴', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Esto te va a poner zen, Minecraft en lluvia y madera mojada: https://www.youtube.com/watch?v=Dy3VtjcHdCs', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=Dy3VtjcHdCs' },
+  { subject: 'Para cuando necesites inspirarte', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Mirá este Tiny Desk, pura creatividad chilena: https://www.youtube.com/watch?v=UEqTIwRrWvA', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=UEqTIwRrWvA' },
+  { subject: 'De los que hacen historia', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Un clásico eterno, escuchalo completo: https://www.youtube.com/watch?v=bZwxTX2pWmw', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=bZwxTX2pWmw' },
+  { subject: 'Te va a hacer reír fuerte 🤣', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Este video es lo mejor que vas a ver hoy, confía: https://www.youtube.com/watch?v=dQw4w9WgXcQ', isSpam: false, type: 'bestfriend', content: 'video', url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
   { subject: 'Confirmación: movimiento de cuenta', fromName: 'BBVA Frances', fromEmail: 'avisos@bbva.com', body: 'Se ha registrado un retiro de €120,45 el 01/10. Si no lo reconoce, comuníquese con atención al cliente.', isSpam: false, tipo: 'bank' },
   { subject: 'Extracto mensual disponible', fromName: 'BBVA Frances', fromEmail: 'avisos@bbva.com', body: 'Su extracto de septiembre ya está disponible en el área de clientes. Acceda con su usuario habitual.', isSpam: false, tipo: 'bank' },
   { subject: 'Aviso: cargo programado próximo', fromName: 'BBVA Frances', fromEmail: 'avisos@bbva.com', body: 'Le recordamos que el cargo de la tarjeta se realizará el 05/10. Consulte el detalle en su cuenta.', isSpam: false, tipo: 'bank' },
@@ -282,14 +292,25 @@ export const EMAILS = [
   { subject: 'Confirmación de inicio de sesión desconocido', fromName: 'BBVA Frances', fromEmail: 'avisos@bbva-login-alert.co', body: 'Confirme si fue usted: http://bbva-login-alert.co/confirmar', isSpam: true, tipo: 'phishing' },
   { subject: 'Actualización obligatoria de datos fiscales', fromName: 'BBVA Frances', fromEmail: 'avisos@bbva-taxupdate.net', body: 'Complete el formulario aquí: http://bbva-taxupdate.net/formulario', isSpam: true, tipo: 'phishing' },
   { subject: 'Notificación de bloqueo de tarjeta', fromName: 'BBVA Frances', fromEmail: 'avisos@bbva-cardhelp.com', body: 'Su tarjeta está bloqueada. Desbloquéela aquí: http://bbva-cardhelp.com/unlock', isSpam: true, tipo: 'phishing',},
-  { subject: 'Decime si no es tierno', fromName: '💚 Cari', fromEmail: 'photoalerts@catgallerypics.com', body: 'Subí la foto acá: https://imgur.com/a/1Dfibe1X3rQ', isSpam: true, type: 'promo' },
-  { subject: 'Mirá qué bolita dormida', fromName: '💚 Cari', fromEmail: 'sweetshots@meowdrop.io', body: 'Está en la galería: https://flickr.com/photos/cari/2Hfks8Y4t', isSpam: true, type: 'promo' },
-  { subject: 'Este te va a encantar', fromName: '💚 Cari', fromEmail: 'offers@kittyclub.store', body: 'Subí la foto aquí: https://drive.google.com/3Jglt9Z5uz594tSk1fEZAHXN2', isSpam: true, type: 'promo' },
-  { subject: 'Amor de gatito', fromName: '💚 Cari', fromEmail: 'cuteads@pawmarket.net', body: 'Mirá esta belleza: https://catpicshare.net/4Khmu0A6va605uTl2gFAAIYO3', isSpam: true, type: 'promo' },
-  { subject: 'Qué cara de inocente 😻', fromName: '💚 Cari', fromEmail: 'hotdeals@meowpixx.com', body: 'Te lo mando por acá: https://postimg.cc/5Linv1B7wb7', isSpam: true, type: 'promo' },
-  { subject: 'Desperté con esta vista', fromName: '💚 Cari', fromEmail: 'updates@catgalleryhub.com', body: 'Mirá lo que me encontré: https://ibb.co/6Mopw2C8xc8', isSpam: true, type: 'promo' },
-  { subject: 'No podés creer esto', fromName: '💚 Cari', fromEmail: 'newsletter@purrfectoffers.co', body: 'Jajaja mirá: https://imgbb.com/7Npqx3D9yd9', isSpam: true, type: 'promo' },
-  { subject: 'Foto del día ✨', fromName: '💚 Cari', fromEmail: 'promos@dailycatshots.net', body: 'Hoy capturé esta joya: https://drive.google.com/8Oqry4E0ze0', isSpam: true, type: 'promo' },
-  { subject: 'Posando como modelo', fromName: '💚 Cari', fromEmail: 'marketing@catmoments.shop', body: 'Salió re bien esta: https://unsplash.com/photos/9Prsz5F1af1', isSpam: true, type: 'promo' },
-  { subject: 'Momento de relax', fromName: '💚 Cari', fromEmail: 'offers@meowgallery.org', body: 'Qué paz transmite: https://pinterest.com/pin/10Qstu6G2bg', isSpam: true, type: 'promo' }
+  { subject: 'Decime si no es tierno', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'photoalerts@catgallerypics.com', body: 'Subí la foto acá: https://imgur.com/a/1Dfibe1X3rQ', isSpam: true, type: 'promo' },
+  { subject: 'Mirá qué bolita dormida', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'sweetshots@meowdrop.io', body: 'Está en la galería: https://flickr.com/photos/cari/2Hfks8Y4t', isSpam: true, type: 'promo' },
+  { subject: 'Este te va a encantar', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'offers@kittyclub.store', body: 'Subí la foto aquí: https://drive.google.com/3Jglt9Z5uz594tSk1fEZAHXN2', isSpam: true, type: 'promo' },
+  { subject: 'Amor de gatito', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'cuteads@pawmarket.net', body: 'Mirá esta belleza: https://catpicshare.net/4Khmu0A6va605uTl2gFAAIYO3', isSpam: true, type: 'promo' },
+  { subject: 'Qué cara de inocente 😻', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'hotdeals@meowpixx.com', body: 'Te lo mando por acá: https://postimg.cc/5Linv1B7wb7', isSpam: true, type: 'promo' },
+  { subject: 'Desperté con esta vista', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'updates@catgalleryhub.com', body: 'Mirá lo que me encontré: https://ibb.co/6Mopw2C8xc8', isSpam: true, type: 'promo' },
+  { subject: 'No podés creer esto', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'newsletter@purrfectoffers.co', body: 'Jajaja mirá: https://imgbb.com/7Npqx3D9yd9', isSpam: true, type: 'promo' },
+  { subject: 'Foto del día ✨', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'promos@dailycatshots.net', body: 'Hoy capturé esta joya: https://drive.google.com/8Oqry4E0ze0', isSpam: true, type: 'promo' },
+  { subject: 'Posando como modelo', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'marketing@catmoments.shop', body: 'Salió re bien esta: https://unsplash.com/photos/9Prsz5F1af1', isSpam: true, type: 'promo' },
+  { subject: 'Momento de relax', fromName: GIRLFRIEND_FROM_NAME, fromEmail: 'offers@meowgallery.org', body: 'Qué paz transmite: https://pinterest.com/pin/10Qstu6G2bg', isSpam: true, type: 'promo' },
+
+  { subject: 'Tenés que ver esto 😂', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Tiny Desk de 31 Minutos “exclusivo”, pedirá validación antes de verlo: https://yotube.com/watch?v=UEqTIwRrWvA', isSpam: true, type: 'promo' },
+  { subject: 'Relajate un toque (ASMR premium)', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Minecraft ASMR pero primero iniciá sesión para “HD ilimitado”: https://yotube.com/watch?v=AwdrXKbjBoE', isSpam: true, type: 'promo' },
+  { subject: 'Lluvia + cabaña = foco total ☔', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Activá la extensión “FocusView” para verlo sin anuncios: https://yotube.com/watch?v=Dy3VtjcHdCs', isSpam: true, type: 'promo' },
+  { subject: 'Pink Floyd en 8K 🎸', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Canal “oficial” con descargas gratis si vinculás tu cuenta: https://yotube.com/watch?v=bZwxTX2pWmw', isSpam: true, type: 'promo' },
+  { subject: 'Tema oculto que vuela la cabeza 🔥', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Acceso anticipado, solo verificá tu edad con tarjeta (sin cargo): https://yotube.com/watch?v=dQw4w9WgXcQ', isSpam: true, type: 'promo' },
+  { subject: 'Mini concierto secreto de títeres', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Cupón exclusivo, pedirá registro social para canjear: https://yotube.com/watch?v=UEqTIwRrWvA', isSpam: true, type: 'promo' },
+  { subject: 'ASMR gamer sin cortes 😴', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: '“Mejor experiencia” si conectás tu YouTube: https://yotube.com/watch?v=Dy3VtjcHdCs', isSpam: true, type: 'promo' },
+  { subject: 'Inspirate con esta joya chilena', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Descarga directa en ZIP (subtítulos incluidos): https://yotube.com/watch?v=UEqTIwRrWvA', isSpam: true, type: 'promo' },
+  { subject: 'Versión extendida remasterizada', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Streaming “premium” a 1 ARS para probar: https://yotube.com/watch?v=bZwxTX2pWmw', isSpam: true, type: 'promo' },
+  { subject: 'No te pierdas esto 🤣', fromName: BESTFRIEND_FROM_NAME, fromEmail: BESTFRIEND_FROM_EMAIL, body: 'Prometen clip gracioso, pero pide logueo con Google primero: https://yotube.com/watch?v=dQw4w9WgXcQ', isSpam: true, type: 'promo' }
 ];
