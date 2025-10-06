@@ -116,12 +116,27 @@ export const useEmailStore = defineStore('email', () => {
       saveEmails();
       const statsStore = useStatsStore();
       if (email.isSpam) {
+        // Email de spam: sumar puntos y monedas
         statsStore.addScore(statsStore.pointsPerSpam);
         statsStore.recordCorrectDeletion();
-        if (email.type === 'nigerian prince') {
+        if (email.type === 'nigerianprince') {
           statsStore.recordNigerianPrinceDeletion();
         }
       } else {
+        // Email legítimo: RESTAR solo monedas (penalización)
+        const penalty = statsStore.pointsPerSpam;
+        
+        // Restar monedas (score)
+        if (statsStore.score >= penalty) {
+          statsStore.score -= penalty;
+        } else {
+          statsStore.score = 0;
+        }
+        
+        // Reproducir sonido de penalización
+        soundStore.playPenaltySound();
+        
+        // totalSpamDeleted NO se resta, es una estadística acumulativa
         statsStore.recordIncorrectDeletion();
       }
     }
