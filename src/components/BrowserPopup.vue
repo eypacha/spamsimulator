@@ -78,6 +78,7 @@
 import { ref, computed, watch, onUnmounted } from 'vue';
 import { useStatsStore } from '../store/stats.js';
 import { useEmailStore } from '../store/email.js';
+import { useSoundStore } from '../store/sound.js';
 import PhishingPrize from './browser-templates/PhishingPrize.vue';
 import VirusWarning from './browser-templates/VirusWarning.vue';
 import FakeBank from './browser-templates/FakeBank.vue';
@@ -85,6 +86,7 @@ import SurveyScam from './browser-templates/SurveyScam.vue';
 
 const statsStore = useStatsStore();
 const emailStore = useEmailStore();
+const soundStore = useSoundStore();
 
 const props = defineProps({
   show: Boolean,
@@ -124,6 +126,9 @@ function getRandomPosition() {
 
 // Función para crear un popup adicional
 function createAdditionalPopup() {
+  // Reproducir sonido de win (cortando el anterior)
+  soundStore.playWinSound();
+  
   // Penalización: descontar 50% de los puntos por spam (como monedas), mínimo 1
   const penalty = Math.max(1, Math.floor(statsStore.pointsPerSpam / 2));
   
@@ -198,6 +203,9 @@ function closePopup() {
 // Countdown para páginas spam
 watch(() => props.show, (newVal) => {
   if (newVal) {
+    // Reproducir sonido de win al abrir el popup
+    soundStore.playWinSound();
+    
     // Penalización del popup principal: descontar 50% de los puntos por spam (como monedas), mínimo 1
     const penalty = Math.max(1, Math.floor(statsStore.pointsPerSpam / 2));
     

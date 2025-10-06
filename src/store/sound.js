@@ -75,6 +75,11 @@ export const useSoundStore = defineStore('sound', () => {
     volume: 0.9
   });
   
+  const winSound = new Howl({
+    src: [getAssetPath('sounds/win.mp3')],
+    volume: 0.8
+  });
+  
   function playVirusSound() {
     if (!soundEnabled.value) return;
     console.log('Playing virus sound...');
@@ -127,6 +132,13 @@ export const useSoundStore = defineStore('sound', () => {
     penaltySound.play();
   }
 
+  function playWinSound() {
+    if (!soundEnabled.value) return;
+    // Detener el sonido anterior si está reproduciéndose
+    winSound.stop();
+    winSound.play();
+  }
+
   // Función para cambiar volumen global
   function setVolume(volume) {
     Howler.volume(volume);
@@ -150,6 +162,7 @@ export const useSoundStore = defineStore('sound', () => {
     playSendSound,
     playVirusSound,
     playPenaltySound,
+    playWinSound,
     toggleSound
   };
 });
