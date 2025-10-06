@@ -13,7 +13,7 @@
       <span v-if="comboUnlocked && comboMultiplier > 1" class="font-bold text-yellow-300  animate-pulse pulse-fast">x{{
         comboMultiplier }}</span>
       <span :class="['transition-transform duration-300', { 'scale-110': scoreAnimating }]">🪙 {{ score }}</span>
-      <span>⭐ {{ totalSpamDeleted }}</span>
+      <span>🗑️ {{ totalSpamDeleted }}</span>
     </div>
   </div>
 </template>
