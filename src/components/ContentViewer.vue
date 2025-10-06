@@ -31,8 +31,18 @@
       
       <!-- Contenido del visor -->
       <div class="flex-1 overflow-auto bg-white p-3 flex items-center justify-center">
-
+        <!-- Imagen -->
         <img v-if="contentType === 'image'" :src="contentData" alt="Contenido" class="w-full max-h-full object-cover rounded shadow-lg" />
+        
+        <!-- Iframe (videos, etc) -->
+        <iframe 
+          v-else-if="contentType === 'iframe'" 
+          :src="getEmbedUrl(contentData)" 
+          class="w-full h-full rounded shadow-lg" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen
+        ></iframe>
         
         <!-- Texto u otros contenidos -->
         <div v-else class="text-gray-700 text-lg">
@@ -63,6 +73,39 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+
+// Función para convertir URLs de YouTube a formato embed
+function getEmbedUrl(url) {
+  if (!url) return '';
+  
+  // Si ya es una URL embed, devolverla tal cual
+  if (url.includes('youtube.com/embed/')) {
+    return url;
+  }
+  
+  // Extraer el video ID de diferentes formatos de YouTube
+  let videoId = '';
+  
+  // Formato: https://www.youtube.com/watch?v=VIDEO_ID
+  const watchMatch = url.match(/[?&]v=([^&]+)/);
+  if (watchMatch) {
+    videoId = watchMatch[1];
+  }
+  
+  // Formato: https://youtu.be/VIDEO_ID
+  const shortMatch = url.match(/youtu\.be\/([^?]+)/);
+  if (shortMatch) {
+    videoId = shortMatch[1];
+  }
+  
+  // Si encontramos el video ID, devolver URL embed
+  if (videoId) {
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  
+  // Para otros tipos de iframes, devolver la URL tal cual
+  return url;
+}
 </script>
 
 <style scoped>

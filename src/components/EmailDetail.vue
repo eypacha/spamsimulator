@@ -118,6 +118,12 @@ function handleLegitimateContent() {
     }
     
     console.log('[DEBUG] Modal should open now with:', contentData.value);
+  } else if (content === 'iframe' && props.email.url) {
+    // Mostrar iframe (videos, etc) usando la URL del email
+    contentType.value = 'iframe';
+    contentData.value = props.email.url;
+    showContent.value = true;
+    console.log('[DEBUG] Iframe should open now with:', contentData.value);
   } else {
     console.log('[DEBUG] Condition not met. content:', content, 'url:', props.email.url);
   }
@@ -138,23 +144,51 @@ const italicRegex = /\*([^*]+)\*|_([^_]+)_/g;
 const parsedBody = computed(() => {
   if (!props.email.body) return '';
   let body = props.email.body;
+  
+  // Paso 1: Reemplazar links con placeholders para protegerlos
+  const linkPlaceholders = [];
+  let linkCounter = 0;
+  
   // Links markdown: guardamos los URLs para no parsearlos dos veces
   const markdownLinks = [];
-  // Usar regex robusto
+  
+  // Usar regex robusto para markdown links
   body = body.replace(mdLinkRegexRobust, (match, text, url) => {
     console.log('[DEBUG] Markdown link match:', { match, text, url });
     markdownLinks.push(url);
-    return `<span data-url="${url}" style='color:#2563eb;text-decoration:underline;cursor:pointer'>${text}</span>`;
+    const placeholder = `###LINK${linkCounter}###`;
+    linkPlaceholders.push({
+      placeholder,
+      html: `<span data-url="${url}" style='color:#2563eb;text-decoration:underline;cursor:pointer'>${text}</span>`
+    });
+    linkCounter++;
+    return placeholder;
   });
+  
   // URLs sueltas, pero ignoramos las que ya están en markdownLinks
   body = body.replace(urlRegex, url => {
     if (markdownLinks.includes(url)) return url; // ya parseado
-    return `<span data-url="${url}" style='color:#2563eb;text-decoration:underline;cursor:pointer'>${url}</span>`;
+    const placeholder = `###LINK${linkCounter}###`;
+    linkPlaceholders.push({
+      placeholder,
+      html: `<span data-url="${url}" style='color:#2563eb;text-decoration:underline;cursor:pointer'>${url}</span>`
+    });
+    linkCounter++;
+    return placeholder;
   });
+  
+  // Paso 2: Aplicar formato de texto (ahora los links están protegidos)
   // Bold
   body = body.replace(boldRegex, (match, g1, g2) => `<span style='font-weight:bold;'>${g1 || g2}</span>`);
   // Italic
   body = body.replace(italicRegex, (match, g1, g2) => `<span style='font-style:italic;'>${g1 || g2}</span>`);
+  
+  // Paso 3: Restaurar los links
+  linkPlaceholders.forEach(({ placeholder, html }) => {
+    body = body.replaceAll(placeholder, html);
+  });
+  
+  // Resto del formato
   // Encabezados markdown ###, ## y #
   body = body.replace(/(^|<br>)###\s*(.*?)(?=<br>|$)/g, (match, br, text) => `${br}<span style='font-size:1.1em;font-weight:bold;color:#5e35b1;'>${text}</span>`);
   body = body.replace(/(^|<br>)##\s*(.*?)(?=<br>|$)/g, (match, br, text) => `${br}<span style='font-size:1.3em;font-weight:bold;color:#142c96;'>${text}</span>`);
