@@ -54,11 +54,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   // Bulk Delete - Eliminar múltiples emails seleccionados
   const bulkDeleteUnlocked = ref(loaded?.bulkDeleteUnlocked ?? false);
-  const bulkDeleteUpgradeCost = ref(loaded?.bulkDeleteUpgradeCost ?? 90);
+  const bulkDeleteUpgradeCost = ref(loaded?.bulkDeleteUpgradeCost ?? 50);
 
   // Bulk Archive - Archivar múltiples emails seleccionados
   const bulkArchiveUnlocked = ref(loaded?.bulkArchiveUnlocked ?? false);
-  const bulkArchiveUpgradeCost = ref(loaded?.bulkArchiveUpgradeCost ?? 110);
+  const bulkArchiveUpgradeCost = ref(loaded?.bulkArchiveUpgradeCost ?? 60);
 
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
