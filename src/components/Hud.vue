@@ -13,8 +13,9 @@
       <span v-if="comboUnlocked && comboMultiplier > 1" class="font-bold text-yellow-300  animate-pulse pulse-fast">x{{
         comboMultiplier }}</span>
       <span v-if="virusCount > 0">🦠 {{ virusCount }}</span>
-      <span :class="['transition-transform duration-300', { 'scale-110': scoreAnimating }]">🪙 {{ score }}</span>
+      <span :class="['transition-transform duration-300', { 'scale-150': scoreAnimating }]">🪙 {{ score }}</span>
       <span>⭐ {{ totalSpamDeleted }}</span>
+      <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{ unlockedAchievements }}</span>
     </div>
   </div>
 </template>
@@ -30,12 +31,14 @@ const statsStore = useStatsStore();
 const score = computed(() => statsStore.score);
 const virusCount = computed(() => statsStore.virusCount);
 const totalSpamDeleted = computed(() => statsStore.totalSpamDeleted);
+const unlockedAchievements = computed(() => statsStore.unlockedAchievements);
 const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);
 const spamFrenzyUnlocked = computed(() => statsStore.spamFrenzyUnlocked);
 const spamFrenzyActive = computed(() => statsStore.spamFrenzyActive);
 const spamFrenzyTime = computed(() => statsStore.spamFrenzyTime);
 const scoreAnimating = ref(false);
+const achievementsAnimating = ref(false);
 
 function activateSpamFrenzy() {
   statsStore.activateSpamFrenzy();
@@ -45,6 +48,13 @@ watch(score, () => {
   scoreAnimating.value = true;
   setTimeout(() => {
     scoreAnimating.value = false;
+  }, 300);
+});
+
+watch(unlockedAchievements, () => {
+  achievementsAnimating.value = true;
+  setTimeout(() => {
+    achievementsAnimating.value = false;
   }, 300);
 });
 </script>

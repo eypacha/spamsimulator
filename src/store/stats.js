@@ -289,7 +289,47 @@ export const useStatsStore = defineStore('stats', () => {
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount
   ], saveAllStats);
 
-  return { score, virusCount, incrementVirusCount, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
+  // Computed para contar logros desbloqueados
+  const unlockedAchievements = computed(() => {
+    let count = 0;
+    
+    // Logros de spam eliminado
+    if (totalSpamDeleted.value >= 50) count++;
+    if (totalSpamDeleted.value >= 100) count++;
+    if (totalSpamDeleted.value >= 1000) count++;
+    if (totalSpamDeleted.value >= 10000) count++;
+    
+    // Logros de emails leídos
+    if (totalEmailsRead.value >= 50) count++;
+    if (totalEmailsRead.value >= 100) count++;
+    if (totalEmailsRead.value >= 1000) count++;
+    
+    // Logros de monedas
+    if (totalCoinsEarned.value >= 500) count++;
+    if (totalCoinsEarned.value >= 1000) count++;
+    if (totalCoinsEarned.value >= 10000) count++;
+    
+    // Logros de racha
+    if (maxStreak.value >= 10) count++;
+    if (maxStreak.value >= 50) count++;
+    if (maxStreak.value >= 100) count++;
+    
+    // Logros de correos enviados
+    if (totalEmailsSent.value >= 1) count++;
+    if (totalEmailsSent.value >= 10) count++;
+    if (totalEmailsSent.value >= 100) count++;
+    
+    // Logros de correos de novia
+    if (totalGirlfriendEmailsRead.value >= 100) count++;
+    if (totalGirlfriendEmailsRead.value >= 10000) count++;
+    
+    // Logro de príncipe nigeriano
+    if (totalNigerianPrinceDeleted.value >= 1000) count++;
+    
+    return count;
+  });
+
+  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
     spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,
