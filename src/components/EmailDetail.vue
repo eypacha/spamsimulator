@@ -24,6 +24,15 @@
       :url="clickedUrl" 
       @close="showBrowser = false"
     />
+    
+    <!-- Content Viewer for legitimate links -->
+    <ContentViewer
+      :show="showContent"
+      :content-type="contentType"
+      :content-data="contentData"
+      :url="clickedUrl"
+      @close="showContent = false"
+    />
   </div>
 </template>
 
@@ -34,6 +43,7 @@ import { formatDate } from '@/utils/date';
 import { shouldShowAds as checkShouldShowAds } from '@/utils/ads';
 import GoogleAd from './GoogleAd.vue';
 import BrowserPopup from './BrowserPopup.vue';
+import ContentViewer from './ContentViewer.vue';
 import { useStatsStore } from '../store/stats.js';
 
 const statsStore = useStatsStore();
@@ -42,6 +52,9 @@ const emit = defineEmits(['delete', 'star', 'deletePermanent', 'archive']);
 
 const showBrowser = ref(false);
 const clickedUrl = ref('');
+const showContent = ref(false);
+const contentType = ref('');
+const contentData = ref('');
 
 const shouldShowAds = computed(() => checkShouldShowAds(props.email));
 
@@ -62,9 +75,42 @@ function handleLinkClick(event) {
   const target = event.target;
   if (target.tagName === 'SPAN' && target.dataset.url) {
     event.preventDefault();
-    clickedUrl.value = target.dataset.url;
-    showBrowser.value = true;
+    const url = target.dataset.url;
+    
+    console.log('[DEBUG] Link clicked:', url);
+    console.log('[DEBUG] Email isSpam:', props.email.isSpam);
+    console.log('[DEBUG] Email content:', props.email.content);
+    console.log('[DEBUG] Email url:', props.email.url);
+    
+    // Si el email es spam, abrir ventana de spam browser
+    if (props.email.isSpam) {
+      clickedUrl.value = url;
+      showBrowser.value = true;
+    } else {
+      // Si es legítimo, procesar el contenido según el campo content del email
+      handleLegitimateContent();
+    }
   }
+}
+
+function handleLegitimateContent() {
+  // Usar el campo content del email para determinar qué mostrar
+  const content = props.email.content;
+  
+  console.log('[DEBUG] handleLegitimateContent called');
+  console.log('[DEBUG] content:', content);
+  console.log('[DEBUG] props.email.url:', props.email.url);
+  
+  if (content === 'picture' && props.email.url) {
+    // Mostrar imagen usando la URL especificada en el email
+    contentType.value = 'image';
+    contentData.value = `images/${props.email.url}`;
+    showContent.value = true;
+    console.log('[DEBUG] Modal should open now with:', contentData.value);
+  } else {
+    console.log('[DEBUG] Condition not met. content:', content, 'url:', props.email.url);
+  }
+  // Para cualquier otro tipo de contenido, simplemente no hacer nada
 }
 
 // Regex para URLs (simplificado)

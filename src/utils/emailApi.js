@@ -15,6 +15,8 @@ export function newEmail(parsed) {
         type: parsed.type || '',
         starred: false,
         read: false,
-        trash: false
+        trash: false,
+        content: parsed.content,
+        url: parsed.url
     };
 }
