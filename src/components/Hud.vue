@@ -12,6 +12,7 @@
     <div class="flex items-center space-x-4">
       <span v-if="comboUnlocked && comboMultiplier > 1" class="font-bold text-yellow-300  animate-pulse pulse-fast">x{{
         comboMultiplier }}</span>
+      <span v-if="virusCount > 0">🦠 {{ virusCount }}</span>
       <span :class="['transition-transform duration-300', { 'scale-110': scoreAnimating }]">🪙 {{ score }}</span>
       <span>🗑️ {{ totalSpamDeleted }}</span>
     </div>
@@ -27,6 +28,7 @@ const statsStore = useStatsStore();
 
 
 const score = computed(() => statsStore.score);
+const virusCount = computed(() => statsStore.virusCount);
 const totalSpamDeleted = computed(() => statsStore.totalSpamDeleted);
 const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);

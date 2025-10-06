@@ -203,8 +203,17 @@ function closePopup() {
 // Countdown para páginas spam
 watch(() => props.show, (newVal) => {
   if (newVal) {
-    // Reproducir sonido de win al abrir el popup
-    soundStore.playWinSound();
+    // 50% de probabilidad de infectarse con un virus al hacer clic en un link
+    const gotVirus = Math.random() < 0.5;
+    
+    if (gotVirus) {
+      // Si hay virus, solo reproducir el sonido de virus
+      statsStore.incrementVirusCount();
+      soundStore.playVirusSound();
+    } else {
+      // Si no hay virus, reproducir el sonido de win
+      soundStore.playWinSound();
+    }
     
     // Penalización del popup principal: descontar 50% de los puntos por spam (como monedas), mínimo 1
     const penalty = Math.max(1, Math.floor(statsStore.pointsPerSpam / 2));

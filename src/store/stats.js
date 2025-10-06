@@ -34,6 +34,7 @@ export const useStatsStore = defineStore('stats', () => {
   function saveAllStats() {
     saveStats({
       score: score.value,
+      virusCount: virusCount.value,
       level: level.value,
       pointsPerSpam: pointsPerSpam.value,
       upgradeCost: upgradeCost.value,
@@ -182,6 +183,7 @@ export const useStatsStore = defineStore('stats', () => {
 
   // const loaded = loadStats(); // Already declared at the top
   const score = ref(loaded?.score ?? 0);
+  const virusCount = ref(loaded?.virusCount ?? 0);
   const soundStore = useSoundStore();
   const buyUpgradeHandler = createUpgradeHandler(score, saveAllStats, soundStore);
   const level = ref(loaded?.level ?? 1); // Maybe keep level for display, but not auto
@@ -218,6 +220,11 @@ export const useStatsStore = defineStore('stats', () => {
 
   function addScore(points) {
     scoreManager.addScore(score, points);
+  }
+
+  function incrementVirusCount() {
+    virusCount.value += 1;
+    saveAllStats();
   }
 
   function recordCorrectDeletion() {
@@ -282,7 +289,7 @@ export const useStatsStore = defineStore('stats', () => {
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount
   ], saveAllStats);
 
-  return { score, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
+  return { score, virusCount, incrementVirusCount, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
     spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,
