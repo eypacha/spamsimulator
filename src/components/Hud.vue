@@ -12,8 +12,8 @@
     <div class="flex items-center space-x-4">
       <span v-if="comboUnlocked && comboMultiplier > 1" class="font-bold text-yellow-300  animate-pulse pulse-fast">x{{
         comboMultiplier }}</span>
-      <span v-if="virusCount > 0">🦠 {{ virusCount }}</span>
-      <span :class="['transition-transform duration-300', { 'scale-150': scoreAnimating }]">🪙 {{ score }}</span>
+      <span v-if="virusCount > 0" :class="['transition-all duration-300', { 'scale-150 text-red-500': virusAnimating }]">🦠 {{ virusCount }}</span>
+      <span :class="['transition-all duration-300', { 'scale-150': scoreAnimating, 'text-red-500': scoreDecreasing }]">🪙 {{ score }}</span>
       <span>⭐ {{ totalSpamDeleted }}</span>
       <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{ unlockedAchievements }}</span>
     </div>
@@ -34,20 +34,26 @@ const totalSpamDeleted = computed(() => statsStore.totalSpamDeleted);
 const unlockedAchievements = computed(() => statsStore.unlockedAchievements);
 const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);
-const spamFrenzyUnlocked = computed(() => statsStore.spamFrenzyUnlocked);
-const spamFrenzyActive = computed(() => statsStore.spamFrenzyActive);
-const spamFrenzyTime = computed(() => statsStore.spamFrenzyTime);
 const scoreAnimating = ref(false);
+const scoreDecreasing = ref(false);
 const achievementsAnimating = ref(false);
+const virusAnimating = ref(false);
 
 function activateSpamFrenzy() {
   statsStore.activateSpamFrenzy();
 }
 
-watch(score, () => {
+watch(score, (newValue, oldValue) => {
   scoreAnimating.value = true;
+  // Detectar si el score está decreciendo
+  if (oldValue !== undefined && newValue < oldValue) {
+    scoreDecreasing.value = true;
+  } else {
+    scoreDecreasing.value = false;
+  }
   setTimeout(() => {
     scoreAnimating.value = false;
+    scoreDecreasing.value = false;
   }, 300);
 });
 
@@ -55,6 +61,13 @@ watch(unlockedAchievements, () => {
   achievementsAnimating.value = true;
   setTimeout(() => {
     achievementsAnimating.value = false;
+  }, 300);
+});
+
+watch(virusCount, () => {
+  virusAnimating.value = true;
+  setTimeout(() => {
+    virusAnimating.value = false;
   }, 300);
 });
 </script>
