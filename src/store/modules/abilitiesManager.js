@@ -39,6 +39,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const virusBombUpgradeCost = ref(loaded?.virusBombUpgradeCost ?? 250);
   const virusBombCooldown = ref(loaded?.virusBombCooldown ?? 0);
 
+  // Antivirus - Elimina un virus con cooldown
+  const antivirusUnlocked = ref(loaded?.antivirusUnlocked ?? false);
+  const antivirusUpgradeCost = ref(loaded?.antivirusUpgradeCost ?? 180);
+  const antivirusCooldown = ref(loaded?.antivirusCooldown ?? 0);
+
   // Group Select - Selecciona grupos consecutivos del mismo tipo
   const groupSelectUnlocked = ref(loaded?.groupSelectUnlocked ?? false);
   const groupSelectUpgradeCost = ref(loaded?.groupSelectUpgradeCost ?? 150);
@@ -73,6 +78,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockVirusBomb() {
     virusBombUnlocked.value = true;
+  }
+
+  function unlockAntivirus() {
+    antivirusUnlocked.value = true;
   }
 
   function unlockGroupSelect() {
@@ -114,6 +123,17 @@ export function createAbilitiesManager(loaded, saveAllStats) {
         if (spamFrenzyTime.value <= 0) {
           spamFrenzyActive.value = false;
           clearInterval(interval);
+          saveAllStats();
+        }
+      }, 1000);
+    }
+
+    // Antivirus cooldown
+    if (antivirusCooldown.value > 0) {
+      const cdInterval = setInterval(() => {
+        antivirusCooldown.value--;
+        if (antivirusCooldown.value <= 0) {
+          clearInterval(cdInterval);
           saveAllStats();
         }
       }, 1000);
@@ -174,6 +194,24 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     saveAllStats();
   }
 
+  function activateAntivirus(removeVirusCallback) {
+    if (!antivirusUnlocked.value || antivirusCooldown.value > 0) return false;
+    const removed = removeVirusCallback();
+    if (removed) {
+      antivirusCooldown.value = 20; // 20s cooldown
+      const cdInterval = setInterval(() => {
+        antivirusCooldown.value--;
+        if (antivirusCooldown.value <= 0) {
+          clearInterval(cdInterval);
+          saveAllStats();
+        }
+      }, 1000);
+      saveAllStats();
+      return true;
+    }
+    return false;
+  }
+
   return {
     // Spam Frenzy
     spamFrenzyUnlocked,
@@ -215,6 +253,12 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     virusBombCooldown,
     unlockVirusBomb,
     activateVirusBomb,
+  // Antivirus
+  antivirusUnlocked,
+  antivirusUpgradeCost,
+  antivirusCooldown,
+  unlockAntivirus,
+  activateAntivirus,
     
     // Group Select
     groupSelectUnlocked,

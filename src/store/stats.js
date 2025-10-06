@@ -85,6 +85,10 @@ export const useStatsStore = defineStore('stats', () => {
       virusBombUnlocked: abilitiesManager.virusBombUnlocked.value,
       virusBombUpgradeCost: abilitiesManager.virusBombUpgradeCost.value,
       virusBombCooldown: abilitiesManager.virusBombCooldown.value,
+  // Antivirus
+  antivirusUnlocked: abilitiesManager.antivirusUnlocked.value,
+  antivirusUpgradeCost: abilitiesManager.antivirusUpgradeCost.value,
+  antivirusCooldown: abilitiesManager.antivirusCooldown.value,
       // Group Select
       groupSelectUnlocked: abilitiesManager.groupSelectUnlocked.value,
       groupSelectUpgradeCost: abilitiesManager.groupSelectUpgradeCost.value,
@@ -117,6 +121,10 @@ export const useStatsStore = defineStore('stats', () => {
     virusBombUpgradeCost,
     virusBombCooldown,
     activateVirusBomb,
+  antivirusUnlocked,
+  antivirusUpgradeCost,
+  antivirusCooldown,
+  activateAntivirus,
     groupSelectUnlocked,
     groupSelectUpgradeCost,
     keyboardShortcutsUnlocked,
@@ -149,6 +157,10 @@ export const useStatsStore = defineStore('stats', () => {
 
   function buyVirusBombUpgrade() {
     buyUpgradeHandler(virusBombUpgradeCost, abilitiesManager.unlockVirusBomb, 1.5, !virusBombUnlocked.value);
+  }
+
+  function buyAntivirusUpgrade() {
+    buyUpgradeHandler(antivirusUpgradeCost, abilitiesManager.unlockAntivirus, 1.5, !antivirusUnlocked.value);
   }
 
   function buyGroupSelectUpgrade() {
@@ -225,6 +237,15 @@ export const useStatsStore = defineStore('stats', () => {
   function incrementVirusCount() {
     virusCount.value += 1;
     saveAllStats();
+  }
+
+  function removeOneVirus() {
+    if (virusCount.value > 0) {
+      virusCount.value -= 1;
+      saveAllStats();
+      return true;
+    }
+    return false;
   }
 
   // === Virus coin drain loop ===
@@ -390,6 +411,8 @@ export const useStatsStore = defineStore('stats', () => {
     starredUnlocked, starredUpgradeCost, buyStarredUpgrade,
     // Virus Bomb Upgrade
     virusBombUnlocked, virusBombUpgradeCost, virusBombCooldown, activateVirusBomb, buyVirusBombUpgrade,
+    // Antivirus Upgrade
+    antivirusUnlocked, antivirusUpgradeCost, antivirusCooldown, activateAntivirus: () => activateAntivirus(removeOneVirus), buyAntivirusUpgrade,
     // Group Select Upgrade
     groupSelectUnlocked, groupSelectUpgradeCost, buyGroupSelectUpgrade,
     // Keyboard Shortcuts Upgrade

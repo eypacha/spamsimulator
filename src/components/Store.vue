@@ -168,6 +168,17 @@ const cards = computed(() => [
     rounded: true,
   },
   {
+    title: 'Antivirus',
+    description: '🛡️ Elimina 1 virus activo. Cooldown: 20s.',
+    details: [
+      statsStore.antivirusUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.antivirusUpgradeCost} 🪙`,
+      statsStore.antivirusUnlocked ? 'Remueve virus' : 'Virus sin control'
+    ],
+    onClick: () => statsStore.buyAntivirusUpgrade(),
+    disabled: statsStore.score < statsStore.antivirusUpgradeCost || statsStore.antivirusUnlocked,
+    rounded: true,
+  },
+  {
     title: 'Selección Grupal',
     description: '📦 Al seleccionar un email, selecciona todo el grupo consecutivo del mismo tipo (SPAM/NO SPAM).',
     details: [

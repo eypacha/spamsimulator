@@ -69,6 +69,20 @@ export const useSoundStore = defineStore('sound', () => {
       console.error('Error playing virus sound:', error);
     }
   });
+
+  const antivirusSound = new Howl({
+    src: [getAssetPath('sounds/sword.wav')],
+    volume: 1,
+    onload: function() {
+      console.log('Antivirus (sword) sound loaded successfully');
+    },
+    onloaderror: function(id, error) {
+      console.error('Error loading antivirus sound:', error);
+    },
+    onplayerror: function(id, error) {
+      console.error('Error playing antivirus sound:', error);
+    }
+  });
   
   const penaltySound = new Howl({
     src: [getAssetPath('sounds/penalty.wav')],
@@ -84,6 +98,11 @@ export const useSoundStore = defineStore('sound', () => {
     if (!soundEnabled.value) return;
     console.log('Playing virus sound...');
     virusSound.play();
+  }
+
+  function playAntivirusSound() {
+    if (!soundEnabled.value) return;
+    antivirusSound.play();
   }
 
   // Funciones para reproducir sonidos
@@ -161,6 +180,7 @@ export const useSoundStore = defineStore('sound', () => {
     playTrashSound,
     playSendSound,
     playVirusSound,
+  playAntivirusSound,
     playPenaltySound,
     playWinSound,
     toggleSound

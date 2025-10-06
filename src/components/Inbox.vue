@@ -29,6 +29,15 @@
           💣 Virus Bomb
           <span v-if="statsStore.virusBombCooldown > 0"> ({{ statsStore.virusBombCooldown }})</span>
         </button>
+        <button
+          v-if="statsStore.antivirusUnlocked"
+          @click="handleAntivirus"
+          :disabled="statsStore.antivirusCooldown > 0 || statsStore.virusCount === 0"
+          class="px-4 py-2 rounded bg-green-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-green-700"
+        >
+          🛡️ Antivirus
+          <span v-if="statsStore.antivirusCooldown > 0"> ({{ statsStore.antivirusCooldown }})</span>
+        </button>
       </div>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
@@ -140,5 +149,13 @@ function selectFirstThree() {
 function handleVirusBomb() {
   // Ejecutar el Virus Bomb, pasando la función de conversión del emailStore
   statsStore.activateVirusBomb(() => emailStore.convertLegitimateToSpam());
+}
+
+function handleAntivirus() {
+  // Antivirus elimina un virus si hay alguno
+  const activated = statsStore.activateAntivirus();
+  if (activated && soundStore.playAntivirusSound) {
+    soundStore.playAntivirusSound();
+  }
 }
 </script>
