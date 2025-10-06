@@ -164,6 +164,13 @@ export const useEmailStore = defineStore('email', () => {
         }
         
         soundStore.playPenaltySound();
+
+        // 50% de probabilidad de infectarse con un virus adicional al archivar spam
+        if (Math.random() < 0.5) {
+          statsStore.incrementVirusCount();
+          // Sonido de virus para feedback inmediato
+          soundStore.playVirusSound && soundStore.playVirusSound();
+        }
       } else {
         statsStore.addScore(statsStore.pointsPerSpam);
       }
