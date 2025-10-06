@@ -164,8 +164,9 @@ export const useEmailStore = defineStore('email', () => {
         }
         
         soundStore.playPenaltySound();
+      } else {
+        statsStore.addScore(statsStore.pointsPerSpam);
       }
-      // Si es legítimo, no pasa nada (sin sonido, sin penalización)
     }
   }
 
