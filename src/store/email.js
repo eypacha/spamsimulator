@@ -145,11 +145,10 @@ export const useEmailStore = defineStore('email', () => {
   }
 
   function archiveEmail(id) {
-    // Archivar: sin penalización si es legítimo, con penalización si es spam
-    const email = emails.value.find(e => e.id === id);
-    if (email) {
-      email.trash = true;
-      saveEmails();
+    // Archivar: elimina directamente el email sin pasar por la papelera
+    const emailIndex = emails.value.findIndex(e => e.id === id);
+    if (emailIndex !== -1) {
+      const email = emails.value[emailIndex];
       
       const statsStore = useStatsStore();
       
@@ -174,6 +173,10 @@ export const useEmailStore = defineStore('email', () => {
       } else {
         statsStore.addScore(statsStore.pointsPerSpam);
       }
+      
+      // Eliminar el email directamente del array
+      emails.value.splice(emailIndex, 1);
+      saveEmails();
     }
   }
 
