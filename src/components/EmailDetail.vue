@@ -108,6 +108,15 @@ function handleLegitimateContent() {
     contentType.value = 'image';
     contentData.value = `images/${props.email.url}`;
     showContent.value = true;
+    
+    // Si es una foto de gato (cats/XX.jpg), marcar como vista
+    const catMatch = props.email.url.match(/cats\/(\d+)\.jpg/);
+    if (catMatch) {
+      const catNumber = parseInt(catMatch[1]);
+      statsStore.markCatPictureViewed(catNumber);
+      console.log('[DEBUG] Cat picture viewed:', catNumber);
+    }
+    
     console.log('[DEBUG] Modal should open now with:', contentData.value);
   } else {
     console.log('[DEBUG] Condition not met. content:', content, 'url:', props.email.url);

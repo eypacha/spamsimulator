@@ -52,6 +52,7 @@ export const useStatsStore = defineStore('stats', () => {
       totalEmailsSent: statsTracker.totalEmailsSent.value,
       currentStreak: statsTracker.currentStreak.value,
       maxStreak: statsTracker.maxStreak.value,
+      catPicturesViewed: Array.from(statsTracker.catPicturesViewed.value),
       turboSpamLevel: turboSpamManager.turboSpamLevel.value,
       turboSpamInterval: turboSpamManager.turboSpamInterval.value,
       turboSpamUpgradeCost: turboSpamManager.turboSpamUpgradeCost.value,
@@ -410,10 +411,13 @@ export const useStatsStore = defineStore('stats', () => {
     // Logro de príncipe nigeriano
     if (totalNigerianPrinceDeleted.value >= 1000) count++;
     
+    // Logro de fotos de gatos
+    if (statsTracker.catPicturesViewed.value.size >= 20) count++;
+    
     return count;
   });
 
-  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
+  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
     spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,

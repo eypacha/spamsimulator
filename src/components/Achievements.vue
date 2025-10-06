@@ -211,5 +211,14 @@ const achievements = computed(() => [
     current: statsStore.totalGirlfriendEmailsRead,
     unlocked: statsStore.totalGirlfriendEmailsRead >= 10000
   },
+  {
+    id: 'cat-collector',
+    name: 'Michis',
+    description: 'Ver todas las fotos de gatos',
+    emoji: '😻',
+    target: 20,
+    current: statsStore.catPicturesViewed.size,
+    unlocked: statsStore.catPicturesViewed.size >= 20
+  },
 ]);
 </script>

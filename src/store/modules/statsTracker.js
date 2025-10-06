@@ -15,6 +15,7 @@ export function createStatsTracker(loaded, saveAllStats) {
   const totalEmailsSent = ref(loaded?.totalEmailsSent ?? 0);
   const currentStreak = ref(loaded?.currentStreak ?? 0);
   const maxStreak = ref(loaded?.maxStreak ?? 0);
+  const catPicturesViewed = ref(new Set(loaded?.catPicturesViewed ?? []));
 
   function recordEmailSent() {
     totalEmailsSent.value += 1;
@@ -26,6 +27,11 @@ export function createStatsTracker(loaded, saveAllStats) {
     if (email.fromEmail === 'caririchardson@gmail.com') {
       totalGirlfriendEmailsRead.value += 1;
     }
+  }
+  
+  function markCatPictureViewed(catNumber) {
+    catPicturesViewed.value.add(catNumber);
+    saveAllStats();
   }
 
   function recordCorrectDeletion() {
@@ -61,6 +67,7 @@ export function createStatsTracker(loaded, saveAllStats) {
     totalEmailsSent.value = 0;
     currentStreak.value = 0;
     maxStreak.value = 0;
+    catPicturesViewed.value = new Set();
   }
 
   return {
@@ -72,8 +79,10 @@ export function createStatsTracker(loaded, saveAllStats) {
     totalEmailsSent,
     currentStreak,
     maxStreak,
+    catPicturesViewed,
     recordEmailSent,
     markEmailAsRead,
+    markCatPictureViewed,
     recordCorrectDeletion,
     recordIncorrectDeletion,
     recordNigerianPrinceDeletion,
