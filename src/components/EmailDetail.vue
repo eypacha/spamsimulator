@@ -82,9 +82,11 @@ function handleLinkClick(event) {
     console.log('[DEBUG] Email content:', props.email.content);
     console.log('[DEBUG] Email url:', props.email.url);
     
+    // Guardar la URL clicada
+    clickedUrl.value = url;
+    
     // Si el email es spam, abrir ventana de spam browser
     if (props.email.isSpam) {
-      clickedUrl.value = url;
       showBrowser.value = true;
     } else {
       // Si es legítimo, procesar el contenido según el campo content del email
