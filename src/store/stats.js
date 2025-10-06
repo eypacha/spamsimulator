@@ -227,6 +227,51 @@ export const useStatsStore = defineStore('stats', () => {
     saveAllStats();
   }
 
+  // === Virus coin drain loop ===
+  const VIRUS_DRAIN_INTERVAL = 2000; // 2s
+  let virusDrainTimer = null;
+
+  function computeVirusDrain() {
+    if (virusCount.value <= 0) return 0;
+    const drainPerVirus = Math.max(1, Math.floor(pointsPerSpam.value * 0.25));
+    return drainPerVirus * virusCount.value;
+  }
+
+  function applyVirusDrain() {
+    const drain = computeVirusDrain();
+    if (drain > 0 && score.value > 0) {
+      score.value = Math.max(0, score.value - drain);
+      // Guardar y disparar animación negativa (HUD ya detecta decremento)
+      saveAllStats();
+      // Reproducir sonido de virus por drenaje
+      if (soundStore && soundStore.playVirusSound) {
+        soundStore.playVirusSound();
+      }
+    }
+  }
+
+  function startVirusDrainLoop() {
+    if (virusDrainTimer) return; // ya corriendo
+    virusDrainTimer = setInterval(applyVirusDrain, VIRUS_DRAIN_INTERVAL);
+  }
+
+  function stopVirusDrainLoop() {
+    if (virusDrainTimer) {
+      clearInterval(virusDrainTimer);
+      virusDrainTimer = null;
+    }
+  }
+
+  // Iniciar inmediatamente (el juego ya está montado al usar el store)
+  startVirusDrainLoop();
+
+  // Hot Module Replacement cleanup (desarrollo)
+  if (import.meta.hot) {
+    import.meta.hot.dispose(() => {
+      stopVirusDrainLoop();
+    });
+  }
+
   function recordCorrectDeletion() {
     statsTracker.recordCorrectDeletion();
     updateCombo(true);
