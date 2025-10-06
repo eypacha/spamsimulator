@@ -1,5 +1,39 @@
 <template>
-  <div class="home-view h-screen bg-gray-100 overflow-x-hidden flex flex-col">
+  <div class="home-view h-screen bg-gray-100 overflow-x-hidden flex flex-col relative">
+    <!-- Virus emojis flotantes -->
+    <div v-if="statsStore.virusCount > 0" class="fixed inset-0 pointer-events-none z-30">
+      <div
+        v-for="virus in virusPositions"
+        :key="virus.id"
+        class="absolute text-4xl animate-float cursor-pointer pointer-events-auto"
+        :style="{
+          left: virus.x + '%',
+          top: virus.y + '%',
+          animationDelay: virus.delay + 's',
+          animationDuration: virus.duration + 's'
+        }"
+        @click="onVirusClick"
+      >
+        🦠
+      </div>
+    </div>
+    
+    <!-- Explosiones -->
+    <div class="fixed inset-0 pointer-events-none z-40">
+      <div
+        v-for="explosion in explosions"
+        :key="explosion.id"
+        class="absolute text-5xl animate-explode"
+        :style="{
+          left: explosion.x + '%',
+          top: explosion.y + '%',
+          transform: 'translate(-50%, -50%)'
+        }"
+      >
+        💥
+      </div>
+    </div>
+    
     <Hud @openSidebar="sidebarOpen = true" />
     <div class="flex flex-1 overflow-hidden">
       <!-- Sidebar: drawer en mobile, fijo en desktop -->
@@ -47,7 +81,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue';
 import { useSoundStore } from '../store/sound.js';
 import { useStatsStore } from '../store/stats.js';
 import Sidebar from '../components/Sidebar.vue';
@@ -67,6 +101,59 @@ const soundStore = useSoundStore();
 const statsStore = useStatsStore();
 const sidebarOpen = ref(false);
 const isDesktop = ref(window.innerWidth >= 768);
+const virusPositions = ref([]);
+const explosions = ref([]);
+
+function generateVirusPositions(count) {
+  const positions = [];
+  for (let i = 0; i < Math.min(count, 10); i++) {
+    positions.push({
+      id: Math.random(),
+      x: Math.random() * 90 + 5, // 5% to 95%
+      y: Math.random() * 90 + 5,
+      delay: Math.random() * 2,
+      duration: 3 + Math.random() * 2 // 3-5 seconds
+    });
+  }
+  return positions;
+}
+
+watch(() => statsStore.virusCount, (newCount) => {
+  virusPositions.value = generateVirusPositions(newCount);
+}, { immediate: true });
+
+function onVirusClick(event) {
+  // Eliminar un virus
+  if (statsStore.virusCount > 0) {
+    // Obtener posición del click para la explosión
+    const rect = event.target.getBoundingClientRect();
+    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
+    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+    
+    // Crear explosión
+    const explosionId = Date.now() + Math.random();
+    explosions.value.push({ id: explosionId, x, y });
+    
+    // Remover explosión después de la animación
+    setTimeout(() => {
+      explosions.value = explosions.value.filter(e => e.id !== explosionId);
+    }, 400);
+    
+    // Reproducir sonido de espada
+    if (soundStore.playAntivirusSound) {
+      soundStore.playAntivirusSound();
+    }
+    
+    // Decrementar virus count usando la función del store
+    const removed = statsStore.virusCount > 0;
+    if (removed) {
+      statsStore.virusCount--;
+      statsStore.saveAllStats?.();
+    }
+  }
+  
+  event.stopPropagation();
+}
 
 function handleSelectMenu(menu) {
   selectedMenu.value = menu;
