@@ -5,12 +5,13 @@
       <div
         v-for="virus in virusPositions"
         :key="virus.id"
-        class="absolute text-4xl animate-float cursor-pointer pointer-events-auto"
+        class="absolute text-4xl cursor-pointer pointer-events-auto transition-all duration-75"
+        :class="{ 'animate-float': !virus.isMoving }"
         :style="{
           left: virus.x + '%',
           top: virus.y + '%',
-          animationDelay: virus.delay + 's',
-          animationDuration: virus.duration + 's'
+          animationDelay: !virus.isMoving ? virus.delay + 's' : undefined,
+          animationDuration: !virus.isMoving ? virus.duration + 's' : undefined
         }"
         @click="onVirusClick"
       >
@@ -103,23 +104,71 @@ const sidebarOpen = ref(false);
 const isDesktop = ref(window.innerWidth >= 768);
 const virusPositions = ref([]);
 const explosions = ref([]);
+let animationFrameId = null;
 
 function generateVirusPositions(count) {
   const positions = [];
   for (let i = 0; i < Math.min(count, 10); i++) {
+    const isMoving = Math.random() < 0.5; // 50% de probabilidad de moverse
     positions.push({
       id: Math.random(),
       x: Math.random() * 90 + 5, // 5% to 95%
       y: Math.random() * 90 + 5,
       delay: Math.random() * 2,
-      duration: 3 + Math.random() * 2 // 3-5 seconds
+      duration: 3 + Math.random() * 2, // 3-5 seconds
+      isMoving,
+      // Propiedades para movimiento
+      vx: isMoving ? (Math.random() - 0.5) * 0.3 : 0, // velocidad X
+      vy: isMoving ? (Math.random() - 0.5) * 0.3 : 0, // velocidad Y
     });
   }
   return positions;
 }
 
+function updateMovingViruses() {
+  virusPositions.value = virusPositions.value.map(virus => {
+    if (!virus.isMoving) return virus;
+    
+    // Actualizar posición
+    let newX = virus.x + virus.vx;
+    let newY = virus.y + virus.vy;
+    let newVx = virus.vx;
+    let newVy = virus.vy;
+    
+    // Rebotar en los bordes
+    if (newX <= 5 || newX >= 95) {
+      newVx = -virus.vx;
+      newX = newX <= 5 ? 5 : 95;
+    }
+    if (newY <= 5 || newY >= 95) {
+      newVy = -virus.vy;
+      newY = newY <= 5 ? 5 : 95;
+    }
+    
+    return {
+      ...virus,
+      x: newX,
+      y: newY,
+      vx: newVx,
+      vy: newVy
+    };
+  });
+  
+  if (statsStore.virusCount > 0) {
+    animationFrameId = requestAnimationFrame(updateMovingViruses);
+  }
+}
+
 watch(() => statsStore.virusCount, (newCount) => {
   virusPositions.value = generateVirusPositions(newCount);
+  
+  // Iniciar animación de virus móviles si hay virus
+  if (newCount > 0 && !animationFrameId) {
+    animationFrameId = requestAnimationFrame(updateMovingViruses);
+  } else if (newCount === 0 && animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
 }, { immediate: true });
 
 function onVirusClick(event) {
@@ -224,10 +273,21 @@ onMounted(() => {
   window.addEventListener('resize', handleResize);
   window.addEventListener('keydown', handleKeydown);
   handleResize();
+  
+  // Iniciar animación si ya hay virus
+  if (statsStore.virusCount > 0) {
+    animationFrameId = requestAnimationFrame(updateMovingViruses);
+  }
 });
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize);
   window.removeEventListener('keydown', handleKeydown);
+  
+  // Limpiar animación
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = null;
+  }
 });
 
 </script>
