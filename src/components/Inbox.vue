@@ -47,7 +47,7 @@
     <div v-else class="flex-1 overflow-y-auto">
       <button @click="selectedEmail = null"
         class="my-4 ml-6 px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">←</button>
-      <EmailDetail :email="selectedEmail" @delete="deleteEmail" @star="toggleStar" />
+      <EmailDetail :email="selectedEmail" @delete="deleteEmail" @star="toggleStar" @archive="archiveEmail" />
     </div>
     <div v-if="showTrashFull" class="fixed inset-0 flex items-center justify-center z-50"
       style="background: rgba(0,0,0,0.4);">
@@ -114,6 +114,11 @@ function deleteEmail(id) {
 
 function toggleStar(id) {
   emailStore.toggleStar(id);
+}
+
+function archiveEmail(id) {
+  emailStore.archiveEmail(id);
+  selectedEmail.value = null;
 }
 
 function deleteSelected() {

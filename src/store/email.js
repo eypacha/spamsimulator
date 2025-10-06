@@ -144,6 +144,31 @@ export const useEmailStore = defineStore('email', () => {
   watch(emails, saveEmails, { deep: true });
   }
 
+  function archiveEmail(id) {
+    // Archivar: sin penalización si es legítimo, con penalización si es spam
+    const email = emails.value.find(e => e.id === id);
+    if (email) {
+      email.trash = true;
+      saveEmails();
+      
+      const statsStore = useStatsStore();
+      
+      if (email.isSpam) {
+        // Si archivas spam, pierdes puntos (penalización)
+        const penalty = statsStore.pointsPerSpam;
+        
+        if (statsStore.score >= penalty) {
+          statsStore.score -= penalty;
+        } else {
+          statsStore.score = 0;
+        }
+        
+        soundStore.playPenaltySound();
+      }
+      // Si es legítimo, no pasa nada (sin sonido, sin penalización)
+    }
+  }
+
   function convertLegitimateToSpam() {
     // Encontrar emails legítimos (no spam) que no estén en la papelera
     const legitimateEmails = emails.value.filter(e => !e.isSpam && !e.trash);
@@ -193,5 +218,5 @@ export const useEmailStore = defineStore('email', () => {
     return true;
   }
 
-  return { emails, time, inboxFull, toggleStar, setRead, moveToTrash, fetchEmail, startGameLoop, convertLegitimateToSpam };
+  return { emails, time, inboxFull, toggleStar, setRead, moveToTrash, archiveEmail, fetchEmail, startGameLoop, convertLegitimateToSpam };
 });
