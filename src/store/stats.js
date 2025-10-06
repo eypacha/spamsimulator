@@ -94,7 +94,13 @@ export const useStatsStore = defineStore('stats', () => {
       groupSelectUpgradeCost: abilitiesManager.groupSelectUpgradeCost.value,
       // Keyboard Shortcuts
       keyboardShortcutsUnlocked: abilitiesManager.keyboardShortcutsUnlocked.value,
-      keyboardShortcutsUpgradeCost: abilitiesManager.keyboardShortcutsUpgradeCost.value
+      keyboardShortcutsUpgradeCost: abilitiesManager.keyboardShortcutsUpgradeCost.value,
+      // Bulk Delete
+      bulkDeleteUnlocked: abilitiesManager.bulkDeleteUnlocked.value,
+      bulkDeleteUpgradeCost: abilitiesManager.bulkDeleteUpgradeCost.value,
+      // Bulk Archive
+      bulkArchiveUnlocked: abilitiesManager.bulkArchiveUnlocked.value,
+      bulkArchiveUpgradeCost: abilitiesManager.bulkArchiveUpgradeCost.value
     });
   }
 
@@ -128,7 +134,11 @@ export const useStatsStore = defineStore('stats', () => {
     groupSelectUnlocked,
     groupSelectUpgradeCost,
     keyboardShortcutsUnlocked,
-    keyboardShortcutsUpgradeCost
+    keyboardShortcutsUpgradeCost,
+    bulkDeleteUnlocked,
+    bulkDeleteUpgradeCost,
+    bulkArchiveUnlocked,
+    bulkArchiveUpgradeCost
   } = abilitiesManager;
 
   function buySpaceBarUpgrade() {
@@ -169,6 +179,14 @@ export const useStatsStore = defineStore('stats', () => {
 
   function buyKeyboardShortcutsUpgrade() {
     buyUpgradeHandler(keyboardShortcutsUpgradeCost, abilitiesManager.unlockKeyboardShortcuts, 1.5, !keyboardShortcutsUnlocked.value);
+  }
+
+  function buyBulkDeleteUpgrade() {
+    buyUpgradeHandler(bulkDeleteUpgradeCost, abilitiesManager.unlockBulkDelete, 1.5, !bulkDeleteUnlocked.value);
+  }
+
+  function buyBulkArchiveUpgrade() {
+    buyUpgradeHandler(bulkArchiveUpgradeCost, abilitiesManager.unlockBulkArchive, 1.5, !bulkArchiveUnlocked.value);
   }
 
   // Combo upgrade - usando comboManager
@@ -416,6 +434,10 @@ export const useStatsStore = defineStore('stats', () => {
     // Group Select Upgrade
     groupSelectUnlocked, groupSelectUpgradeCost, buyGroupSelectUpgrade,
     // Keyboard Shortcuts Upgrade
-    keyboardShortcutsUnlocked, keyboardShortcutsUpgradeCost, buyKeyboardShortcutsUpgrade
+    keyboardShortcutsUnlocked, keyboardShortcutsUpgradeCost, buyKeyboardShortcutsUpgrade,
+    // Bulk Delete Upgrade
+    bulkDeleteUnlocked, bulkDeleteUpgradeCost, buyBulkDeleteUpgrade,
+    // Bulk Archive Upgrade
+    bulkArchiveUnlocked, bulkArchiveUpgradeCost, buyBulkArchiveUpgrade
   };
 });

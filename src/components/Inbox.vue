@@ -6,10 +6,26 @@
         <span class="text-sm text-gray-500">{{ visibleEmails.length }} correos</span>
       </div>
       <div v-if="!selectedEmail" class="px-6 py-2">
-        <button v-if="statsStore.maxSelectable !== 0" @click="selectFirstThree" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}</button>
-        <button @click="deleteSelected" :disabled="selectedEmails.length === 0"
-          class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed">Eliminar
-          ({{ selectedEmails.length }})</button>
+        <button
+          v-if="statsStore.maxSelectable !== 0 && (statsStore.bulkDeleteUnlocked || statsStore.bulkArchiveUnlocked)"
+          @click="selectFirstThree"
+          class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">
+          Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}
+        </button>
+        <button
+          v-if="statsStore.bulkDeleteUnlocked"
+          @click="deleteSelected"
+          :disabled="selectedEmails.length === 0"
+          class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed mr-2">
+          Eliminar ({{ selectedEmails.length }})
+        </button>
+        <button
+          v-if="statsStore.bulkArchiveUnlocked"
+          @click="archiveSelected"
+          :disabled="selectedEmails.length === 0"
+          class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+          Archivar ({{ selectedEmails.length }})
+        </button>
         <button
           v-if="statsStore.spamFrenzyUnlocked"
           @click="statsStore.activateSpamFrenzy()"
@@ -43,8 +59,14 @@
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
       <template v-if="visibleEmails.length > 0">
         <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
-          <Email v-for="email in visibleEmails" :key="email.id" :email="email" v-model="selectedEmails"
-            @toggle-star="emailStore.toggleStar" @open="openEmail(email)" />
+          <Email
+            v-for="email in visibleEmails"
+            :key="email.id"
+            :email="email"
+            v-model="selectedEmails"
+            :show-checkbox="statsStore.bulkDeleteUnlocked || statsStore.bulkArchiveUnlocked"
+            @toggle-star="emailStore.toggleStar"
+            @open="openEmail(email)" />
         </ul>
       </template>
       <template v-else>
@@ -139,6 +161,12 @@ function deleteSelected() {
     return;
   }
   selectedEmails.value.forEach(id => emailStore.moveToTrash(id));
+  selectedEmails.value = [];
+}
+
+function archiveSelected() {
+  // Archivar emails seleccionados
+  selectedEmails.value.forEach(id => emailStore.archiveEmail(id));
   selectedEmails.value = [];
 }
 

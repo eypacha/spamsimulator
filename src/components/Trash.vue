@@ -6,16 +6,30 @@
         <span class="text-sm text-gray-500">{{ trashedEmails.length }} correos</span>
       </div>
       <div v-if="!selectedEmail" class="px-6 py-2">
-        <button v-if="statsStore.maxSelectable !== 0" @click="selectFirstThree" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}</button>
-        <button @click="deleteSelected" :disabled="selectedEmails.length === 0"
-          class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed">Eliminar
-          ({{ selectedEmails.length }})</button>
+        <button
+          v-if="statsStore.maxSelectable !== 0 && statsStore.bulkDeleteUnlocked"
+          @click="selectFirstThree"
+          class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">
+          Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}
+        </button>
+        <button
+          v-if="statsStore.bulkDeleteUnlocked"
+          @click="deleteSelected"
+          :disabled="selectedEmails.length === 0"
+          class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+          Eliminar ({{ selectedEmails.length }})
+        </button>
       </div>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
       <template v-if="trashedEmails.length > 0">
         <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
-          <Email v-for="email in trashedEmails" :key="email.id" :email="email" v-model="selectedEmails"
+          <Email
+            v-for="email in trashedEmails"
+            :key="email.id"
+            :email="email"
+            v-model="selectedEmails"
+            :show-checkbox="statsStore.bulkDeleteUnlocked"
             @open="openEmail(email)" />
         </ul>
       </template>
@@ -82,14 +96,12 @@ function doDeletePermanent() {
       statsStore.recordNigerianPrinceDeletion();
     }
     emails.value.splice(idx, 1);
+    // Reproducir sonido al eliminar
+    soundStore.playTrashSound();
   }
   selectedEmail.value = null;
   showConfirm.value = false;
   pendingDeleteId = null;
-  // Si la papelera queda vacía, reproducir sonido
-  if (emails.value.filter(e => e.trash).length === 0) {
-    soundStore.playTrashSound();
-  }
 }
 
 function deleteSelected() {
@@ -103,11 +115,11 @@ function deleteSelected() {
       emails.value.splice(idx, 1);
     }
   });
-  selectedEmails.value = [];
-  // Si la papelera queda vacía, reproducir sonido
-  if (emails.value.filter(e => e.trash).length === 0) {
+  // Reproducir sonido después de eliminar todos
+  if (selectedEmails.value.length > 0) {
     soundStore.playTrashSound();
   }
+  selectedEmails.value = [];
 }
 
 function selectFirstThree() {

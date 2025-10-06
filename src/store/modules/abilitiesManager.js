@@ -52,6 +52,14 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const keyboardShortcutsUnlocked = ref(loaded?.keyboardShortcutsUnlocked ?? false);
   const keyboardShortcutsUpgradeCost = ref(loaded?.keyboardShortcutsUpgradeCost ?? 120);
 
+  // Bulk Delete - Eliminar múltiples emails seleccionados
+  const bulkDeleteUnlocked = ref(loaded?.bulkDeleteUnlocked ?? false);
+  const bulkDeleteUpgradeCost = ref(loaded?.bulkDeleteUpgradeCost ?? 90);
+
+  // Bulk Archive - Archivar múltiples emails seleccionados
+  const bulkArchiveUnlocked = ref(loaded?.bulkArchiveUnlocked ?? false);
+  const bulkArchiveUpgradeCost = ref(loaded?.bulkArchiveUpgradeCost ?? 110);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -90,6 +98,14 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockKeyboardShortcuts() {
     keyboardShortcutsUnlocked.value = true;
+  }
+
+  function unlockBulkDelete() {
+    bulkDeleteUnlocked.value = true;
+  }
+
+  function unlockBulkArchive() {
+    bulkArchiveUnlocked.value = true;
   }
 
   // Reiniciar timers al cargar (para cooldowns guardados)
@@ -268,6 +284,16 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Keyboard Shortcuts
     keyboardShortcutsUnlocked,
     keyboardShortcutsUpgradeCost,
-    unlockKeyboardShortcuts
+    unlockKeyboardShortcuts,
+    
+    // Bulk Delete
+    bulkDeleteUnlocked,
+    bulkDeleteUpgradeCost,
+    unlockBulkDelete,
+    
+    // Bulk Archive
+    bulkArchiveUnlocked,
+    bulkArchiveUpgradeCost,
+    unlockBulkArchive
   };
 }
