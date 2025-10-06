@@ -14,7 +14,7 @@
         comboMultiplier }}</span>
       <span v-if="virusCount > 0">🦠 {{ virusCount }}</span>
       <span :class="['transition-transform duration-300', { 'scale-110': scoreAnimating }]">🪙 {{ score }}</span>
-      <span>🗑️ {{ totalSpamDeleted }}</span>
+      <span>⭐ {{ totalSpamDeleted }}</span>
     </div>
   </div>
 </template>
