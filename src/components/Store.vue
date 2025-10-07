@@ -224,5 +224,16 @@ const cards = computed(() => [
     disabled: statsStore.score < statsStore.bulkArchiveUpgradeCost || statsStore.bulkArchiveUnlocked,
     rounded: true,
   },
+  {
+    title: 'Mobile Friendly',
+    description: '📱 Desliza hacia la derecha para archivar, hacia la izquierda para eliminar.',
+    details: [
+      statsStore.mobileFriendlyUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.mobileFriendlyUpgradeCost} 🪙`,
+      statsStore.mobileFriendlyUnlocked ? 'Gestos táctiles activados' : 'Navega con deslizamientos'
+    ],
+    onClick: () => statsStore.buyMobileFriendlyUpgrade(),
+    disabled: statsStore.score < statsStore.mobileFriendlyUpgradeCost || statsStore.mobileFriendlyUnlocked,
+    rounded: true,
+  },
 ]);
 </script>

@@ -60,6 +60,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const bulkArchiveUnlocked = ref(loaded?.bulkArchiveUnlocked ?? false);
   const bulkArchiveUpgradeCost = ref(loaded?.bulkArchiveUpgradeCost ?? 60);
 
+  // Mobile Friendly - Deslizar para archivar/eliminar emails
+  const mobileFriendlyUnlocked = ref(loaded?.mobileFriendlyUnlocked ?? false);
+  const mobileFriendlyUpgradeCost = ref(loaded?.mobileFriendlyUpgradeCost ?? 90);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -106,6 +110,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockBulkArchive() {
     bulkArchiveUnlocked.value = true;
+  }
+
+  function unlockMobileFriendly() {
+    mobileFriendlyUnlocked.value = true;
   }
 
   // Reiniciar timers al cargar (para cooldowns guardados)
@@ -294,6 +302,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Bulk Archive
     bulkArchiveUnlocked,
     bulkArchiveUpgradeCost,
-    unlockBulkArchive
+    unlockBulkArchive,
+    
+    // Mobile Friendly
+    mobileFriendlyUnlocked,
+    mobileFriendlyUpgradeCost,
+    unlockMobileFriendly
   };
 }

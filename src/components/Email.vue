@@ -1,8 +1,13 @@
 <template>
   <li :class="[
     'flex items-center px-6 py-2 cursor-pointer transition-all duration-300',
-    email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100')
-  ]" @click="$emit('open')">
+    email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'),
+    swipeClass
+  ]" 
+  @click="$emit('open')"
+  @touchstart="handleTouchStart"
+  @touchmove="handleTouchMove"
+  @touchend="handleTouchEnd">
     <input
       v-if="showCheckbox"
       type="checkbox"
@@ -26,7 +31,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue';
+import { defineProps, defineEmits, computed, ref } from 'vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { formatDate } from '@/utils/date';
 import { useStatsStore } from '../store/stats.js';
@@ -34,6 +39,12 @@ import { useEmailStore } from '../store/email.js';
 
 const statsStore = useStatsStore();
 const emailStore = useEmailStore();
+
+// Swipe handling
+const startX = ref(0);
+const currentX = ref(0);
+const isSwiping = ref(false);
+const swipeThreshold = 100; // Minimum distance to trigger action
 
 const props = defineProps({
   email: Object,
@@ -52,6 +63,57 @@ const emit = defineEmits(['update:modelValue', 'update:starred', 'open']);
 const shouldShowSpamColor = computed(() => {
   return props.email.isSpam && statsStore.spamDetectorUnlocked;
 });
+
+// Swipe visual feedback
+const swipeClass = computed(() => {
+  if (!statsStore.mobileFriendlyUnlocked || !isSwiping.value) return '';
+  
+  const deltaX = currentX.value - startX.value;
+  if (Math.abs(deltaX) < 30) return ''; // Minimum threshold for visual feedback
+  
+  if (deltaX > 0) {
+    return 'bg-green-100 border-l-8 border-green-500 transform translate-x-2';
+  } else {
+    return 'bg-red-100 border-r-8 border-red-500 transform -translate-x-2';
+  }
+});
+
+function handleTouchStart(event) {
+  if (!statsStore.mobileFriendlyUnlocked) return;
+  
+  startX.value = event.touches[0].clientX;
+  currentX.value = startX.value;
+  isSwiping.value = true;
+}
+
+function handleTouchMove(event) {
+  if (!statsStore.mobileFriendlyUnlocked || !isSwiping.value) return;
+  
+  currentX.value = event.touches[0].clientX;
+}
+
+function handleTouchEnd(event) {
+  if (!statsStore.mobileFriendlyUnlocked || !isSwiping.value) return;
+  
+  const deltaX = currentX.value - startX.value;
+  const absDeltaX = Math.abs(deltaX);
+  
+  isSwiping.value = false;
+  
+  if (absDeltaX >= swipeThreshold) {
+    if (deltaX > 0) {
+      // Swipe right - Archive
+      emailStore.archiveEmail(props.email.id);
+    } else {
+      // Swipe left - Delete (move to trash)
+      emailStore.moveToTrash(props.email.id);
+    }
+  }
+  
+  // Reset positions
+  startX.value = 0;
+  currentX.value = 0;
+}
 
 function onChange(event) {
   const checked = event.target.checked;
@@ -115,3 +177,18 @@ function toggleStar() {
   props.email.starred = !props.email.starred;
 }
 </script>
+
+<style scoped>
+/* Swipe animations */
+li {
+  transition: transform 0.2s ease-out, background-color 0.2s ease-out, border 0.2s ease-out;
+}
+
+li.bg-green-100 {
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+li.bg-red-100 {
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.3);
+}
+</style>
