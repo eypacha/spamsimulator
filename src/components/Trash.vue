@@ -44,6 +44,7 @@
         class="my-4 ml-6 px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">←</button>
       <EmailDetail :email="selectedEmail" @deletePermanent="deletePermanent" />
     </div>
+    <VirusManager screen="trash" />
   </section>
 </template>
 
@@ -54,6 +55,7 @@ import { useStatsStore } from '../store/stats.js';
 import { storeToRefs } from 'pinia';
 import Email from './Email.vue';
 import EmailDetail from './EmailDetail.vue';
+import VirusManager from './VirusManager.vue';
 
 const emailStore = useEmailStore();
 const statsStore = useStatsStore();

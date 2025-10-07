@@ -34,12 +34,14 @@
         </div>
       </div>
     </div>
+    <VirusManager screen="achievements" />
   </section>
 </template>
 
 <script setup>
 import { computed } from 'vue';
 import { useStatsStore } from '../store/stats.js';
+import VirusManager from './VirusManager.vue';
 
 const statsStore = useStatsStore();
 

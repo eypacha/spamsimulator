@@ -35,6 +35,7 @@ export const useStatsStore = defineStore('stats', () => {
     saveStats({
       score: score.value,
       virusCount: virusCount.value,
+      virusByScreen: virusByScreen.value,
       level: level.value,
       pointsPerSpam: pointsPerSpam.value,
       upgradeCost: upgradeCost.value,
@@ -220,6 +221,12 @@ export const useStatsStore = defineStore('stats', () => {
   // const loaded = loadStats(); // Already declared at the top
   const score = ref(loaded?.score ?? 0);
   const virusCount = ref(loaded?.virusCount ?? 0);
+  const virusByScreen = ref(loaded?.virusByScreen ?? { inbox: 0, trash: 0, store: 0, achievements: 0, settings: 0, starred: 0 });
+  const activeScreens = computed(() => {
+    const screens = ['inbox', 'trash', 'store', 'achievements', 'settings'];
+    if (abilitiesManager.starredUnlocked.value) screens.push('starred');
+    return screens;
+  });
   const soundStore = useSoundStore();
   const buyUpgradeHandler = createUpgradeHandler(score, saveAllStats, soundStore);
   const level = ref(loaded?.level ?? 1); // Maybe keep level for display, but not auto
@@ -261,16 +268,33 @@ export const useStatsStore = defineStore('stats', () => {
   function incrementVirusCount(amount = 1) {
     virusCount.value += amount;
     for (let i = 0; i < amount; i++) {
+      const screens = activeScreens.value;
+      const randomScreen = screens[Math.floor(Math.random() * screens.length)];
+      virusByScreen.value[randomScreen]++;
       statsTracker.recordVirusInfection();
     }
     saveAllStats();
   }
 
-  function removeOneVirus() {
-    if (virusCount.value > 0) {
-      virusCount.value -= 1;
-      saveAllStats();
-      return true;
+  function removeOneVirus(screen) {
+    if (screen) {
+      // Remover de pantalla específica
+      if (virusByScreen.value[screen] > 0) {
+        virusByScreen.value[screen]--;
+        virusCount.value--;
+        saveAllStats();
+        return true;
+      }
+    } else {
+      // Remover de cualquier pantalla (para compatibilidad)
+      const screensWithVirus = activeScreens.value.filter(s => virusByScreen.value[s] > 0);
+      if (screensWithVirus.length > 0) {
+        const randomScreen = screensWithVirus[Math.floor(Math.random() * screensWithVirus.length)];
+        virusByScreen.value[randomScreen]--;
+        virusCount.value--;
+        saveAllStats();
+        return true;
+      }
     }
     return false;
   }
@@ -466,6 +490,10 @@ export const useStatsStore = defineStore('stats', () => {
     // Bulk Delete Upgrade
     bulkDeleteUnlocked, bulkDeleteUpgradeCost, buyBulkDeleteUpgrade,
     // Bulk Archive Upgrade
-    bulkArchiveUnlocked, bulkArchiveUpgradeCost, buyBulkArchiveUpgrade
+    bulkArchiveUnlocked, bulkArchiveUpgradeCost, buyBulkArchiveUpgrade,
+    // Virus by screen
+    virusByScreen,
+    activeScreens,
+    removeOneVirus
   };
 });

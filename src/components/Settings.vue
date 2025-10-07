@@ -43,12 +43,14 @@
         </div>
       </div>
     </div>
+    <VirusManager screen="settings" />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useSoundStore } from '../store/sound.js';
+import VirusManager from './VirusManager.vue';
 
 const soundStore = useSoundStore();
 const showConfirm = ref(false);

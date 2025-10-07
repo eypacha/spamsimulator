@@ -101,6 +101,7 @@
       </div>
     </div>
   </section>
+  <VirusManager screen="inbox" />
 </template>
 
 <script setup>
@@ -111,6 +112,7 @@ import { useSoundStore } from '../store/sound.js';
 import { storeToRefs } from 'pinia';
 import Email from './Email.vue';
 import EmailDetail from './EmailDetail.vue';
+import VirusManager from './VirusManager.vue';
 
 const selectedEmails = ref([]);
 const selectedEmail = ref(null);
