@@ -33,6 +33,14 @@
       :url="clickedUrl"
       @close="showContent = false"
     />
+    
+    <!-- Appointment Viewer for meeting confirmations -->
+    <AppointmentViewer
+      :show="showAppointment"
+      :url="clickedUrl"
+      :company-name="email.fromName"
+      @close="showAppointment = false"
+    />
   </div>
 </template>
 
@@ -44,6 +52,7 @@ import { shouldShowAds as checkShouldShowAds } from '@/utils/ads';
 import GoogleAd from './GoogleAd.vue';
 import BrowserPopup from './BrowserPopup.vue';
 import ContentViewer from './ContentViewer.vue';
+import AppointmentViewer from './AppointmentViewer.vue';
 import { useStatsStore } from '../store/stats.js';
 
 const statsStore = useStatsStore();
@@ -55,6 +64,7 @@ const clickedUrl = ref('');
 const showContent = ref(false);
 const contentType = ref('');
 const contentData = ref('');
+const showAppointment = ref(false);
 
 const shouldShowAds = computed(() => checkShouldShowAds(props.email));
 
@@ -124,6 +134,11 @@ function handleLegitimateContent() {
     contentData.value = props.email.url;
     showContent.value = true;
     console.log('[DEBUG] Iframe should open now with:', contentData.value);
+  } else if (content === 'apointment' && props.email.url) {
+    // Mostrar confirmación de cita usando la URL del email
+    clickedUrl.value = props.email.url;
+    showAppointment.value = true;
+    console.log('[DEBUG] Appointment should open now with:', props.email.url);
   } else {
     console.log('[DEBUG] Condition not met. content:', content, 'url:', props.email.url);
   }
