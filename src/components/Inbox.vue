@@ -64,7 +64,7 @@
             :key="email.id"
             :email="email"
             v-model="selectedEmails"
-            :show-checkbox="statsStore.bulkDeleteUnlocked || statsStore.bulkArchiveUnlocked"
+            :show-checkbox="true"
             @toggle-star="emailStore.toggleStar"
             @open="openEmail(email)" />
         </ul>

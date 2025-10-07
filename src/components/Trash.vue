@@ -29,7 +29,7 @@
             :key="email.id"
             :email="email"
             v-model="selectedEmails"
-            :show-checkbox="statsStore.bulkDeleteUnlocked"
+            :show-checkbox="true"
             @open="openEmail(email)" />
         </ul>
       </template>
