@@ -18,6 +18,7 @@ body {
   font-optical-sizing: auto;
   font-style: normal;
   font-variation-settings: "wdth" 87.5;
+  touch-action: none;
 }
 
 .pulse-fast {
