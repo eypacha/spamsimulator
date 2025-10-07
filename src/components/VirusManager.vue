@@ -2,7 +2,7 @@
   <!-- Virus emojis flotantes -->
   <div v-if="virusCount > 0" class="fixed inset-0 pointer-events-none z-30">
     <div
-      v-for="virus in virusPositions"
+      v-for="(virus, index) in virusPositions"
       :key="virus.id"
       class="absolute text-4xl cursor-pointer pointer-events-auto transition-all duration-75"
       :class="{ 'animate-float': !virus.isMoving }"
@@ -12,7 +12,7 @@
         animationDelay: !virus.isMoving ? virus.delay + 's' : undefined,
         animationDuration: !virus.isMoving ? virus.duration + 's' : undefined
       }"
-      @click="onVirusClick"
+      @click="onVirusClick(index, $event)"
     >
       🦠
     </div>
@@ -109,8 +109,20 @@ function updateMovingViruses() {
   }
 }
 
-watch(virusCount, (newCount) => {
-  virusPositions.value = generateVirusPositions(newCount);
+watch(virusCount, (newCount, oldCount) => {
+  // Manejar el caso inicial cuando oldCount es undefined
+  if (oldCount === undefined) {
+    oldCount = 0;
+  }
+
+  if (newCount > oldCount) {
+    // Agregar nuevos virus manteniendo los existentes
+    const newPositions = generateVirusPositions(newCount - oldCount);
+    virusPositions.value.push(...newPositions);
+  } else if (newCount < oldCount) {
+    // Remover virus del final, manteniendo los primeros
+    virusPositions.value.splice(newCount);
+  }
 
   // Iniciar animación de virus móviles si hay virus
   if (newCount > 0 && !animationFrameId) {
@@ -121,13 +133,16 @@ watch(virusCount, (newCount) => {
   }
 }, { immediate: true });
 
-function onVirusClick(event) {
-  // Eliminar un virus
-  if (virusCount.value > 0) {
-    // Obtener posición del click para la explosión
-    const rect = event.target.getBoundingClientRect();
-    const x = ((rect.left + rect.width / 2) / window.innerWidth) * 100;
-    const y = ((rect.top + rect.height / 2) / window.innerHeight) * 100;
+function onVirusClick(virusIndex, event) {
+  // Eliminar el virus específico
+  if (virusIndex >= 0 && virusIndex < virusPositions.value.length) {
+    // Obtener la posición del virus para la explosión antes de eliminarlo
+    const virus = virusPositions.value[virusIndex];
+    const x = virus.x;
+    const y = virus.y;
+
+    // Eliminar el virus del array visual
+    virusPositions.value.splice(virusIndex, 1);
 
     // Crear explosión
     const explosionId = Date.now() + Math.random();
