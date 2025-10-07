@@ -247,5 +247,32 @@ const achievements = computed(() => [
     current: statsStore.totalVirusesInfected,
     unlocked: statsStore.totalVirusesInfected >= 1000
   },
+  {
+    id: 'early-bird',
+    name: 'Dios te ayuda',
+    description: 'Jugar a las 6 AM',
+    emoji: '🌅',
+    target: 1,
+    current: statsStore.playedAt6AM ? 1 : 0,
+    unlocked: statsStore.playedAt6AM
+  },
+  {
+    id: 'night-owl',
+    name: 'Noctámbulo',
+    description: 'Jugar a las 3 AM',
+    emoji: '🌙',
+    target: 1,
+    current: statsStore.playedAt3AM ? 1 : 0,
+    unlocked: statsStore.playedAt3AM
+  },
+  {
+    id: 'workaholic',
+    name: 'Workaholic',
+    description: 'Jugar durante más de 8 horas',
+    emoji: '💼',
+    target: 120,
+    current: statsStore.totalPlayTimeMinutes,
+    unlocked: statsStore.totalPlayTimeMinutes >= 60 * 8
+  },
 ]);
 </script>

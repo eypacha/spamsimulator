@@ -17,6 +17,13 @@ export function createStatsTracker(loaded, saveAllStats) {
   const maxStreak = ref(loaded?.maxStreak ?? 0);
   const catPicturesViewed = ref(new Set(loaded?.catPicturesViewed ?? []));
   const totalVirusesInfected = ref(loaded?.totalVirusesInfected ?? 0);
+  
+  // Logros de tiempo
+  const playedAt6AM = ref(loaded?.playedAt6AM ?? false);
+  const playedAt3AM = ref(loaded?.playedAt3AM ?? false);
+  const totalPlayTimeMinutes = ref(loaded?.totalPlayTimeMinutes ?? 0);
+  const sessionStartTime = ref(Date.now());
+  let playTimeInterval = null;
 
   function recordEmailSent() {
     totalEmailsSent.value += 1;
@@ -64,6 +71,45 @@ export function createStatsTracker(loaded, saveAllStats) {
     saveAllStats();
   }
 
+  function checkTimeAchievements() {
+    const hour = new Date().getHours();
+    
+    // Madrugador: Jugar a las 6 AM (entre 6:00 y 6:59)
+    if (hour === 6 && !playedAt6AM.value) {
+      playedAt6AM.value = true;
+      saveAllStats();
+    }
+    
+    // Noctámbulo: Jugar a las 3 AM (entre 3:00 y 3:59)
+    if (hour === 3 && !playedAt3AM.value) {
+      playedAt3AM.value = true;
+      saveAllStats();
+    }
+  }
+
+  function startPlayTimeTracking() {
+    sessionStartTime.value = Date.now();
+    
+    // Verificar logros de hora al iniciar
+    checkTimeAchievements();
+    
+    // Actualizar tiempo de juego cada minuto
+    playTimeInterval = setInterval(() => {
+      totalPlayTimeMinutes.value += 1;
+      saveAllStats();
+      
+      // Verificar logros de hora cada minuto
+      checkTimeAchievements();
+    }, 60000); // 60000ms = 1 minuto
+  }
+
+  function stopPlayTimeTracking() {
+    if (playTimeInterval) {
+      clearInterval(playTimeInterval);
+      playTimeInterval = null;
+    }
+  }
+
   function resetStats() {
     totalSpamDeleted.value = 0;
     totalEmailsRead.value = 0;
@@ -75,6 +121,9 @@ export function createStatsTracker(loaded, saveAllStats) {
     maxStreak.value = 0;
     catPicturesViewed.value = new Set();
     totalVirusesInfected.value = 0;
+    playedAt6AM.value = false;
+    playedAt3AM.value = false;
+    totalPlayTimeMinutes.value = 0;
   }
 
   return {
@@ -88,6 +137,9 @@ export function createStatsTracker(loaded, saveAllStats) {
     maxStreak,
     catPicturesViewed,
     totalVirusesInfected,
+    playedAt6AM,
+    playedAt3AM,
+    totalPlayTimeMinutes,
     recordEmailSent,
     markEmailAsRead,
     markCatPictureViewed,
@@ -97,6 +149,8 @@ export function createStatsTracker(loaded, saveAllStats) {
     incrementSpamDeleted,
     incrementCoinsEarned,
     recordVirusInfection,
+    startPlayTimeTracking,
+    stopPlayTimeTracking,
     resetStats
   };
 }
