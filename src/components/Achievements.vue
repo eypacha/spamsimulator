@@ -220,5 +220,32 @@ const achievements = computed(() => [
     current: statsStore.catPicturesViewed.size,
     unlocked: statsStore.catPicturesViewed.size >= 20
   },
+  {
+    id: 'flu',
+    name: 'Gripecita',
+    description: 'Infectarse con 50 virus',
+    emoji: '🤧',
+    target: 50,
+    current: statsStore.totalVirusesInfected,
+    unlocked: statsStore.totalVirusesInfected >= 50
+  },
+  {
+    id: 'whooping-cough',
+    name: 'Toz convulsa',
+    description: 'Infectarse con 100 virus',
+    emoji: '😷',
+    target: 100,
+    current: statsStore.totalVirusesInfected,
+    unlocked: statsStore.totalVirusesInfected >= 100
+  },
+  {
+    id: 'covid',
+    name: 'COVID-19',
+    description: 'Infectarse con 1000 virus',
+    emoji: '🦠',
+    target: 1000,
+    current: statsStore.totalVirusesInfected,
+    unlocked: statsStore.totalVirusesInfected >= 1000
+  },
 ]);
 </script>

@@ -53,6 +53,7 @@ export const useStatsStore = defineStore('stats', () => {
       currentStreak: statsTracker.currentStreak.value,
       maxStreak: statsTracker.maxStreak.value,
       catPicturesViewed: Array.from(statsTracker.catPicturesViewed.value),
+      totalVirusesInfected: statsTracker.totalVirusesInfected.value,
       turboSpamLevel: turboSpamManager.turboSpamLevel.value,
       turboSpamInterval: turboSpamManager.turboSpamInterval.value,
       turboSpamUpgradeCost: turboSpamManager.turboSpamUpgradeCost.value,
@@ -255,6 +256,7 @@ export const useStatsStore = defineStore('stats', () => {
 
   function incrementVirusCount() {
     virusCount.value += 1;
+    statsTracker.recordVirusInfection();
     saveAllStats();
   }
 
@@ -414,10 +416,15 @@ export const useStatsStore = defineStore('stats', () => {
     // Logro de fotos de gatos
     if (statsTracker.catPicturesViewed.value.size >= 20) count++;
     
+    // Logros de virus infectados
+    if (statsTracker.totalVirusesInfected.value >= 50) count++;
+    if (statsTracker.totalVirusesInfected.value >= 100) count++;
+    if (statsTracker.totalVirusesInfected.value >= 1000) count++;
+    
     return count;
   });
 
-  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
+  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, totalVirusesInfected: computed(() => statsTracker.totalVirusesInfected.value), currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
     spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,

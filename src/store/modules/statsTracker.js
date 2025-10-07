@@ -16,6 +16,7 @@ export function createStatsTracker(loaded, saveAllStats) {
   const currentStreak = ref(loaded?.currentStreak ?? 0);
   const maxStreak = ref(loaded?.maxStreak ?? 0);
   const catPicturesViewed = ref(new Set(loaded?.catPicturesViewed ?? []));
+  const totalVirusesInfected = ref(loaded?.totalVirusesInfected ?? 0);
 
   function recordEmailSent() {
     totalEmailsSent.value += 1;
@@ -58,6 +59,11 @@ export function createStatsTracker(loaded, saveAllStats) {
     totalCoinsEarned.value += amount;
   }
 
+  function recordVirusInfection() {
+    totalVirusesInfected.value += 1;
+    saveAllStats();
+  }
+
   function resetStats() {
     totalSpamDeleted.value = 0;
     totalEmailsRead.value = 0;
@@ -68,6 +74,7 @@ export function createStatsTracker(loaded, saveAllStats) {
     currentStreak.value = 0;
     maxStreak.value = 0;
     catPicturesViewed.value = new Set();
+    totalVirusesInfected.value = 0;
   }
 
   return {
@@ -80,6 +87,7 @@ export function createStatsTracker(loaded, saveAllStats) {
     currentStreak,
     maxStreak,
     catPicturesViewed,
+    totalVirusesInfected,
     recordEmailSent,
     markEmailAsRead,
     markCatPictureViewed,
@@ -88,6 +96,7 @@ export function createStatsTracker(loaded, saveAllStats) {
     recordNigerianPrinceDeletion,
     incrementSpamDeleted,
     incrementCoinsEarned,
+    recordVirusInfection,
     resetStats
   };
 }
