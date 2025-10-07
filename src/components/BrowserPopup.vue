@@ -207,8 +207,9 @@ watch(() => props.show, (newVal) => {
     const gotVirus = Math.random() < 0.5;
     
     if (gotVirus) {
-      // Si hay virus, solo reproducir el sonido de virus
-      statsStore.incrementVirusCount();
+      // Si hay virus, infectarse con 1 a 5 virus
+      const virusAmount = Math.floor(Math.random() * 5) + 1;
+      statsStore.incrementVirusCount(virusAmount);
       soundStore.playVirusSound();
     } else {
       // Si no hay virus, reproducir el sonido de win

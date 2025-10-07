@@ -258,9 +258,11 @@ export const useStatsStore = defineStore('stats', () => {
     scoreManager.addScore(score, points);
   }
 
-  function incrementVirusCount() {
-    virusCount.value += 1;
-    statsTracker.recordVirusInfection();
+  function incrementVirusCount(amount = 1) {
+    virusCount.value += amount;
+    for (let i = 0; i < amount; i++) {
+      statsTracker.recordVirusInfection();
+    }
     saveAllStats();
   }
 
