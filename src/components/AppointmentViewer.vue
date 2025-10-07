@@ -97,6 +97,9 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useStatsStore } from '../store/stats.js';
+
+const statsStore = useStatsStore();
 
 const props = defineProps({
   show: Boolean,
@@ -162,6 +165,7 @@ const appointmentTime = computed(() => {
 
 function confirmAppointment() {
   confirmed.value = true;
+  statsStore.recordAppointmentConfirmed();
   setTimeout(() => {
     emit('close');
   }, 1500);

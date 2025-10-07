@@ -17,6 +17,7 @@ export function createStatsTracker(loaded, saveAllStats) {
   const maxStreak = ref(loaded?.maxStreak ?? 0);
   const catPicturesViewed = ref(new Set(loaded?.catPicturesViewed ?? []));
   const totalVirusesInfected = ref(loaded?.totalVirusesInfected ?? 0);
+  const totalAppointmentsConfirmed = ref(loaded?.totalAppointmentsConfirmed ?? 0);
   
   // Logros de tiempo
   const playedAt6AM = ref(loaded?.playedAt6AM ?? false);
@@ -71,6 +72,11 @@ export function createStatsTracker(loaded, saveAllStats) {
     saveAllStats();
   }
 
+  function recordAppointmentConfirmed() {
+    totalAppointmentsConfirmed.value += 1;
+    saveAllStats();
+  }
+
   function checkTimeAchievements() {
     const hour = new Date().getHours();
     
@@ -121,6 +127,7 @@ export function createStatsTracker(loaded, saveAllStats) {
     maxStreak.value = 0;
     catPicturesViewed.value = new Set();
     totalVirusesInfected.value = 0;
+    totalAppointmentsConfirmed.value = 0;
     playedAt6AM.value = false;
     playedAt3AM.value = false;
     totalPlayTimeMinutes.value = 0;
@@ -137,6 +144,7 @@ export function createStatsTracker(loaded, saveAllStats) {
     maxStreak,
     catPicturesViewed,
     totalVirusesInfected,
+    totalAppointmentsConfirmed,
     playedAt6AM,
     playedAt3AM,
     totalPlayTimeMinutes,
@@ -149,6 +157,7 @@ export function createStatsTracker(loaded, saveAllStats) {
     incrementSpamDeleted,
     incrementCoinsEarned,
     recordVirusInfection,
+    recordAppointmentConfirmed,
     startPlayTimeTracking,
     stopPlayTimeTracking,
     resetStats

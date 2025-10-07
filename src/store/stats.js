@@ -54,6 +54,7 @@ export const useStatsStore = defineStore('stats', () => {
       maxStreak: statsTracker.maxStreak.value,
       catPicturesViewed: Array.from(statsTracker.catPicturesViewed.value),
       totalVirusesInfected: statsTracker.totalVirusesInfected.value,
+      totalAppointmentsConfirmed: statsTracker.totalAppointmentsConfirmed.value,
       playedAt6AM: statsTracker.playedAt6AM.value,
       playedAt3AM: statsTracker.playedAt3AM.value,
       totalPlayTimeMinutes: statsTracker.totalPlayTimeMinutes.value,
@@ -427,7 +428,10 @@ export const useStatsStore = defineStore('stats', () => {
     // Logros de tiempo
     if (statsTracker.playedAt6AM.value) count++;
     if (statsTracker.playedAt3AM.value) count++;
-    if (statsTracker.totalPlayTimeMinutes.value >= 120) count++; // 2 horas = 120 minutos
+    if (statsTracker.totalPlayTimeMinutes.value >= 480) count++; // 8 horas = 480 minutos
+    
+    // Logros de citas
+    if (statsTracker.totalAppointmentsConfirmed.value >= 100) count++;
     
     return count;
   });
@@ -435,7 +439,7 @@ export const useStatsStore = defineStore('stats', () => {
   // Iniciar el tracking de tiempo de juego
   statsTracker.startPlayTimeTracking();
 
-  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, totalVirusesInfected: computed(() => statsTracker.totalVirusesInfected.value), playedAt6AM: computed(() => statsTracker.playedAt6AM.value), playedAt3AM: computed(() => statsTracker.playedAt3AM.value), totalPlayTimeMinutes: computed(() => statsTracker.totalPlayTimeMinutes.value), currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
+  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, totalVirusesInfected: computed(() => statsTracker.totalVirusesInfected.value), totalAppointmentsConfirmed: computed(() => statsTracker.totalAppointmentsConfirmed.value), recordAppointmentConfirmed: statsTracker.recordAppointmentConfirmed, playedAt6AM: computed(() => statsTracker.playedAt6AM.value), playedAt3AM: computed(() => statsTracker.playedAt3AM.value), totalPlayTimeMinutes: computed(() => statsTracker.totalPlayTimeMinutes.value), currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
     spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,

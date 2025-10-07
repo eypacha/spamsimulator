@@ -16,7 +16,12 @@
               </h3>
               <p class="text-sm text-gray-500">{{ achievement.description }}</p>
               <p class="text-xs text-gray-400 mt-1">
-                {{ Math.min(achievement.current, achievement.target) }}/{{ achievement.target }}
+                <template v-if="achievement.id === 'workaholic'">
+                  {{ Math.floor(Math.min(achievement.current, achievement.target) / 60) }}/{{ Math.floor(achievement.target / 60) }} horas
+                </template>
+                <template v-else>
+                  {{ Math.min(achievement.current, achievement.target) }}/{{ achievement.target }}
+                </template>
               </p>
             </div>
             <div v-if="!achievement.unlocked" class="w-full bg-gray-200 rounded-full h-2">
@@ -270,9 +275,18 @@ const achievements = computed(() => [
     name: 'Workaholic',
     description: 'Jugar durante más de 8 horas',
     emoji: '💼',
-    target: 120,
+    target: 480,
     current: statsStore.totalPlayTimeMinutes,
-    unlocked: statsStore.totalPlayTimeMinutes >= 60 * 8
+    unlocked: statsStore.totalPlayTimeMinutes >= 480
+  },
+  {
+    id: 'organizer',
+    name: 'Organizador',
+    description: 'Confirmar 100 citas',
+    emoji: '📅',
+    target: 100,
+    current: statsStore.totalAppointmentsConfirmed,
+    unlocked: statsStore.totalAppointmentsConfirmed >= 100
   },
 ]);
 </script>
