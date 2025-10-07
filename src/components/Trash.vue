@@ -66,6 +66,13 @@ const trashedEmails = computed(() => emails.value.filter(e => e.trash).reverse()
 const selectedEmail = ref(null);
 const selectedEmails = ref([]);
 
+// Watch para resetear selectedEmail si el email ya no existe
+watch(() => emailStore.emails, (newEmails) => {
+  if (selectedEmail.value && !newEmails.find(email => email.id === selectedEmail.value.id)) {
+    selectedEmail.value = null;
+  }
+}, { deep: true });
+
 function openEmail(email) {
   selectedEmail.value = email;
   emailStore.setRead(email.id);

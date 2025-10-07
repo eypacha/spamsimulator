@@ -222,6 +222,7 @@ export const useStatsStore = defineStore('stats', () => {
   const score = ref(loaded?.score ?? 0);
   const virusCount = ref(loaded?.virusCount ?? 0);
   const virusByScreen = ref(loaded?.virusByScreen ?? { inbox: 0, trash: 0, store: 0, achievements: 0, settings: 0, starred: 0 });
+  const gameOver = ref(false);
   const activeScreens = computed(() => {
     const screens = ['inbox', 'trash', 'store', 'achievements', 'settings'];
     if (abilitiesManager.starredUnlocked.value) screens.push('starred');
@@ -337,6 +338,14 @@ export const useStatsStore = defineStore('stats', () => {
   // Iniciar inmediatamente (el juego ya está montado al usar el store)
   startVirusDrainLoop();
 
+  // Watch for game over condition - game over when score is 0 AND there are viruses
+  watch([score, virusCount], ([newScore, newVirusCount]) => {
+    if (newScore === 0 && newVirusCount > 0 && !gameOver.value) {
+      gameOver.value = true;
+      stopVirusDrainLoop(); // Detener el drain cuando hay game over
+    }
+  });
+
   // Hot Module Replacement cleanup (desarrollo)
   if (import.meta.hot) {
     import.meta.hot.dispose(() => {
@@ -384,11 +393,13 @@ export const useStatsStore = defineStore('stats', () => {
     return formatStorage(emailCount * sizeKB);
   }
 
-  function reset() {
+  function resetGame() {
+    // Resetear todo menos achievements
     score.value = 0;
+    virusCount.value = 0;
+    virusByScreen.value = { inbox: 0, trash: 0, store: 0, achievements: 0, settings: 0, starred: 0 };
     level.value = 1;
     pointsPerSpam.value = 1;
-    statsTracker.resetStats();
     upgradeCost.value = UPGRADE_COST;
     trashUpgradeCost.value = TRASH_UPGRADE_COST;
     inboxUpgradeCost.value = INBOX_UPGRADE_COST;
@@ -396,6 +407,15 @@ export const useStatsStore = defineStore('stats', () => {
     maxTrash.value = MAX_TRASH;
     maxInbox.value = MAX_INBOX;
     maxSelectable.value = MAX_SELECTABLE;
+    
+    // Resetear stats tracker (mantener achievements)
+    statsTracker.resetStats();
+    
+    // Resetear combo
+    comboManager.resetCombo();
+    
+    gameOver.value = false;
+    startVirusDrainLoop(); // Reiniciar el drain loop
     saveAllStats();
   }
   // Guarda automáticamente cuando cambian los upgrades, monedas y contadores de logros
@@ -465,7 +485,7 @@ export const useStatsStore = defineStore('stats', () => {
   // Iniciar el tracking de tiempo de juego
   statsTracker.startPlayTimeTracking();
 
-  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, totalVirusesInfected: computed(() => statsTracker.totalVirusesInfected.value), totalAppointmentsConfirmed: computed(() => statsTracker.totalAppointmentsConfirmed.value), recordAppointmentConfirmed: statsTracker.recordAppointmentConfirmed, playedAt6AM: computed(() => statsTracker.playedAt6AM.value), playedAt3AM: computed(() => statsTracker.playedAt3AM.value), totalPlayTimeMinutes: computed(() => statsTracker.totalPlayTimeMinutes.value), currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
+  return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, totalVirusesInfected: computed(() => statsTracker.totalVirusesInfected.value), totalAppointmentsConfirmed: computed(() => statsTracker.totalAppointmentsConfirmed.value), recordAppointmentConfirmed: statsTracker.recordAppointmentConfirmed, playedAt6AM: computed(() => statsTracker.playedAt6AM.value), playedAt3AM: computed(() => statsTracker.playedAt3AM.value), totalPlayTimeMinutes: computed(() => statsTracker.totalPlayTimeMinutes.value), currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade,     getSpaceString, resetGame,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
     spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,
@@ -494,6 +514,9 @@ export const useStatsStore = defineStore('stats', () => {
     // Virus by screen
     virusByScreen,
     activeScreens,
-    removeOneVirus
+    removeOneVirus,
+    // Game Over
+    gameOver,
+    resetGame
   };
 });

@@ -39,6 +39,13 @@ const { emails } = storeToRefs(emailStore);
 const starredEmails = computed(() => emails.value.filter(e => e.starred).reverse());
 const selectedEmail = ref(null);
 
+// Watch para resetear selectedEmail si el email ya no existe
+watch(() => emailStore.emails, (newEmails) => {
+  if (selectedEmail.value && !newEmails.find(email => email.id === selectedEmail.value.id)) {
+    selectedEmail.value = null;
+  }
+}, { deep: true });
+
 function openEmail(email) {
   selectedEmail.value = email;
   emailStore.setRead(email.id);

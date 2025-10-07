@@ -230,5 +230,10 @@ export const useEmailStore = defineStore('email', () => {
     return true;
   }
 
-  return { emails, time, inboxFull, toggleStar, setRead, moveToTrash, archiveEmail, fetchEmail, startGameLoop, convertLegitimateToSpam };
+  function resetEmails() {
+    emails.value = [];
+    saveEmails();
+  }
+
+  return { emails, time, inboxFull, toggleStar, setRead, moveToTrash, archiveEmail, fetchEmail, startGameLoop, convertLegitimateToSpam, resetEmails };
 });

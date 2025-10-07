@@ -118,6 +118,13 @@ const selectedEmails = ref([]);
 const selectedEmail = ref(null);
 const emailStore = useEmailStore();
 const statsStore = useStatsStore();
+
+// Watch para resetear selectedEmail si el email ya no existe
+watch(() => emailStore.emails, (newEmails) => {
+  if (selectedEmail.value && !newEmails.find(email => email.id === selectedEmail.value.id)) {
+    selectedEmail.value = null;
+  }
+}, { deep: true });
 const soundStore = useSoundStore();
 const { emails, inboxFull } = storeToRefs(emailStore);
 const visibleEmails = computed(() => emails.value.filter(e => !e.trash).reverse());

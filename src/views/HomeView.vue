@@ -43,6 +43,7 @@
       <div v-if="showCompose" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0004]">
         <ComposeEmail @send="onSendEmail" @close="showCompose = false" />
       </div>
+      <GameOver @resetUI="handleResetUI" />
     </div>
   </div>
 </template>
@@ -60,6 +61,7 @@ import Store from '../components/Store.vue';
 import Achievements from '../components/Achievements.vue';
 import ComposeEmail from '../components/ComposeEmail.vue';
 import Settings from '../components/Settings.vue';
+import GameOver from '../components/GameOver.vue';
 
 
 const selectedMenu = ref('inbox');
@@ -84,6 +86,16 @@ function onSendEmail(emailData) {
 function handleResize() {
   isDesktop.value = window.innerWidth >= 768;
   if (isDesktop.value) sidebarOpen.value = true;
+}
+
+function handleResetUI() {
+  console.log('handleResetUI called');
+  // Resetear navegación a inbox
+  selectedMenu.value = 'inbox';
+  // Cerrar sidebar
+  sidebarOpen.value = false;
+  // Cerrar modal de compose
+  showCompose.value = false;
 }
 
 function handleKeydown(event) {
