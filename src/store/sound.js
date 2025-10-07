@@ -11,6 +11,21 @@ export const useSoundStore = defineStore('sound', () => {
     localStorage.setItem('soundEnabled', String(newValue));
   });
 
+  // Sistema de throttle para evitar sonidos repetidos
+  const soundThrottles = new Map();
+  
+  function throttleSound(soundName, callback, delay = 200) {
+    if (!soundEnabled.value) return;
+    
+    const now = Date.now();
+    const lastPlayed = soundThrottles.get(soundName) || 0;
+    
+    if (now - lastPlayed >= delay) {
+      soundThrottles.set(soundName, now);
+      callback();
+    }
+  }
+
   Howler.volume(0.8);
 
   const getAssetPath = (path) => {
@@ -95,9 +110,10 @@ export const useSoundStore = defineStore('sound', () => {
   });
   
   function playVirusSound() {
-    if (!soundEnabled.value) return;
-    console.log('Playing virus sound...');
-    virusSound.play();
+    throttleSound('virus', () => {
+      console.log('Playing virus sound...');
+      virusSound.play();
+    }, 300);
   }
 
   function playAntivirusSound() {
@@ -132,8 +148,7 @@ export const useSoundStore = defineStore('sound', () => {
   }
 
   function playErrorSound() {
-    if (!soundEnabled.value) return;
-    errorSound.play();
+    throttleSound('error', () => errorSound.play(), 300);
   }
 
   function playSendSound() {
@@ -147,8 +162,7 @@ export const useSoundStore = defineStore('sound', () => {
   }
 
   function playPenaltySound() {
-    if (!soundEnabled.value) return;
-    penaltySound.play();
+    throttleSound('penalty', () => penaltySound.play(), 300);
   }
 
   function playWinSound() {
