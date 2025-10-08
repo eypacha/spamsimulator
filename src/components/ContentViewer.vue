@@ -1,5 +1,5 @@
 <template>
-  <div v-if="show" class="fixed inset-0 z-50 p-4" style="background: rgba(0,0,0,0.5);" @click="emit('close')">
+  <div v-if="show" class="fixed inset-0 z-50" style="background: rgba(0,0,0,0.5);" @click="emit('close')">
     <!-- Ventana del visor de contenido -->
     <div 
       class="bg-white shadow-2xl w-full max-w-3xl aspect-[4/3] flex flex-col animate-popup border-2 border-gray-400 absolute"
