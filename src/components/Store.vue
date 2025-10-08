@@ -86,6 +86,17 @@ const cards = computed(() => [
     rounded: true,
   },
   {
+    title: 'MobileFriendly',
+    description: '📱 Desbloquea la capacidad de borrar y archivar emails deslizando el dedo (swipe) en la bandeja de entrada y papelera.',
+    details: [
+      statsStore.mobileFriendlyUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.mobileFriendlyUpgradeCost} 🪙`,
+      statsStore.mobileFriendlyUnlocked ? 'Swipe activado' : 'Desliza para borrar o archivar'
+    ],
+    onClick: () => statsStore.buyMobileFriendlyUpgrade(),
+    disabled: statsStore.score < statsStore.mobileFriendlyUpgradeCost || statsStore.mobileFriendlyUnlocked,
+    rounded: true,
+  },
+  {
     title: 'Selección múltiple',
     description: '☑️ Aumenta el número de emails que puedes seleccionar a la vez.',
     details: [

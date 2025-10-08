@@ -1,8 +1,17 @@
 <template>
-  <li :class="[
-    'flex items-center px-6 py-4 md:py-2 cursor-pointer transition-all duration-300',
-    email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100')
-  ]" @click="$emit('open')">
+  <li
+    :class="[
+      'flex items-center px-6 py-4 md:py-2 cursor-pointer',
+      email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'),
+      swipeActive && swipeDirection === 'left' ? 'border-r-8 border-red-500' : '',
+      swipeActive && swipeDirection === 'right' ? 'border-l-8 border-green-500' : ''
+    ]"
+    :style="swipeStyle"
+    @click="$emit('open')"
+    @touchstart="onTouchStart"
+    @touchmove="onTouchMove"
+    @touchend="onTouchEnd"
+  >
     <input
       v-if="showCheckbox"
       type="checkbox"
@@ -26,7 +35,87 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue';
+import { defineProps, defineEmits, computed, ref } from 'vue';
+
+// Swipe state y animación elástica
+const swipeStartX = ref(null);
+const swipeActive = ref(false);
+const swipeDirection = ref(null);
+const swipeDeltaX = ref(0);
+const swipeAnimatingBack = ref(false);
+
+const swipeStyle = computed(() => {
+  let style = '';
+  if (swipeActive.value || swipeAnimatingBack.value) {
+    style += `transform: translateX(${swipeDeltaX.value}px);`;
+    style += 'transition: none;';
+  } else {
+    style += 'transform: translateX(0);';
+    style += 'transition: transform 0.3s;';
+  }
+  return style;
+});
+
+// Detectar si MobileFriendly está desbloqueado
+const mobileFriendlyUnlocked = computed(() => statsStore.mobileFriendlyUnlocked);
+
+function onTouchStart(e) {
+  if (!mobileFriendlyUnlocked.value) return;
+  swipeStartX.value = e.touches[0].clientX;
+  swipeActive.value = true;
+  swipeDirection.value = null;
+  swipeDeltaX.value = 0;
+  swipeAnimatingBack.value = false;
+}
+
+function onTouchMove(e) {
+  if (!mobileFriendlyUnlocked.value || swipeStartX.value === null) return;
+  const deltaX = e.touches[0].clientX - swipeStartX.value;
+  swipeDeltaX.value = deltaX;
+  if (Math.abs(deltaX) > 20) {
+    swipeDirection.value = deltaX < 0 ? 'left' : 'right';
+  } else {
+    swipeDirection.value = null;
+  }
+}
+
+function onTouchEnd(e) {
+  if (!mobileFriendlyUnlocked.value || swipeStartX.value === null) {
+    swipeActive.value = false;
+    swipeDirection.value = null;
+    swipeDeltaX.value = 0;
+    return;
+  }
+  const endX = e.changedTouches[0].clientX;
+  const deltaX = endX - swipeStartX.value;
+  const threshold = 60;
+  if (Math.abs(deltaX) > threshold) {
+    if (deltaX < 0) {
+      emailStore.moveToTrash(props.email.id);
+    } else {
+      if (!props.email.trash) {
+        emailStore.archiveEmail(props.email.id);
+      }
+    }
+    // Animar fuera de pantalla
+    swipeDeltaX.value = deltaX < 0 ? -300 : 300;
+    setTimeout(() => {
+      swipeActive.value = false;
+      swipeDirection.value = null;
+      swipeDeltaX.value = 0;
+    }, 200);
+  } else {
+    // Animar regreso a posición original
+    swipeAnimatingBack.value = true;
+    swipeDeltaX.value = 0;
+    setTimeout(() => {
+      swipeActive.value = false;
+      swipeDirection.value = null;
+      swipeAnimatingBack.value = false;
+    }, 300);
+  }
+  swipeStartX.value = null;
+}
 import '@fortawesome/fontawesome-free/css/all.css';
 import { formatDate } from '@/utils/date';
 import { useStatsStore } from '../store/stats.js';

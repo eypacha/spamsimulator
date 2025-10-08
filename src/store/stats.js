@@ -107,7 +107,10 @@ export const useStatsStore = defineStore('stats', () => {
       bulkDeleteUpgradeCost: abilitiesManager.bulkDeleteUpgradeCost.value,
       // Bulk Archive
       bulkArchiveUnlocked: abilitiesManager.bulkArchiveUnlocked.value,
-      bulkArchiveUpgradeCost: abilitiesManager.bulkArchiveUpgradeCost.value
+      bulkArchiveUpgradeCost: abilitiesManager.bulkArchiveUpgradeCost.value,
+      // MobileFriendly
+      mobileFriendlyUnlocked: abilitiesManager.mobileFriendlyUnlocked.value,
+      mobileFriendlyUpgradeCost: abilitiesManager.mobileFriendlyUpgradeCost.value
     });
   }
 
@@ -145,7 +148,9 @@ export const useStatsStore = defineStore('stats', () => {
     bulkDeleteUnlocked,
     bulkDeleteUpgradeCost,
     bulkArchiveUnlocked,
-    bulkArchiveUpgradeCost
+    bulkArchiveUpgradeCost,
+    mobileFriendlyUnlocked,
+    mobileFriendlyUpgradeCost
   } = abilitiesManager;
 
   function buySpaceBarUpgrade() {
@@ -194,6 +199,10 @@ export const useStatsStore = defineStore('stats', () => {
 
   function buyBulkArchiveUpgrade() {
     buyUpgradeHandler(bulkArchiveUpgradeCost, abilitiesManager.unlockBulkArchive, 1.5, !bulkArchiveUnlocked.value);
+  }
+
+  function buyMobileFriendlyUpgrade() {
+    buyUpgradeHandler(mobileFriendlyUpgradeCost, abilitiesManager.unlockMobileFriendly, 1.5, !mobileFriendlyUnlocked.value);
   }
 
   // Combo upgrade - usando comboManager
@@ -491,6 +500,8 @@ export const useStatsStore = defineStore('stats', () => {
     bulkDeleteUnlocked, bulkDeleteUpgradeCost, buyBulkDeleteUpgrade,
     // Bulk Archive Upgrade
     bulkArchiveUnlocked, bulkArchiveUpgradeCost, buyBulkArchiveUpgrade,
+    // MobileFriendly Upgrade
+    mobileFriendlyUnlocked, mobileFriendlyUpgradeCost, buyMobileFriendlyUpgrade,
     // Virus by screen
     virusByScreen,
     activeScreens,

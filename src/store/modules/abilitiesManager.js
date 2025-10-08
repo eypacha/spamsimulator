@@ -60,6 +60,10 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   const bulkArchiveUnlocked = ref(loaded?.bulkArchiveUnlocked ?? false);
   const bulkArchiveUpgradeCost = ref(loaded?.bulkArchiveUpgradeCost ?? 60);
 
+  // MobileFriendly - Swipe para borrar/archivar mails
+  const mobileFriendlyUnlocked = ref(loaded?.mobileFriendlyUnlocked ?? false);
+  const mobileFriendlyUpgradeCost = ref(loaded?.mobileFriendlyUpgradeCost ?? 40);
+
   function unlockSpamFrenzy() {
     spamFrenzyUnlocked.value = true;
   }
@@ -106,6 +110,9 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockBulkArchive() {
     bulkArchiveUnlocked.value = true;
+  }
+  function unlockMobileFriendly() {
+    mobileFriendlyUnlocked.value = true;
   }
 
   // Reiniciar timers al cargar (para cooldowns guardados)
@@ -237,63 +244,57 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     spamFrenzyTime,
     unlockSpamFrenzy,
     activateSpamFrenzy,
-    
     // Space Bar
     spaceBarUnlocked,
     spaceBarUpgradeCost,
     unlockSpaceBar,
-    
     // Spam Detector
     spamDetectorUnlocked,
     spamDetectorUpgradeCost,
     unlockSpamDetector,
-    
     // Trash Bar
     trashBarUnlocked,
     trashBarUpgradeCost,
     unlockTrashBar,
-    
     // Compose
     composeUnlocked,
     composeUpgradeCost,
     unlockCompose,
-    
     // Starred
     starredUnlocked,
     starredUpgradeCost,
     unlockStarred,
-    
     // Virus Bomb
     virusBombUnlocked,
     virusBombUpgradeCost,
     virusBombCooldown,
     unlockVirusBomb,
     activateVirusBomb,
-  // Antivirus
-  antivirusUnlocked,
-  antivirusUpgradeCost,
-  antivirusCooldown,
-  unlockAntivirus,
-  activateAntivirus,
-    
+    // Antivirus
+    antivirusUnlocked,
+    antivirusUpgradeCost,
+    antivirusCooldown,
+    unlockAntivirus,
+    activateAntivirus,
     // Group Select
     groupSelectUnlocked,
     groupSelectUpgradeCost,
     unlockGroupSelect,
-    
     // Keyboard Shortcuts
     keyboardShortcutsUnlocked,
     keyboardShortcutsUpgradeCost,
     unlockKeyboardShortcuts,
-    
     // Bulk Delete
     bulkDeleteUnlocked,
     bulkDeleteUpgradeCost,
     unlockBulkDelete,
-    
     // Bulk Archive
     bulkArchiveUnlocked,
     bulkArchiveUpgradeCost,
-    unlockBulkArchive
+    unlockBulkArchive,
+    // MobileFriendly
+    mobileFriendlyUnlocked,
+    mobileFriendlyUpgradeCost,
+    unlockMobileFriendly,
   };
 }
