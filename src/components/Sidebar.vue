@@ -21,6 +21,15 @@
       
       <!-- Barra de progreso del espacio -->
       <div class="mt-auto px-6 space-y-4">
+        <!-- Botón Antivirus -->
+        <div v-if="statsStore.antivirusUnlocked" class="mb-4">
+          <button @click="handleAntivirus"
+            :disabled="statsStore.antivirusCooldown > 0 || statsStore.virusCount === 0"
+            class="w-full px-4 py-2 rounded bg-green-600 text-white font-bold transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-green-700">
+            🛡️ Zordon Antivirus
+            <span v-if="statsStore.antivirusCooldown > 0"> ({{ statsStore.antivirusCooldown }})</span>
+          </button>
+        </div>
         <!-- Barra de Bandeja de Entrada -->
         <div v-if="statsStore.spaceBarUnlocked">
           <div class="text-sm text-gray-300 mb-2">Espacio de Bandeja</div>
@@ -55,6 +64,15 @@
 </template>
 
 <script setup>
+import { useSoundStore } from '../store/sound.js';
+const soundStore = useSoundStore();
+
+function handleAntivirus() {
+  const activated = statsStore.activateAntivirus();
+  if (activated && soundStore.playAntivirusSound) {
+    soundStore.playAntivirusSound();
+  }
+}
 import { defineProps, defineEmits, computed } from 'vue';
 import { useEmailStore } from '../store/email.js';
 import { useStatsStore } from '../store/stats.js';
