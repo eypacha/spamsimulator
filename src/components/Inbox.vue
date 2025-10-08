@@ -8,49 +8,33 @@
       <div v-if="!selectedEmail" class="px-6 py-2">
         <button
           v-if="statsStore.maxSelectable !== 0 && (statsStore.bulkDeleteUnlocked || statsStore.bulkArchiveUnlocked)"
-          @click="selectFirstThree"
-          class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">
+          @click="selectFirstThree" class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 mr-2">
           Seleccionar {{ statsStore.maxSelectable >= statsStore.maxInbox ? 'todos' : statsStore.maxSelectable }}
         </button>
-        <button
-          v-if="statsStore.bulkDeleteUnlocked"
-          @click="deleteSelected"
-          :disabled="selectedEmails.length === 0"
+        <button v-if="statsStore.bulkDeleteUnlocked" @click="deleteSelected" :disabled="selectedEmails.length === 0"
           class="px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed mr-2">
           Eliminar ({{ selectedEmails.length }})
         </button>
-        <button
-          v-if="statsStore.bulkArchiveUnlocked"
-          @click="archiveSelected"
-          :disabled="selectedEmails.length === 0"
+        <button v-if="statsStore.bulkArchiveUnlocked" @click="archiveSelected" :disabled="selectedEmails.length === 0"
           class="px-4 py-2 rounded bg-green-600 text-white hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
           Archivar ({{ selectedEmails.length }})
         </button>
-        <button
-          v-if="statsStore.spamFrenzyUnlocked"
-          @click="statsStore.activateSpamFrenzy()"
+        <button v-if="statsStore.spamFrenzyUnlocked" @click="statsStore.activateSpamFrenzy()"
           :disabled="statsStore.spamFrenzyActive || statsStore.spamFrenzyCooldown > 0"
           class="px-4 py-2 rounded bg-pink-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed"
-          :class="statsStore.spamFrenzyActive ? 'animate-pulse pulse-fast' : 'hover:bg-pink-700'"
-        >
+          :class="statsStore.spamFrenzyActive ? 'animate-pulse pulse-fast' : 'hover:bg-pink-700'">
           Spam Frenzy
           <span v-if="statsStore.spamFrenzyCooldown > 0"> ({{ statsStore.spamFrenzyCooldown }})</span>
         </button>
-        <button
-          v-if="statsStore.virusBombUnlocked"
-          @click="handleVirusBomb"
+        <button v-if="statsStore.virusBombUnlocked" @click="handleVirusBomb"
           :disabled="statsStore.virusBombCooldown > 0"
-          class="px-4 py-2 rounded bg-purple-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-purple-700"
-        >
+          class="px-4 py-2 rounded bg-purple-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-purple-700">
           💣 Virus Bomb
           <span v-if="statsStore.virusBombCooldown > 0"> ({{ statsStore.virusBombCooldown }})</span>
         </button>
-        <button
-          v-if="statsStore.antivirusUnlocked"
-          @click="handleAntivirus"
+        <button v-if="statsStore.antivirusUnlocked" @click="handleAntivirus"
           :disabled="statsStore.antivirusCooldown > 0 || statsStore.virusCount === 0"
-          class="px-4 py-2 rounded bg-green-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-green-700"
-        >
+          class="px-4 py-2 rounded bg-green-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-green-700">
           🛡️ Antivirus
           <span v-if="statsStore.antivirusCooldown > 0"> ({{ statsStore.antivirusCooldown }})</span>
         </button>
@@ -58,20 +42,15 @@
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
       <template v-if="visibleEmails.length > 0">
-        <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow">
-          <Email
-            v-for="email in visibleEmails"
-            :key="email.id"
-            :email="email"
-            v-model="selectedEmails"
-            :show-checkbox="true"
-            @toggle-star="emailStore.toggleStar"
-            @open="openEmail(email)" />
+        <ul class="divide-y divide-gray-200 bg-white rounded-lg shadow overflow-x-hidden">
+          <Email v-for="email in visibleEmails" :key="email.id" :email="email" v-model="selectedEmails"
+            :show-checkbox="true" @toggle-star="emailStore.toggleStar" @open="openEmail(email)" />
         </ul>
       </template>
       <template v-else>
         <div class="flex items-center justify-center h-full">
-          <div class="text-2xl text-gray-400 font-semibold text-center">¡Tu bandeja está vacía!<br/> Disfruta tu día 😊</div>
+          <div class="text-2xl text-gray-400 font-semibold text-center">¡Tu bandeja está vacía!<br /> Disfruta tu día 😊
+          </div>
         </div>
       </template>
     </div>

@@ -1,41 +1,38 @@
 <template>
-  <li
-    :class="[
-      'flex items-center px-6 py-4 md:py-2 cursor-pointer',
-      email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'),
-      swipeActive && swipeDirection === 'left' ? 'border-r-8 border-red-500' : '',
-      swipeActive && swipeDirection === 'right' ? 'border-l-8 border-green-500' : ''
-    ]"
-    :style="swipeStyle"
-    @click="$emit('open')"
-    @touchstart="onTouchStart"
-    @touchmove="onTouchMove"
-    @touchend="onTouchEnd"
-  >
-    <input
-      v-if="showCheckbox"
-      type="checkbox"
-      :checked="modelValue.includes(email.id)"
-      :value="email.id"
-      @click.stop
-      @change="onChange"
-      class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
+  <li :class="[
+    'flex items-center px-6 py-4 md:py-2 cursor-pointer',
+    email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'),
+    swipeActive && swipeDirection === 'left' ? 'border-r-8 border-red-500' : '',
+    swipeActive && swipeDirection === 'right' ? 'border-l-8 border-green-500' : ''
+  ]" :style="swipeStyle" @click="$emit('open')" @touchstart="onTouchStart" @touchmove="onTouchMove"
+    @touchend="onTouchEnd">
+    <input v-if="showCheckbox" type="checkbox" :checked="modelValue.includes(email.id)" :value="email.id" @click.stop
+      @change="onChange" class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
     <span v-if="statsStore.starredUnlocked" class="mr-2 cursor-pointer" @click.stop="toggleStar">
       <i :class="email.starred ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-400'" aria-label="Destacar"></i>
     </span>
-    <span
-      class="w-50 truncate whitespace-nowrap mr-3"
-      :style="shouldShowSpamColor ? 'color: #e53935; font-weight: bold;' : 'color: #6b7280;'"
-    >
+    <span class="w-50 truncate whitespace-nowrap mr-3"
+      :style="shouldShowSpamColor ? 'color: #e53935; font-weight: bold;' : 'color: #6b7280;'">
       {{ email.fromName }}
     </span>
     <span class="flex-1 min-w-0 truncate whitespace-nowrap w-0">{{ email.subject }}</span>
     <span class="w-32 flex-shrink-0 text-right text-gray-400">{{ formatDate(email.id) }}</span>
   </li>
+  <div v-if="showTrashFull" class="fixed inset-0 flex items-center justify-center z-50"
+    style="background: rgba(0,0,0,0.4);">
+    <div class="bg-white rounded-lg shadow-lg p-8 text-center">
+      <div class="mb-4 text-lg">No puedes eliminar este correo, papelera llena</div>
+      <div class="flex gap-4 justify-center">
+        <button @click="showTrashFull = false"
+          class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700">Aceptar</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { defineProps, defineEmits, computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 
 // Swipe state y animación elástica
 const swipeStartX = ref(null);
@@ -70,6 +67,8 @@ function onTouchStart(e) {
 
 function onTouchMove(e) {
   if (!mobileFriendlyUnlocked.value || swipeStartX.value === null) return;
+  // Prevenir scroll del body mientras se hace swipe
+  e.preventDefault();
   const deltaX = e.touches[0].clientX - swipeStartX.value;
   swipeDeltaX.value = deltaX;
   if (Math.abs(deltaX) > 20) {
@@ -91,7 +90,12 @@ function onTouchEnd(e) {
   const threshold = 60;
   if (Math.abs(deltaX) > threshold) {
     if (deltaX < 0) {
-      emailStore.moveToTrash(props.email.id);
+      // Verificar si la papelera está llena
+      if (trashCount.value >= maxTrash.value) {
+        showTrashFull.value = true;
+      } else {
+        emailStore.moveToTrash(props.email.id);
+      }
     } else {
       if (!props.email.trash) {
         emailStore.archiveEmail(props.email.id);
@@ -123,6 +127,9 @@ import { useEmailStore } from '../store/email.js';
 
 const statsStore = useStatsStore();
 const emailStore = useEmailStore();
+const { maxTrash } = storeToRefs(statsStore);
+const trashCount = computed(() => emailStore.emails.filter(e => e.trash).length);
+const showTrashFull = ref(false);
 
 const props = defineProps({
   email: Object,
@@ -146,7 +153,7 @@ function onChange(event) {
   const checked = event.target.checked;
   const value = props.email.id;
   let newValue = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
-  
+
   if (checked) {
     // Si Group Select está desbloqueado, seleccionar todo el grupo
     if (statsStore.groupSelectUnlocked) {
@@ -162,22 +169,22 @@ function onChange(event) {
     // Al deseleccionar, siempre eliminar solo el email individual
     newValue = newValue.filter(id => id !== value);
   }
-  
+
   emit('update:modelValue', newValue);
 }
 
 function getEmailGroup(emailId) {
   // Obtener todos los emails visibles
   const visibleEmails = emailStore.emails.filter(e => !e.trash).reverse();
-  
+
   // Encontrar el índice del email actual
   const index = visibleEmails.findIndex(e => e.id === emailId);
   if (index === -1) return [emailId];
-  
+
   const currentEmail = visibleEmails[index];
   const isSpam = currentEmail.isSpam;
   const group = [emailId];
-  
+
   // Buscar hacia arriba (emails anteriores)
   for (let i = index - 1; i >= 0; i--) {
     if (visibleEmails[i].isSpam === isSpam) {
@@ -186,7 +193,7 @@ function getEmailGroup(emailId) {
       break;
     }
   }
-  
+
   // Buscar hacia abajo (emails siguientes)
   for (let i = index + 1; i < visibleEmails.length; i++) {
     if (visibleEmails[i].isSpam === isSpam) {
@@ -195,7 +202,7 @@ function getEmailGroup(emailId) {
       break;
     }
   }
-  
+
   return group;
 }
 

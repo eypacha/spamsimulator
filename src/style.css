@@ -9,8 +9,8 @@
   --color-gray: #dbdddd;
   --color-orange: #f9490d;
   background-color: var(--color-gray);
+  touch-action: none;
 }
-
 body {
   scroll-behavior: smooth;
   font-weight: 300;
@@ -18,7 +18,9 @@ body {
   font-optical-sizing: auto;
   font-style: normal;
   font-variation-settings: "wdth" 87.5;
+  touch-action: none;
 }
+ 
 
 .pulse-fast {
   animation-duration: 0.5s !important;
