@@ -27,13 +27,17 @@ export const useVirusStore = defineStore('virus', () => {
   // Función para aplicar el drain (recibe callbacks para modificar score y reproducir sonido)
   function applyVirusDrain(pointsPerSpam, scoreRef, saveStatsCallback, playSoundCallback) {
     const drain = computeVirusDrain(pointsPerSpam);
-    if (drain > 0 && scoreRef.value > 0) {
-      scoreRef.value = Math.max(0, scoreRef.value - drain);
-      // Guardar y disparar animación negativa (HUD ya detecta decremento)
-      saveStatsCallback();
-      // Reproducir sonido de virus por drenaje
+    if (drain > 0) {
+      // Siempre reproducir sonido si hay virus, para indicar infección continua
       if (playSoundCallback) {
         playSoundCallback();
+      }
+      
+      // Solo drenar monedas si hay score disponible
+      if (scoreRef.value > 0) {
+        scoreRef.value = Math.max(0, scoreRef.value - drain);
+        // Guardar y disparar animación negativa (HUD ya detecta decremento)
+        saveStatsCallback();
       }
     }
   }
