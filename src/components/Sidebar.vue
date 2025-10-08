@@ -24,7 +24,7 @@
         <!-- Botón Antivirus -->
         <div v-if="statsStore.antivirusUnlocked" class="mb-4">
           <button @click="handleAntivirus"
-            :disabled="statsStore.antivirusCooldown > 0 || statsStore.virusCount === 0"
+            :disabled="statsStore.antivirusCooldown > 0 || virusStore.virusCount === 0"
             class="w-full px-4 py-2 rounded bg-green-600 text-white font-bold transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-green-700">
             🛡️ Antivirus
             <span v-if="statsStore.antivirusCooldown > 0"> ({{ statsStore.antivirusCooldown }})</span>
@@ -76,6 +76,7 @@ function handleAntivirus() {
 import { defineProps, defineEmits, computed } from 'vue';
 import { useEmailStore } from '../store/email.js';
 import { useStatsStore } from '../store/stats.js';
+import { useVirusStore } from '../store/virus.js';
 
 // Opciones del menú (excepto Redactar)
 const allMenuOptions = [
@@ -94,6 +95,7 @@ const emit = defineEmits(['selectMenu']);
 
 const emailStore = useEmailStore();
 const statsStore = useStatsStore();
+const virusStore = useVirusStore();
 
 // Filtrar opciones del menú según los unlocks
 const menuOptions = computed(() => {

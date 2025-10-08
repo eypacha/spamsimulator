@@ -1,6 +1,7 @@
 import { ref, computed, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { useSoundStore } from './sound.js';
+import { useVirusStore } from './virus.js';
 import { formatStorage } from '../utils/storage.js';
 import { loadStats, saveStats } from '../utils/statsStorage.js';
 import { calculatePointsPerSpamIncrement, calculateUpgradeCostMultiplier, calculateTrashCapacityIncrement, calculateInboxCapacityIncrement, calculateSelectionIncrement, calculateSelectionCostMultiplier } from '../utils/balancing.js';
@@ -34,8 +35,8 @@ export const useStatsStore = defineStore('stats', () => {
   function saveAllStats() {
     saveStats({
       score: score.value,
-      virusCount: virusCount.value,
-      virusByScreen: virusByScreen.value,
+      virusCount: virusStore.virusCount.value,
+      virusByScreen: virusStore.virusByScreen.value,
       level: level.value,
       pointsPerSpam: pointsPerSpam.value,
       upgradeCost: upgradeCost.value,
@@ -273,78 +274,42 @@ export const useStatsStore = defineStore('stats', () => {
 
   // Score Manager - maneja la puntuación con multiplicadores y sonidos
   const scoreManager = createScoreManager(comboUnlocked, comboMultiplier, statsTracker, saveAllStats, soundStore);
+  const virusStore = useVirusStore();
 
-  function addScore(points) {
-    scoreManager.addScore(score, points);
-  }
+  // Inicializar virusStore con datos guardados
+  virusStore.initializeVirusData(loaded);
 
   function incrementVirusCount(amount = 1) {
-    virusCount.value += amount;
-    for (let i = 0; i < amount; i++) {
-      const screens = activeScreens.value;
-      const randomScreen = screens[Math.floor(Math.random() * screens.length)];
-      virusByScreen.value[randomScreen]++;
-      statsTracker.recordVirusInfection();
-    }
+    // Usar screens activas para distribuir virus
+    virusStore.incrementVirusCount(amount, activeScreens.value);
+    statsTracker.recordVirusInfection();
     saveAllStats();
   }
 
   function removeOneVirus(screen) {
-    if (screen) {
-      // Remover de pantalla específica
-      if (virusByScreen.value[screen] > 0) {
-        virusByScreen.value[screen]--;
-        virusCount.value--;
-        saveAllStats();
-        return true;
-      }
-    } else {
-      // Remover de cualquier pantalla (para compatibilidad)
-      const screensWithVirus = activeScreens.value.filter(s => virusByScreen.value[s] > 0);
-      if (screensWithVirus.length > 0) {
-        const randomScreen = screensWithVirus[Math.floor(Math.random() * screensWithVirus.length)];
-        virusByScreen.value[randomScreen]--;
-        virusCount.value--;
-        saveAllStats();
-        return true;
-      }
+    // Usar virusStore para remover virus
+    const removed = virusStore.removeOneVirus(screen);
+    if (removed) {
+      saveAllStats();
+      return true;
     }
     return false;
   }
 
   // === Virus coin drain loop ===
-  const VIRUS_DRAIN_INTERVAL = 2000; // 2s
-  let virusDrainTimer = null;
-
-  function computeVirusDrain() {
-    if (virusCount.value <= 0) return 0;
-    const drainPerVirus = Math.max(1, Math.floor(pointsPerSpam.value * 0.25));
-    return drainPerVirus * virusCount.value;
-  }
-
-  function applyVirusDrain() {
-    const drain = computeVirusDrain();
-    if (drain > 0 && score.value > 0) {
-      score.value = Math.max(0, score.value - drain);
-      // Guardar y disparar animación negativa (HUD ya detecta decremento)
-      saveAllStats();
-      // Reproducir sonido de virus por drenaje
-      if (soundStore && soundStore.playVirusSound) {
-        soundStore.playVirusSound();
-      }
-    }
-  }
+  // Ahora usa las funciones del virusStore
 
   function startVirusDrainLoop() {
-    if (virusDrainTimer) return; // ya corriendo
-    virusDrainTimer = setInterval(applyVirusDrain, VIRUS_DRAIN_INTERVAL);
+    virusStore.startVirusDrainLoop(
+      pointsPerSpam.value,
+      score,
+      saveAllStats,
+      () => soundStore && soundStore.playVirusSound ? soundStore.playVirusSound() : null
+    );
   }
 
   function stopVirusDrainLoop() {
-    if (virusDrainTimer) {
-      clearInterval(virusDrainTimer);
-      virusDrainTimer = null;
-    }
+    virusStore.stopVirusDrainLoop();
   }
 
   // Iniciar inmediatamente (el juego ya está montado al usar el store)
@@ -353,7 +318,7 @@ export const useStatsStore = defineStore('stats', () => {
   // Hot Module Replacement cleanup (desarrollo)
   if (import.meta.hot) {
     import.meta.hot.dispose(() => {
-      stopVirusDrainLoop();
+      virusStore.stopVirusDrainLoop();
     });
   }
 
@@ -477,6 +442,10 @@ export const useStatsStore = defineStore('stats', () => {
 
   // Iniciar el tracking de tiempo de juego
   statsTracker.startPlayTimeTracking();
+
+  function addScore(points) {
+    scoreManager.addScore(score, points);
+  }
 
   return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalSpamDeleted, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, totalVirusesInfected: computed(() => statsTracker.totalVirusesInfected.value), totalAppointmentsConfirmed: computed(() => statsTracker.totalAppointmentsConfirmed.value), recordAppointmentConfirmed: statsTracker.recordAppointmentConfirmed, playedAt6AM: computed(() => statsTracker.playedAt6AM.value), playedAt3AM: computed(() => statsTracker.playedAt3AM.value), totalPlayTimeMinutes: computed(() => statsTracker.totalPlayTimeMinutes.value), currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,

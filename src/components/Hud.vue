@@ -23,13 +23,15 @@
 <script setup>
 import { computed, ref, watch } from 'vue';
 import { useStatsStore } from '../store/stats.js';
+import { useVirusStore } from '../store/virus.js';
 
 const statsStore = useStatsStore();
+const virusStore = useVirusStore();
 
 
 
 const score = computed(() => statsStore.score);
-const virusCount = computed(() => statsStore.virusCount);
+const virusCount = computed(() => virusStore.virusCount);
 const totalSpamDeleted = computed(() => statsStore.totalSpamDeleted);
 const unlockedAchievements = computed(() => statsStore.unlockedAchievements);
 const comboUnlocked = computed(() => statsStore.comboUnlocked);

@@ -38,6 +38,7 @@
 <script setup>
 import { ref, watch, computed, onUnmounted } from 'vue';
 import { useStatsStore } from '../store/stats.js';
+import { useVirusStore } from '../store/virus.js';
 import { useSoundStore } from '../store/sound.js';
 
 const props = defineProps({
@@ -48,13 +49,14 @@ const props = defineProps({
 });
 
 const statsStore = useStatsStore();
+const virusStore = useVirusStore();
 const soundStore = useSoundStore();
 
 const virusPositions = ref([]);
 const explosions = ref([]);
 let animationFrameId = null;
 
-const virusCount = computed(() => statsStore.virusByScreen?.[props.screen] || 0);
+const virusCount = computed(() => virusStore.virusByScreen?.[props.screen] || 0);
 
 function generateVirusPositions(count) {
   const positions = [];
@@ -159,7 +161,7 @@ function onVirusClick(virusIndex, event) {
     }
 
     // Decrementar virus count
-    statsStore.removeOneVirus(props.screen);
+    virusStore.removeOneVirus(props.screen);
   }
 
   event.stopPropagation();
