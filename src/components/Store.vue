@@ -64,6 +64,28 @@ const cards = computed(() => [
     disabled: statsStore.score < statsStore.inboxUpgradeCost,
   },
   {
+    title: 'Eliminar Seleccionados',
+    description: '🗑️ Desbloquea el botón para eliminar múltiples emails seleccionados a la vez.',
+    details: [
+      statsStore.bulkDeleteUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.bulkDeleteUpgradeCost} 🪙`,
+      statsStore.bulkDeleteUnlocked ? 'Elimina en masa' : 'Borra varios a la vez'
+    ],
+    onClick: () => statsStore.buyBulkDeleteUpgrade(),
+    disabled: statsStore.score < statsStore.bulkDeleteUpgradeCost || statsStore.bulkDeleteUnlocked,
+    rounded: true,
+  },
+  {
+    title: 'Archivar Seleccionados',
+    description: '📂 Desbloquea el botón para archivar múltiples emails seleccionados a la vez.',
+    details: [
+      statsStore.bulkArchiveUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.bulkArchiveUpgradeCost} 🪙`,
+      statsStore.bulkArchiveUnlocked ? 'Archiva en masa' : 'Archiva varios a la vez'
+    ],
+    onClick: () => statsStore.buyBulkArchiveUpgrade(),
+    disabled: statsStore.score < statsStore.bulkArchiveUpgradeCost || statsStore.bulkArchiveUnlocked,
+    rounded: true,
+  },
+  {
     title: 'Selección múltiple',
     description: '☑️ Aumenta el número de emails que puedes seleccionar a la vez.',
     details: [
@@ -200,28 +222,6 @@ const cards = computed(() => [
     ],
     onClick: () => statsStore.buyKeyboardShortcutsUpgrade(),
     disabled: statsStore.score < statsStore.keyboardShortcutsUpgradeCost || statsStore.keyboardShortcutsUnlocked,
-    rounded: true,
-  },
-  {
-    title: 'Eliminar Seleccionados',
-    description: '🗑️ Desbloquea el botón para eliminar múltiples emails seleccionados a la vez.',
-    details: [
-      statsStore.bulkDeleteUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.bulkDeleteUpgradeCost} 🪙`,
-      statsStore.bulkDeleteUnlocked ? 'Elimina en masa' : 'Borra varios a la vez'
-    ],
-    onClick: () => statsStore.buyBulkDeleteUpgrade(),
-    disabled: statsStore.score < statsStore.bulkDeleteUpgradeCost || statsStore.bulkDeleteUnlocked,
-    rounded: true,
-  },
-  {
-    title: 'Archivar Seleccionados',
-    description: '📂 Desbloquea el botón para archivar múltiples emails seleccionados a la vez.',
-    details: [
-      statsStore.bulkArchiveUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.bulkArchiveUpgradeCost} 🪙`,
-      statsStore.bulkArchiveUnlocked ? 'Archiva en masa' : 'Archiva varios a la vez'
-    ],
-    onClick: () => statsStore.buyBulkArchiveUpgrade(),
-    disabled: statsStore.score < statsStore.bulkArchiveUpgradeCost || statsStore.bulkArchiveUnlocked,
     rounded: true,
   },
 ]);
