@@ -26,7 +26,7 @@
           <button @click="handleAntivirus"
             :disabled="statsStore.antivirusCooldown > 0 || statsStore.virusCount === 0"
             class="w-full px-4 py-2 rounded bg-green-600 text-white font-bold transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-green-700">
-            🛡️ Zordon Antivirus
+            🛡️ Antivirus
             <span v-if="statsStore.antivirusCooldown > 0"> ({{ statsStore.antivirusCooldown }})</span>
           </button>
         </div>
@@ -68,7 +68,7 @@ import { useSoundStore } from '../store/sound.js';
 const soundStore = useSoundStore();
 
 function handleAntivirus() {
-  const activated = statsStore.activateAntivirus();
+  const activated = statsStore.activateAntivirus(); // No pasar argumentos
   if (activated && soundStore.playAntivirusSound) {
     soundStore.playAntivirusSound();
   }
