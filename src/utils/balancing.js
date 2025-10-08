@@ -75,8 +75,8 @@ export function calculateSelectionCostMultiplier(currentSelectable) {
  * @returns {number} - Multiplicador a aplicar al costo
  */
 export function calculateUpgradeCostMultiplier(currentLevel) {
-  if (currentLevel <= 5) return 1.5;   // Niveles bajos: crecimiento suave
-  if (currentLevel <= 10) return 1.6;  // Niveles medios: un poco más caro
-  if (currentLevel <= 15) return 1.7;  // Niveles altos: bastante más caro
-  return 1.8; // Niveles muy altos: muy caro
+  if (currentLevel <= 5) return 1.7;   // Niveles bajos: más caro
+  if (currentLevel <= 10) return 1.9;  // Niveles medios: aún más caro
+  if (currentLevel <= 15) return 2.1;  // Niveles altos: mucho más caro
+  return 2.3; // Niveles muy altos: extremadamente caro
 }

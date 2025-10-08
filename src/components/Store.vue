@@ -204,13 +204,17 @@ const cards = computed(() => [
   },
   {
     title: 'Zordon Antivirus',
-    description: '🛡️ Elimina 1 virus activo. Cooldown: 20s.',
+    description: `🛡️ Elimina ${Math.min(statsStore.antivirusLevel + 1, 5)} virus activos. Cooldown: 20s.`,
     details: [
-      statsStore.antivirusUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.antivirusUpgradeCost} 🪙`,
-      statsStore.antivirusUnlocked ? 'Remueve virus' : 'Virus sin control'
+      (statsStore.antivirusUnlocked && statsStore.antivirusLevel < 4)
+        ? `Costo: ${statsStore.antivirusUpgradeCost} 🪙`
+        : (statsStore.antivirusUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.antivirusUpgradeCost} 🪙`),
+      statsStore.antivirusUnlocked
+        ? `Remueve ${Math.min(statsStore.antivirusLevel + 1, 5)} virus por uso${statsStore.antivirusLevel < 4 ? ' (puedes mejorar hasta 5)' : ''}`
+        : 'Virus sin control'
     ],
     onClick: () => statsStore.buyAntivirusUpgrade(),
-    disabled: statsStore.score < statsStore.antivirusUpgradeCost || statsStore.antivirusUnlocked,
+    disabled: statsStore.score < statsStore.antivirusUpgradeCost || (statsStore.antivirusUnlocked && statsStore.antivirusLevel >= 4),
     rounded: true,
   },
   {

@@ -182,7 +182,11 @@ export const useStatsStore = defineStore('stats', () => {
   }
 
   function buyAntivirusUpgrade() {
-    buyUpgradeHandler(antivirusUpgradeCost, abilitiesManager.unlockAntivirus, 1.5, !antivirusUnlocked.value);
+    if (!antivirusUnlocked.value) {
+      buyUpgradeHandler(antivirusUpgradeCost, abilitiesManager.unlockAntivirus, 1.5, true);
+    } else if (abilitiesManager.antivirusLevel.value < 4) {
+      buyUpgradeHandler(antivirusUpgradeCost, abilitiesManager.upgradeAntivirus, 2, true);
+    }
   }
 
   function buyGroupSelectUpgrade() {
@@ -491,7 +495,8 @@ export const useStatsStore = defineStore('stats', () => {
     // Virus Bomb Upgrade
     virusBombUnlocked, virusBombUpgradeCost, virusBombCooldown, activateVirusBomb, buyVirusBombUpgrade,
     // Antivirus Upgrade
-    antivirusUnlocked, antivirusUpgradeCost, antivirusCooldown, activateAntivirus: () => activateAntivirus(removeOneVirus), buyAntivirusUpgrade,
+  antivirusUnlocked, antivirusUpgradeCost, antivirusCooldown, activateAntivirus: () => activateAntivirus(removeOneVirus), buyAntivirusUpgrade,
+  antivirusLevel: abilitiesManager.antivirusLevel,
     // Group Select Upgrade
     groupSelectUnlocked, groupSelectUpgradeCost, buyGroupSelectUpgrade,
     // Keyboard Shortcuts Upgrade

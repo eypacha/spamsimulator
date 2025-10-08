@@ -7,6 +7,8 @@ import { ref } from 'vue';
  * @returns {Object} Estado y funciones de habilidades
  */
 export function createAbilitiesManager(loaded, saveAllStats) {
+  // Nivel de antivirus: 1=2 virus, 2=3 virus, ... hasta 5
+  const antivirusLevel = ref(loaded?.antivirusLevel ?? 1);
   // Spam Frenzy - Habilidad de frenesí con cooldown
   const spamFrenzyUnlocked = ref(loaded?.spamFrenzyUnlocked ?? false);
   const spamFrenzyUpgradeCost = ref(loaded?.spamFrenzyUpgradeCost ?? 200);
@@ -94,6 +96,17 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function unlockAntivirus() {
     antivirusUnlocked.value = true;
+    antivirusLevel.value = 1; // Al desbloquear, empieza en nivel 1 (elimina 2 virus)
+    saveAllStats();
+  }
+
+  function upgradeAntivirus() {
+    if (antivirusLevel.value < 4) {
+      antivirusLevel.value++;
+      saveAllStats();
+      return true;
+    }
+    return false;
   }
 
   function unlockGroupSelect() {
@@ -219,8 +232,13 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   function activateAntivirus(removeVirusCallback) {
     if (!antivirusUnlocked.value || antivirusCooldown.value > 0) return false;
-    const removed = removeVirusCallback();
-    if (removed) {
+    let virusesToRemove = Math.min(antivirusLevel.value + 1, 5); // 2,3,4,5
+    let removedAny = false;
+    for (let i = 0; i < virusesToRemove; i++) {
+      const removed = removeVirusCallback();
+      if (removed) removedAny = true;
+    }
+    if (removedAny) {
       antivirusCooldown.value = 20; // 20s cooldown
       const cdInterval = setInterval(() => {
         antivirusCooldown.value--;
@@ -275,6 +293,8 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     antivirusUpgradeCost,
     antivirusCooldown,
     unlockAntivirus,
+    upgradeAntivirus,
+    antivirusLevel,
     activateAntivirus,
     // Group Select
     groupSelectUnlocked,
