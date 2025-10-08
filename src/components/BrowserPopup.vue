@@ -214,15 +214,15 @@ watch(() => props.show, (newVal) => {
     if (gotVirus) {
       // Si hay virus, infectarse con 1 a 5 virus
       const virusAmount = Math.floor(Math.random() * 5) + 1;
-      statsStore.incrementVirusCount(virusAmount);
+      statsStore.incrementVirusCount(virusAmount); 
       soundStore.playVirusSound();
     } else {
       // Si no hay virus, reproducir el sonido de win
       soundStore.playWinSound();
     }
     
-    // Penalización del popup principal: descontar 50% de los puntos por spam (como monedas), mínimo 1
-    const penalty = Math.max(1, Math.floor(statsStore.pointsPerSpam / 2));
+    // Penalización del popup principal: points puntos por spam (como monedas), mínimo 1
+    const penalty = statsStore.pointsPerSpam;
     
     // Restar monedas
     if (statsStore.score >= penalty) {
