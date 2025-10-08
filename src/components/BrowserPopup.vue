@@ -117,8 +117,12 @@ const popupIntervals = ref([]);
 // Función para generar posición aleatoria
 function getRandomPosition() {
   const isMobile = window.innerWidth < 768;
+  const popupWidth = Math.min(window.innerWidth, 768); // max-w-3xl = 768px
+  const margin = 16; // margen de seguridad para la 'x' (px)
+  const maxLeftPx = window.innerWidth - popupWidth - margin;
+  const maxLeftPercent = (maxLeftPx / window.innerWidth) * 100;
+  const leftPercent = isMobile ? 0 : Math.random() * maxLeftPercent;
   const topPercent = Math.random() * 40 + 5; // Entre 5% y 45%
-  const leftPercent = isMobile ? 0 : Math.random() * 40 + 5; // Si es mobile, left=0, else random
   return {
     top: `${topPercent}%`,
     left: `${leftPercent}%`
