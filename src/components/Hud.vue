@@ -14,7 +14,7 @@
         comboMultiplier }}</span>
       <span v-if="virusCount > 0" :class="['transition-all duration-300', { 'scale-150 text-red-500': virusAnimating }]">🦠 {{ virusCount }}</span>
       <span :class="['transition-all duration-300', { 'scale-150': scoreAnimating, 'text-red-500': scoreDecreasing }]">🪙 {{ score }}</span>
-      <span>⭐ {{ totalSpamDeleted }}</span>
+      <span>🗑️ {{ totalScore }}</span>
       <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{ unlockedAchievements }}</span>
     </div>
   </div>
@@ -32,7 +32,7 @@ const virusStore = useVirusStore();
 
 const score = computed(() => statsStore.score);
 const virusCount = computed(() => virusStore.virusCount);
-const totalSpamDeleted = computed(() => statsStore.totalSpamDeleted);
+const totalScore = computed(() => statsStore.totalScore);
 const unlockedAchievements = computed(() => statsStore.unlockedAchievements);
 const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);

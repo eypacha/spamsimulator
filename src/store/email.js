@@ -136,7 +136,7 @@ export const useEmailStore = defineStore('email', () => {
         // Reproducir sonido de penalización
         soundStore.playPenaltySound();
         
-        // totalSpamDeleted NO se resta, es una estadística acumulativa
+        // totalScore NO se resta, es una estadística acumulativa
         statsStore.recordIncorrectDeletion();
       }
     }

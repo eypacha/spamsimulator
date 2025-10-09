@@ -156,10 +156,10 @@ onMounted(() => {
   }
   
   // Restar puntos (estrellitas)
-  if (statsStore.totalSpamDeleted >= penalty) {
-    statsStore.totalSpamDeleted -= penalty;
+  if (statsStore.totalScore >= penalty) {
+    statsStore.totalScore -= penalty;
   } else {
-    statsStore.totalSpamDeleted = 0;
+    statsStore.totalScore = 0;
   }
 });
 

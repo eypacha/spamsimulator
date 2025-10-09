@@ -52,8 +52,8 @@ const achievements = computed(() => [
     description: 'Borrar 50 spam',
     emoji: '🧹',
     target: 50,
-    current: statsStore.totalSpamDeleted,
-    unlocked: statsStore.totalSpamDeleted >= 50
+    current: statsStore.totalScore,
+    unlocked: statsStore.totalScore >= 50
   },
   {
     id: 'pressure-washer',
@@ -61,8 +61,8 @@ const achievements = computed(() => [
     description: 'Borrar 100 spam',
     emoji: '🚿',
     target: 100,
-    current: statsStore.totalSpamDeleted,
-    unlocked: statsStore.totalSpamDeleted >= 100
+    current: statsStore.totalScore,
+    unlocked: statsStore.totalScore >= 100
   },
   {
     id: 'spam-master',
@@ -70,8 +70,8 @@ const achievements = computed(() => [
     description: 'Borrar 1000 spam',
     emoji: '🗑️',
     target: 1000,
-    current: statsStore.totalSpamDeleted,
-    unlocked: statsStore.totalSpamDeleted >= 1000
+    current: statsStore.totalScore,
+    unlocked: statsStore.totalScore >= 1000
   },
   {
     id: 'spam-buster',
@@ -79,8 +79,8 @@ const achievements = computed(() => [
     description: 'Borrar 10000 spam',
     emoji: '🧽',
     target: 10000,
-    current: statsStore.totalSpamDeleted,
-    unlocked: statsStore.totalSpamDeleted >= 10000
+    current: statsStore.totalScore,
+    unlocked: statsStore.totalScore >= 10000
   },
   {
     id: 'novice-reader',

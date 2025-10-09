@@ -7,7 +7,7 @@ import { ref } from 'vue';
  * @returns {Object} Estado y funciones de tracking
  */
 export function createStatsTracker(loaded, saveAllStats) {
-  const totalSpamDeleted = ref(loaded?.totalSpamDeleted ?? 0);
+  const totalScore = ref(loaded?.totalScore ?? 0);
   const totalEmailsRead = ref(loaded?.totalEmailsRead ?? 0);
   const totalGirlfriendEmailsRead = ref(loaded?.totalGirlfriendEmailsRead ?? 0);
   const totalNigerianPrinceDeleted = ref(loaded?.totalNigerianPrinceDeleted ?? 0);
@@ -60,7 +60,7 @@ export function createStatsTracker(loaded, saveAllStats) {
   }
 
   function incrementSpamDeleted() {
-    totalSpamDeleted.value += 1;
+    totalScore.value += 1;
   }
 
   function incrementCoinsEarned(amount) {
@@ -117,7 +117,7 @@ export function createStatsTracker(loaded, saveAllStats) {
   }
 
   function resetStats() {
-    totalSpamDeleted.value = 0;
+    totalScore.value = 0;
     totalEmailsRead.value = 0;
     totalGirlfriendEmailsRead.value = 0;
     totalNigerianPrinceDeleted.value = 0;
@@ -134,7 +134,7 @@ export function createStatsTracker(loaded, saveAllStats) {
   }
 
   return {
-    totalSpamDeleted,
+    totalScore,
     totalEmailsRead,
     totalGirlfriendEmailsRead,
     totalNigerianPrinceDeleted,
