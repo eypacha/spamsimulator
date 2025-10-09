@@ -29,7 +29,9 @@
         />
       </div>
       <!-- Main Panel -->
-      <main class="flex-1 max-w-full">
+      <main class="flex-1 max-w-full relative">
+        <!-- Virus Manager -->
+      
         <Inbox v-if="selectedMenu === 'inbox'"/>
         <Starred v-else-if="selectedMenu === 'starred'"/>
         <Trash v-else-if="selectedMenu === 'trash'"/>
@@ -39,6 +41,8 @@
         <section v-else>
           <div class="text-gray-400 text-center mt-20 text-lg">Selecciona una opción del menú</div>
         </section>
+
+        <VirusManager :screen="selectedMenu"/>
       </main>
       <div v-if="showCompose" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0004]">
         <ComposeEmail @send="onSendEmail" @close="showCompose = false" />
@@ -54,8 +58,6 @@
         @close="popupsStore.closeBrowser(browser.id)"
       />
       
-      <!-- Virus Manager -->
-      <VirusManager :screen="selectedMenu" />
     </div>
   </div>
 </template>

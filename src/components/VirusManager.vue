@@ -1,6 +1,6 @@
 <template>
   <!-- Virus emojis flotantes -->
-  <div v-if="virusCount > 0" class="fixed inset-0 pointer-events-none z-30">
+  <div v-if="virusCount > 0" class="absolute inset-0 pointer-events-none z-30" style="background: transparent;">
     <div
       v-for="(virus, index) in virusPositions"
       :key="virus.id"
@@ -24,7 +24,7 @@
   </div>
 
   <!-- Explosiones -->
-  <div class="fixed inset-0 pointer-events-none z-40">
+  <div class="absolute inset-0 pointer-events-none z-40" style="background: transparent;">
     <div
       v-for="explosion in explosions"
       :key="explosion.id"
