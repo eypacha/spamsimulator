@@ -29,7 +29,7 @@
       </div>
       
       <!-- Contenido del navegador -->
-      <div class="flex-1 overflow-auto bg-white p-8">
+      <div class="flex-1 overflow-auto bg-white">
         <!-- Página de spam/phishing simulada - Template aleatorio -->
         <component :is="currentTemplate" :countdown="countdown" />
       </div>
@@ -46,6 +46,7 @@ import PhishingPrize from './browser-templates/PhishingPrize.vue';
 import VirusWarning from './browser-templates/VirusWarning.vue';
 import FakeBank from './browser-templates/FakeBank.vue';
 import SurveyScam from './browser-templates/SurveyScam.vue';
+import RouletteScam from './browser-templates/RouletteScam.vue';
 
 const statsStore = useStatsStore();
 const soundStore = useSoundStore();
@@ -65,7 +66,7 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 
 // Array de templates disponibles
-const templates = [PhishingPrize, VirusWarning, FakeBank, SurveyScam];
+const templates = [PhishingPrize, VirusWarning, FakeBank, SurveyScam, RouletteScam];
 
 // Seleccionar template aleatorio
 const currentTemplate = ref(null);
