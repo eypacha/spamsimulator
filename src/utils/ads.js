@@ -8,5 +8,6 @@
  * @returns {boolean} True if ads should be shown
  */
 export function shouldShowAds(email) {
-  return email.isSpam === true;
+  if (!email || !email.isSpam) return false;
+  return Math.random() < 0.3;
 }

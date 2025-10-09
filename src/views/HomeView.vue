@@ -43,6 +43,18 @@
       <div v-if="showCompose" class="fixed inset-0 z-50 flex items-center justify-center bg-[#0004]">
         <ComposeEmail @send="onSendEmail" @close="showCompose = false" />
       </div>
+      
+      <!-- Browser Popups -->
+      <BrowserPopup
+        v-for="browser in popupsStore.browsers"
+        :key="browser.id"
+        :show="browser.show"
+        :url="browser.url"
+        @close="popupsStore.closeBrowser(browser.id)"
+      />
+      
+      <!-- Virus Manager -->
+      <VirusManager :screen="selectedMenu" />
     </div>
   </div>
 </template>
@@ -60,12 +72,16 @@ import Store from '../components/Store.vue';
 import Achievements from '../components/Achievements.vue';
 import ComposeEmail from '../components/ComposeEmail.vue';
 import Settings from '../components/Settings.vue';
+import BrowserPopup from '../components/BrowserPopup.vue';
+import VirusManager from '../components/VirusManager.vue';
+import { usePopupsStore } from '../store/popups.js';
 
 
 const selectedMenu = ref('inbox');
 const showCompose = ref(false);
 const soundStore = useSoundStore();
 const statsStore = useStatsStore();
+const popupsStore = usePopupsStore();
 const sidebarOpen = ref(false);
 const isDesktop = ref(window.innerWidth >= 768);
 

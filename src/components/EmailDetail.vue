@@ -18,13 +18,6 @@
       <button v-if="!email.trash && statsStore.starredUnlocked" @click="onStar" class="px-4 py-2 rounded bg-yellow-100 text-yellow-700 hover:bg-yellow-200"><i :class="email.starred ? 'fas fa-star' : 'far fa-star'" ></i> {{ email.starred ? 'Destacado' : 'Destacar' }}</button>
     </div>
     
-    <!-- Browser Popup -->
-    <BrowserPopup 
-      :show="showBrowser" 
-      :url="clickedUrl" 
-      @close="showBrowser = false"
-    />
-    
     <!-- Content Viewer for legitimate links -->
     <ContentViewer
       :show="showContent"
@@ -50,16 +43,20 @@ import '@fortawesome/fontawesome-free/css/all.css';
 import { formatDate } from '@/utils/date';
 import { shouldShowAds as checkShouldShowAds } from '@/utils/ads';
 import GoogleAd from './GoogleAd.vue';
-import BrowserPopup from './BrowserPopup.vue';
 import ContentViewer from './ContentViewer.vue';
 import AppointmentViewer from './AppointmentViewer.vue';
 import { useStatsStore } from '../store/stats.js';
+import { useVirusStore } from '../store/virus.js';
+import { usePopupsStore } from '../store/popups.js';
+
+import { RANDOM_URLS_SPAM_URLS } from '@/constants/spamUrls.js';
 
 const statsStore = useStatsStore();
+const virusStore = useVirusStore();
+const popupsStore = usePopupsStore();
 const props = defineProps({ email: Object });
 const emit = defineEmits(['delete', 'star', 'deletePermanent', 'archive']);
 
-const showBrowser = ref(false);
 const clickedUrl = ref('');
 const showContent = ref(false);
 const contentType = ref('');
@@ -76,9 +73,6 @@ function onDeletePermanent() {
 }
 function onArchive() {
   emit('archive', props.email.id);
-}
-function onStar() {
-  emit('star', props.email.id);
 }
 
 function handleLinkClick(event) {
@@ -97,11 +91,22 @@ function handleLinkClick(event) {
     
     // Si el email es spam, abrir ventana de spam browser
     if (props.email.isSpam) {
-      showBrowser.value = true;
+      openBrowserPopup(url);
     } else {
       // Si es legítimo, procesar el contenido según el campo content del email
       handleLegitimateContent();
     }
+  }
+}
+
+function openBrowserPopup(url) {
+  popupsStore.addBrowser(url);
+
+  if (Math.random() < 0.5) {
+    setTimeout(() => {
+      const randomUrl = RANDOM_URLS_SPAM_URLS[Math.floor(Math.random() * RANDOM_URLS_SPAM_URLS.length)];
+      openBrowserPopup(randomUrl);
+    }, 300 + Math.random() * 200);
   }
 }
 
