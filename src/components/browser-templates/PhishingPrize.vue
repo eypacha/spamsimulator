@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center space-y-6">
+  <div class="text-center space-y-6 p-5">
     <div class="text-6xl animate-bounce">⚠️</div>
     <h1 class="text-4xl font-bold text-red-600 animate-pulse">
       ¡¡¡ADVERTENCIA!!!
