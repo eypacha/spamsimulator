@@ -142,7 +142,7 @@ const props = defineProps({
     default: false
   }
 });
-const emit = defineEmits(['update:modelValue', 'update:starred', 'open']);
+const emit = defineEmits(['update:modelValue', 'update:starred', 'open', 'toggle-star']);
 
 // Solo mostrar el color rojo si el detector está desbloqueado Y es spam
 const shouldShowSpamColor = computed(() => {
@@ -208,6 +208,6 @@ function getEmailGroup(emailId) {
 
 
 function toggleStar() {
-  props.email.starred = !props.email.starred;
+  emit('toggle-star', props.email.id);
 }
 </script>
