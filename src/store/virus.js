@@ -17,7 +17,7 @@ export const useVirusStore = defineStore('virus', () => {
   }
 
   // === Virus coin drain logic ===
-  const VIRUS_DRAIN_INTERVAL = 2000; // 2s
+  const VIRUS_DRAIN_INTERVAL = 3000; // 3s
   let virusDrainTimer = null;
 
   // Función para calcular el drain (recibe pointsPerSpam del statsStore)

@@ -315,10 +315,6 @@ export const useStatsStore = defineStore('stats', () => {
     );
   }
 
-  function stopVirusDrainLoop() {
-    virusStore.stopVirusDrainLoop();
-  }
-
   // Iniciar inmediatamente (el juego ya está montado al usar el store)
   startVirusDrainLoop();
 
