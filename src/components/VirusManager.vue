@@ -4,8 +4,12 @@
     <div
       v-for="(virus, index) in virusPositions"
       :key="virus.id"
-      class="absolute text-4xl cursor-pointer pointer-events-auto transition-all duration-75"
-      :class="{ 'animate-float': !virus.isMoving }"
+        :class="[
+          'absolute cursor-pointer pointer-events-auto transition-all duration-75',
+          virus.size === 16 ? 'text-8xl' : virus.size === 8 ? 'text-6xl' : 'text-4xl',
+          { 'animate-float': !virus.isMoving }
+        ]"
+      
       :style="{
         left: virus.x + '%',
         top: virus.y + '%',
@@ -53,42 +57,46 @@ const statsStore = useStatsStore();
 const virusStore = useVirusStore();
 const soundStore = useSoundStore();
 
-const virusPositions = ref([]);
+import { computed as vueComputed } from 'vue';
+// Visualización: solo los virus de la pantalla actual
+const virusPositions = vueComputed(() => virusStore.virusList.filter(v => v.screen === props.screen));
 const explosions = ref([]);
 let animationFrameId = null;
 
-const virusCount = computed(() => virusStore.virusByScreen?.[props.screen] || 0);
+const virusCount = vueComputed(() => virusStore.virusList.filter(v => v.screen === props.screen).length);
 
 function generateVirusPositions(count) {
   const positions = [];
   for (let i = 0; i < Math.min(count, 10); i++) {
-    const isMoving = Math.random() < 0.5; // 50% de probabilidad de moverse
+    const isMoving = Math.random() < 0.5;
+    // Probabilidad de tamaño: 70% 4x, 20% 8x, 10% 16x
+    const rand = Math.random();
+    let size = 4;
+    if (rand > 0.9) size = 16;
+    else if (rand > 0.7) size = 8;
     positions.push({
       id: Math.random(),
-      x: Math.random() * 90 + 5, // 5% to 95%
+      x: Math.random() * 90 + 5,
       y: Math.random() * 90 + 5,
       delay: Math.random() * 2,
-      duration: 3 + Math.random() * 2, // 3-5 seconds
+      duration: 3 + Math.random() * 2,
       isMoving,
-      // Propiedades para movimiento
-      vx: isMoving ? (Math.random() - 0.5) * 0.3 : 0, // velocidad X
-      vy: isMoving ? (Math.random() - 0.5) * 0.3 : 0, // velocidad Y
+      vx: isMoving ? (Math.random() - 0.5) * 0.3 : 0,
+      vy: isMoving ? (Math.random() - 0.5) * 0.3 : 0,
+      size,
     });
   }
   return positions;
 }
 
 function updateMovingViruses() {
-  virusPositions.value = virusPositions.value.map(virus => {
-    if (!virus.isMoving) return virus;
-
-    // Actualizar posición
+  // Actualiza solo la posición en el store
+  virusStore.virusList.forEach(virus => {
+    if (!virus.isMoving) return;
     let newX = virus.x + virus.vx;
     let newY = virus.y + virus.vy;
     let newVx = virus.vx;
     let newVy = virus.vy;
-
-    // Rebotar en los bordes
     if (newX <= 5 || newX >= 95) {
       newVx = -virus.vx;
       newX = newX <= 5 ? 5 : 95;
@@ -97,37 +105,18 @@ function updateMovingViruses() {
       newVy = -virus.vy;
       newY = newY <= 5 ? 5 : 95;
     }
-
-    return {
-      ...virus,
-      x: newX,
-      y: newY,
-      vx: newVx,
-      vy: newVy
-    };
+    virus.x = newX;
+    virus.y = newY;
+    virus.vx = newVx;
+    virus.vy = newVy;
   });
-
   if (virusCount.value > 0) {
     animationFrameId = requestAnimationFrame(updateMovingViruses);
   }
 }
 
-watch(virusCount, (newCount, oldCount) => {
-  // Manejar el caso inicial cuando oldCount es undefined
-  if (oldCount === undefined) {
-    oldCount = 0;
-  }
-
-  if (newCount > oldCount) {
-    // Agregar nuevos virus manteniendo los existentes
-    const newPositions = generateVirusPositions(newCount - oldCount);
-    virusPositions.value.push(...newPositions);
-  } else if (newCount < oldCount) {
-    // Remover virus del final, manteniendo los primeros
-    virusPositions.value.splice(newCount);
-  }
-
-  // Iniciar animación de virus móviles si hay virus
+// Animación
+watch(virusCount, (newCount) => {
   if (newCount > 0 && !animationFrameId) {
     animationFrameId = requestAnimationFrame(updateMovingViruses);
   } else if (newCount === 0 && animationFrameId) {
@@ -137,34 +126,26 @@ watch(virusCount, (newCount, oldCount) => {
 }, { immediate: true });
 
 function onVirusClick(virusIndex, event) {
-  // Eliminar el virus específico
-  if (virusIndex >= 0 && virusIndex < virusPositions.value.length) {
-    // Obtener la posición del virus para la explosión antes de eliminarlo
-    const virus = virusPositions.value[virusIndex];
-    const x = virus.x;
-    const y = virus.y;
-
-    // Eliminar el virus del array visual
-    virusPositions.value.splice(virusIndex, 1);
-
-    // Crear explosión
-    const explosionId = Date.now() + Math.random();
-    explosions.value.push({ id: explosionId, x, y });
-
-    // Remover explosión después de la animación
-    setTimeout(() => {
-      explosions.value = explosions.value.filter(e => e.id !== explosionId);
-    }, 400);
-
-    // Reproducir sonido de espada
-    if (soundStore.playAntivirusSound) {
-      soundStore.playAntivirusSound();
-    }
-
-    // Decrementar virus count
-    virusStore.removeOneVirus(props.screen);
+  const virus = virusPositions.value[virusIndex];
+  if (!virus) return;
+  const x = virus.x;
+  const y = virus.y;
+  // Explosión visual
+  const explosionId = Date.now() + Math.random();
+  explosions.value.push({ id: explosionId, x, y });
+  setTimeout(() => {
+    explosions.value = explosions.value.filter(e => e.id !== explosionId);
+  }, 400);
+  if (soundStore.playAntivirusSound) {
+    soundStore.playAntivirusSound();
   }
 
+  // Subdivisión o eliminación usando el store
+  if (virus.size === 16 || virus.size === 8) {
+    virusStore.subdivideVirus(virus.id);
+  } else if (virus.size === 4) {
+    virusStore.removeOneVirusById(virus.id);
+  }
   event.stopPropagation();
 }
 
