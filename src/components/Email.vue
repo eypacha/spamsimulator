@@ -4,7 +4,7 @@
     email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100'),
     swipeActive && swipeDirection === 'left' ? 'border-r-8 border-red-500' : '',
     swipeActive && swipeDirection === 'right' ? 'border-l-8 border-green-500' : ''
-  ]" :style="swipeStyle" @click="$emit('open')" @touchstart="onTouchStart" @touchmove="onTouchMove"
+  ]" :style="swipeStyle" @click="$emit('open')" v-if="isTouchDevice" @touchstart.passive="onTouchStart" @touchmove.passive="onTouchMove"
     @touchend="onTouchEnd">
     <input v-if="showCheckbox" type="checkbox" :checked="modelValue.includes(email.id)" :value="email.id" @click.stop
       @change="onChange" class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
@@ -53,8 +53,8 @@ const swipeStyle = computed(() => {
   return style;
 });
 
-// Detectar si MobileFriendly está desbloqueado
-const mobileFriendlyUnlocked = computed(() => statsStore.mobileFriendlyUnlocked);
+// Detectar si es dispositivo táctil
+const isTouchDevice = ref('ontouchstart' in window || navigator.maxTouchPoints > 0);
 
 function onTouchStart(e) {
   if (!mobileFriendlyUnlocked.value) return;
@@ -67,11 +67,11 @@ function onTouchStart(e) {
 
 function onTouchMove(e) {
   if (!mobileFriendlyUnlocked.value || swipeStartX.value === null) return;
-  // Prevenir scroll del body mientras se hace swipe
-  e.preventDefault();
   const deltaX = e.touches[0].clientX - swipeStartX.value;
   swipeDeltaX.value = deltaX;
   if (Math.abs(deltaX) > 20) {
+    // Prevenir scroll del body solo cuando se detecta un swipe
+    e.preventDefault();
     swipeDirection.value = deltaX < 0 ? 'left' : 'right';
   } else {
     swipeDirection.value = null;
