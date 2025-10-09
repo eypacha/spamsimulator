@@ -42,7 +42,6 @@
 
 <script setup>
 import { ref, watch, computed, onUnmounted } from 'vue';
-import { useStatsStore } from '../store/stats.js';
 import { useVirusStore } from '../store/virus.js';
 import { useSoundStore } from '../store/sound.js';
 
@@ -53,41 +52,14 @@ const props = defineProps({
   }
 });
 
-const statsStore = useStatsStore();
 const virusStore = useVirusStore();
 const soundStore = useSoundStore();
 
-import { computed as vueComputed } from 'vue';
-// Visualización: solo los virus de la pantalla actual
-const virusPositions = vueComputed(() => virusStore.virusList.filter(v => v.screen === props.screen));
+const virusPositions = computed(() => virusStore.virusList.filter(v => v.screen === props.screen));
 const explosions = ref([]);
 let animationFrameId = null;
 
-const virusCount = vueComputed(() => virusStore.virusList.filter(v => v.screen === props.screen).length);
-
-function generateVirusPositions(count) {
-  const positions = [];
-  for (let i = 0; i < Math.min(count, 10); i++) {
-    const isMoving = Math.random() < 0.5;
-    // Probabilidad de tamaño: 70% 4x, 20% 8x, 10% 16x
-    const rand = Math.random();
-    let size = 4;
-    if (rand > 0.9) size = 16;
-    else if (rand > 0.7) size = 8;
-    positions.push({
-      id: Math.random(),
-      x: Math.random() * 90 + 5,
-      y: Math.random() * 90 + 5,
-      delay: Math.random() * 2,
-      duration: 3 + Math.random() * 2,
-      isMoving,
-      vx: isMoving ? (Math.random() - 0.5) * 0.3 : 0,
-      vy: isMoving ? (Math.random() - 0.5) * 0.3 : 0,
-      size,
-    });
-  }
-  return positions;
-}
+const virusCount = computed(() => virusStore.virusList.filter(v => v.screen === props.screen).length);
 
 function updateMovingViruses() {
   // Actualiza solo la posición en el store
