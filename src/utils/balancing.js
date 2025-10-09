@@ -7,12 +7,18 @@
  * @returns {number} nivel
  */
 export function calculateLevel(totalScore) {
+  // Nivel 2 a 20 puntos; a partir de ahí la curva crece de forma más pronunciada
   let level = 1;
   let threshold = 0;
-  while (totalScore >= threshold + level * 100) {
-    threshold += level * 100;
+  let step = 20;       // para alcanzar el nivel 2
+  const growth = 1.5;  // factor de crecimiento pronunciado para pasos posteriores
+
+  while (totalScore >= threshold + step) {
+    threshold += step;
     level++;
+    step = Math.ceil(step * growth);
   }
+
   return level;
 }
 /**
