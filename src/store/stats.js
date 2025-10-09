@@ -155,6 +155,19 @@ export const useStatsStore = defineStore('stats', () => {
     mobileFriendlyUpgradeCost
   } = abilitiesManager;
 
+    // Barra de nivel
+  const levelBarUnlocked = ref(loaded?.levelBarUnlocked ?? false);
+  const levelBarUpgradeCost = ref(loaded?.levelBarUpgradeCost ?? 200);
+  function buyLevelBarUpgrade() {
+    if (score.value >= levelBarUpgradeCost.value && !levelBarUnlocked.value) {
+      score.value -= levelBarUpgradeCost.value;
+      levelBarUnlocked.value = true;
+      saveAllStats();
+      const soundStore = useSoundStore();
+  if (soundStore.playBuySound) soundStore.playBuySound();
+    }
+  }
+
   function buySpaceBarUpgrade() {
     buyUpgradeHandler(spaceBarUpgradeCost, abilitiesManager.unlockSpaceBar, 1.5, !spaceBarUnlocked.value);
   }
@@ -453,6 +466,7 @@ export const useStatsStore = defineStore('stats', () => {
   }
 
   return { score, virusCount, incrementVirusCount, unlockedAchievements, level, pointsPerSpam, totalScore, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, totalCoinsEarned, totalVirusesInfected: computed(() => statsTracker.totalVirusesInfected.value), totalAppointmentsConfirmed: computed(() => statsTracker.totalAppointmentsConfirmed.value), recordAppointmentConfirmed: statsTracker.recordAppointmentConfirmed, playedAt6AM: computed(() => statsTracker.playedAt6AM.value), playedAt3AM: computed(() => statsTracker.playedAt3AM.value), totalPlayTimeMinutes: computed(() => statsTracker.totalPlayTimeMinutes.value), currentStreak, maxStreak, catPicturesViewed: computed(() => statsTracker.catPicturesViewed.value), markCatPictureViewed: statsTracker.markCatPictureViewed, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, addScore, markEmailAsRead, recordCorrectDeletion, recordIncorrectDeletion, recordNigerianPrinceDeletion, buyUpgrade, buyTrashUpgrade, buyInboxUpgrade, buySelectionUpgrade, getSpaceString, reset,
+    levelBarUnlocked, levelBarUpgradeCost, buyLevelBarUpgrade,
     turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost, buyTurboSpamUpgrade, totalEmailsSent, recordEmailSent,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount, buyComboUpgrade,
     spamFrenzyUnlocked, spamFrenzyUpgradeCost, buySpamFrenzyUpgrade, spamFrenzyActive, spamFrenzyTime, activateSpamFrenzy, spamFrenzyCooldown,

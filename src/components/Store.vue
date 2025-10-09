@@ -96,6 +96,16 @@ const cards = computed(() => [
     disabled: statsStore.score < statsStore.mobileFriendlyUpgradeCost || statsStore.mobileFriendlyUnlocked,
     rounded: true,
   },
+    {
+    title: 'Barra de Nivel',
+    description: '📈 Desbloquea la barra de progreso de nivel en el sidebar.',
+    details: [
+      statsStore.levelBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.levelBarUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyLevelBarUpgrade(),
+    disabled: statsStore.score < statsStore.levelBarUpgradeCost || statsStore.levelBarUnlocked,
+    rounded: true,
+  },
   {
     title: 'Selección múltiple',
     description: '☑️ Aumenta el número de emails que puedes seleccionar a la vez.',

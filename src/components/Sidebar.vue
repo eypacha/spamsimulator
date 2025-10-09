@@ -30,6 +30,20 @@
             <span v-if="statsStore.antivirusCooldown > 0"> ({{ statsStore.antivirusCooldown }})</span>
           </button>
         </div>
+
+        <!-- Barra de Nivel -->
+        <div v-if="statsStore.levelBarUnlocked" class="mb-4">
+          <div class="text-sm text-blue-300 mb-2">Progreso de Nivel</div>
+          <div class="w-full bg-gray-700 rounded-full h-2 mb-1">
+            <div 
+              class="h-2 rounded-full transition-all duration-300 bg-blue-500"
+              :style="{ width: levelProgressPercentage + '%' }"
+            ></div>
+          </div>
+          <div class="text-xs text-gray-400 text-center">
+            Nivel {{ statsStore.level }} ({{ levelProgress }}/{{ nextLevelThreshold }})
+          </div>
+        </div>
         <!-- Barra de Bandeja de Entrada -->
         <div v-if="statsStore.spaceBarUnlocked">
           <div class="text-sm text-gray-300 mb-2">Espacio de Bandeja</div>
@@ -64,6 +78,32 @@
 </template>
 
 <script setup>
+import { calculateLevel } from '../utils/balancing.js';
+// Calcula el progreso de nivel
+const level = computed(() => statsStore.level);
+const totalScore = computed(() => statsStore.totalScore);
+// Calcula el umbral para el siguiente nivel
+function getNextLevelThreshold(level) {
+  let threshold = 0;
+  for (let i = 1; i <= level; i++) {
+    threshold += i * 100;
+  }
+  return threshold + (level + 1) * 100;
+}
+function getCurrentLevelThreshold(level) {
+  let threshold = 0;
+  for (let i = 1; i < level; i++) {
+    threshold += i * 100;
+  }
+  return threshold;
+}
+const nextLevelThreshold = computed(() => getNextLevelThreshold(level.value - 1));
+const currentLevelThreshold = computed(() => getCurrentLevelThreshold(level.value));
+const levelProgress = computed(() => totalScore.value - currentLevelThreshold.value);
+const levelProgressPercentage = computed(() => {
+  const max = nextLevelThreshold.value - currentLevelThreshold.value;
+  return Math.min(100, Math.round((levelProgress.value / max) * 100));
+});
 import { useSoundStore } from '../store/sound.js';
 const soundStore = useSoundStore();
 
