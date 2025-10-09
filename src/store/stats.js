@@ -112,7 +112,10 @@ export const useStatsStore = defineStore('stats', () => {
       bulkArchiveUpgradeCost: abilitiesManager.bulkArchiveUpgradeCost.value,
       // MobileFriendly
       mobileFriendlyUnlocked: abilitiesManager.mobileFriendlyUnlocked.value,
-      mobileFriendlyUpgradeCost: abilitiesManager.mobileFriendlyUpgradeCost.value
+      mobileFriendlyUpgradeCost: abilitiesManager.mobileFriendlyUpgradeCost.value,
+      // Level Bar
+      levelBarUnlocked: levelBarUnlocked.value,
+      levelBarUpgradeCost: levelBarUpgradeCost.value
     });
   }
 
@@ -208,6 +211,7 @@ export const useStatsStore = defineStore('stats', () => {
     buyUpgradeHandler(groupSelectUpgradeCost, abilitiesManager.unlockGroupSelect, 1.5, !groupSelectUnlocked.value);
   }
 
+  
   function buyKeyboardShortcutsUpgrade() {
     buyUpgradeHandler(keyboardShortcutsUpgradeCost, abilitiesManager.unlockKeyboardShortcuts, 1.5, !keyboardShortcutsUnlocked.value);
   }

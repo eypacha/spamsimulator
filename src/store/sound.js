@@ -109,6 +109,11 @@ export const useSoundStore = defineStore('sound', () => {
     volume: 0.8
   });
   
+  const levelupSound = new Howl({
+    src: [getAssetPath('sounds/levelup.wav')],
+    volume: 0.5
+  });
+  
   function playVirusSound() {
     throttleSound('virus', () => {
       console.log('Playing virus sound...');
@@ -172,6 +177,11 @@ export const useSoundStore = defineStore('sound', () => {
     winSound.play();
   }
 
+  function playLevelupSound() {
+    if (!soundEnabled.value) return;
+    levelupSound.play();
+  }
+
   // Función para cambiar volumen global
   function setVolume(volume) {
     Howler.volume(volume);
@@ -197,6 +207,7 @@ export const useSoundStore = defineStore('sound', () => {
   playAntivirusSound,
     playPenaltySound,
     playWinSound,
+    playLevelupSound,
     toggleSound
   };
 });

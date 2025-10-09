@@ -21,6 +21,26 @@ export function calculateLevel(totalScore) {
 
   return level;
 }
+
+/**
+ * Calcula los puntos necesarios para alcanzar un nivel específico
+ * @param {number} targetLevel - Nivel objetivo
+ * @returns {number} - Puntos necesarios para alcanzar ese nivel
+ */
+export function calculateLevelThreshold(targetLevel) {
+  if (targetLevel <= 1) return 0;
+
+  let threshold = 0;
+  let step = 20;       // para alcanzar el nivel 2
+  const growth = 1.5;  // factor de crecimiento pronunciado para pasos posteriores
+
+  for (let level = 2; level <= targetLevel; level++) {
+    threshold += step;
+    step = Math.ceil(step * growth);
+  }
+
+  return threshold;
+}
 /**
  * Calcula el incremento de puntos por spam basado en el nivel actual
  * Usa una curva de crecimiento escalonada (Fibonacci-like)

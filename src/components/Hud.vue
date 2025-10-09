@@ -21,7 +21,7 @@
       <span>🗑️ {{ totalScore }}</span>
       <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{
         unlockedAchievements }}</span>
-      <span class="font-bold text-green-300">Nivel {{ level }}</span>
+      <span :class="['font-bold text-green-300 transition-transform duration-300', { 'scale-150': levelAnimating }]">Nivel {{ level }}</span>
     </div>
   </div>
 </template>
@@ -30,9 +30,11 @@
 import { computed, ref, watch } from 'vue';
 import { useStatsStore } from '../store/stats.js';
 import { useVirusStore } from '../store/virus.js';
+import { useSoundStore } from '../store/sound.js';
 
 const statsStore = useStatsStore();
 const virusStore = useVirusStore();
+const soundStore = useSoundStore();
 
 
 
@@ -47,10 +49,7 @@ const scoreAnimating = ref(false);
 const scoreDecreasing = ref(false);
 const achievementsAnimating = ref(false);
 const virusAnimating = ref(false);
-
-function activateSpamFrenzy() {
-  statsStore.activateSpamFrenzy();
-}
+const levelAnimating = ref(false);
 
 watch(score, (newValue, oldValue) => {
   scoreAnimating.value = true;
@@ -78,5 +77,16 @@ watch(virusCount, () => {
   setTimeout(() => {
     virusAnimating.value = false;
   }, 300);
+});
+
+watch(level, (newValue, oldValue) => {
+  if (oldValue !== undefined && newValue > oldValue) {
+    console.log('Level up! Playing sound...');
+    soundStore.playLevelupSound();
+    levelAnimating.value = true;
+    setTimeout(() => {
+      levelAnimating.value = false;
+    }, 300);
+  }
 });
 </script>

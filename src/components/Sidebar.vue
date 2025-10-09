@@ -78,27 +78,13 @@
 </template>
 
 <script setup>
-import { calculateLevel } from '../utils/balancing.js';
+import { calculateLevel, calculateLevelThreshold } from '../utils/balancing.js';
 // Calcula el progreso de nivel
 const level = computed(() => statsStore.level);
 const totalScore = computed(() => statsStore.totalScore);
 // Calcula el umbral para el siguiente nivel
-function getNextLevelThreshold(level) {
-  let threshold = 0;
-  for (let i = 1; i <= level; i++) {
-    threshold += i * 100;
-  }
-  return threshold + (level + 1) * 100;
-}
-function getCurrentLevelThreshold(level) {
-  let threshold = 0;
-  for (let i = 1; i < level; i++) {
-    threshold += i * 100;
-  }
-  return threshold;
-}
-const nextLevelThreshold = computed(() => getNextLevelThreshold(level.value - 1));
-const currentLevelThreshold = computed(() => getCurrentLevelThreshold(level.value));
+const nextLevelThreshold = computed(() => calculateLevelThreshold(level.value + 1));
+const currentLevelThreshold = computed(() => calculateLevelThreshold(level.value));
 const levelProgress = computed(() => totalScore.value - currentLevelThreshold.value);
 const levelProgressPercentage = computed(() => {
   const max = nextLevelThreshold.value - currentLevelThreshold.value;
