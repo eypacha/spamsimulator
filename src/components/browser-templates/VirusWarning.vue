@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center space-y-5 bg-red-50 p-4 rounded-lg border-4 border-red-600">
+  <div class="text-center space-y-5 bg-red-50 p-4 m-5 rounded-lg border-4 border-red-600">
     <div class="text-6xl animate-pulse">🛡️</div>
     <h1 class="text-4xl font-bold text-red-700 uppercase">
       ¡VIRUS DETECTADO!

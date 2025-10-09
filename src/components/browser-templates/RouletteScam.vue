@@ -21,10 +21,10 @@
         </div>
         <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded shadow mb-4 transition"
             :disabled="spinning" @click="spinRoulette">
-            Girar ruleta
+            Girar ruleta por {{statsStore.pointsPerSpam}}🪙
         </button>
         <div v-if="result" class="mt-2 text-xl font-bold text-center">
-            <span v-if="result === 'win'" class="text-green-600">¡Has ganado un premio!</span>
+            <span v-if="result === 'win'" class="text-green-600">¡Has ganado!</span>
             <span v-else class="text-red-500">Intenta de nuevo...</span>
         </div>
         <div v-else-if="spinning" class="mt-2 text-gray-500 text-xl italic">Girando...</div>
@@ -35,6 +35,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useStatsStore } from '../../store/stats.js';
 
 const segments = [
     { label: '🪙', color: '#cccccc', type: 'coin' },
@@ -42,13 +43,12 @@ const segments = [
     { label: '🪙', color: '#cccccc', type: 'coin' },
     { label: '🦠', color: '#dddddd', type: 'virus' },
     { label: '🦠', color: '#cccccc', type: 'virus' },
-    { label: '💎', color: '#dddddd', type: 'diamond' },
+    { label: '🪙', color: '#dddddd', type: 'coin' },
     { label: '🦠', color: '#cccccc', type: 'virus' },
     { label: '🦠', color: '#dddddd', type: 'virus' },
-
-
-
 ];
+
+const statsStore = useStatsStore();
 
 const spinning = ref(false);
 const result = ref(null);
@@ -77,6 +77,10 @@ function getTextY(i) {
 }
 
 function spinRoulette() {
+    // Coste de girar la ruleta
+    const cost = statsStore.pointsPerSpam;
+    if (statsStore.score < cost || spinning.value) return;
+    statsStore.addScore(-cost);
     spinning.value = true;
     result.value = null;
     const winner = Math.floor(Math.random() * segments.length);
@@ -91,17 +95,15 @@ function spinRoulette() {
         const type = segments[winner].type;
         if (type === 'virus') {
             result.value = 'lose';
-            // Aquí puedes registrar la pérdida, por ejemplo:
-            // infectar con virus, restar puntos, etc.
-            // statsStore.incrementVirusCount(1, 'roulette');
+            if (typeof statsStore.incrementVirusCount === 'function') {
+                statsStore.incrementVirusCount(1, 'roulette');
+            }
         } else if (type === 'coin') {
             result.value = 'win';
-            // Aquí puedes registrar la ganancia de moneda
-            // statsStore.score += 1;
+            statsStore.addScore(statsStore.pointsPerSpam);
         } else if (type === 'diamond') {
             result.value = 'win';
-            // Aquí puedes registrar la ganancia de diamante
-            // statsStore.score += 10;
+            statsStore.addScore(statsStore.pointsPerSpam * 2);
         }
         // Ajustar rotación para que quede en el ángulo final (sin vueltas extra)
         rotation.value = (360 - winner * anglePerSegment - anglePerSegment / 2) % 360;

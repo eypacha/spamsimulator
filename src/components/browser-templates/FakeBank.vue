@@ -1,5 +1,5 @@
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 p-8">
     <div class="space-y-3">
       <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
         <div class="flex items-start gap-3">
