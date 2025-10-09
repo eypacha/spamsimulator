@@ -103,6 +103,15 @@ export const useVirusStore = defineStore('virus', () => {
     return false;
   }
 
+  // Remueve un virus de una pantalla específica o cualquier virus
+  function removeOneVirus(screen) {
+    const virus = screen ? virusList.value.find(v => v.screen === screen) : virusList.value[0];
+    if (virus) {
+      return removeOneVirusById(virus.id);
+    }
+    return false;
+  }
+
   // Subdivide un virus por id
   function subdivideVirus(virusId) {
     const idx = virusList.value.findIndex(v => v.id === virusId);
@@ -151,6 +160,7 @@ export const useVirusStore = defineStore('virus', () => {
     virusList,
     hasVirus,
     incrementVirusCount,
+    removeOneVirus,
     removeOneVirusById,
     subdivideVirus,
     initializeVirusData,
