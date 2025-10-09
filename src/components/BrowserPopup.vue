@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onUnmounted } from 'vue';
+import { ref, watch, onUnmounted, markRaw } from 'vue';
 import { useStatsStore } from '../store/stats.js';
 import { useEmailStore } from '../store/email.js';
 import { useSoundStore } from '../store/sound.js';
@@ -155,7 +155,7 @@ function createAdditionalPopup() {
   emailStore.fetchEmail();
   
   const newPopup = {
-    template: templates[Math.floor(Math.random() * templates.length)],
+    template: markRaw(templates[Math.floor(Math.random() * templates.length)]),
     position: getRandomPosition(),
     url: props.url,
     countdown: ref('00:10')
@@ -242,7 +242,7 @@ watch(() => props.show, (newVal) => {
     emailStore.fetchEmail();
     
     // Seleccionar un template aleatorio cada vez que se abre el popup
-    currentTemplate.value = templates[Math.floor(Math.random() * templates.length)];
+    currentTemplate.value = markRaw(templates[Math.floor(Math.random() * templates.length)]);
     
     // Generar posición aleatoria
     randomPosition.value = getRandomPosition();
