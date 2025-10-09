@@ -1,4 +1,21 @@
 /**
+ * Calcula el nivel del jugador según el totalScore.
+ * El nivel sube cada vez que se supera el umbral de puntos.
+ * Ejemplo: Nivel 1 = 0, Nivel 2 = 100, Nivel 3 = 300, Nivel 4 = 600, etc.
+ * Puedes ajustar la progresión como prefieras.
+ * @param {number} totalScore
+ * @returns {number} nivel
+ */
+export function calculateLevel(totalScore) {
+  let level = 1;
+  let threshold = 0;
+  while (totalScore >= threshold + level * 100) {
+    threshold += level * 100;
+    level++;
+  }
+  return level;
+}
+/**
  * Calcula el incremento de puntos por spam basado en el nivel actual
  * Usa una curva de crecimiento escalonada (Fibonacci-like)
  * @param {number} currentLevel - Nivel actual de pointsPerSpam

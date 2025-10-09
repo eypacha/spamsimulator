@@ -5,6 +5,7 @@ import { useVirusStore } from './virus.js';
 import { formatStorage } from '../utils/storage.js';
 import { loadStats, saveStats } from '../utils/statsStorage.js';
 import { calculatePointsPerSpamIncrement, calculateUpgradeCostMultiplier, calculateTrashCapacityIncrement, calculateInboxCapacityIncrement, calculateSelectionIncrement, calculateSelectionCostMultiplier } from '../utils/balancing.js';
+import { calculateLevel } from '../utils/balancing.js';
 import { createUpgradeHandler } from './modules/upgradeManager.js';
 import { createComboManager } from './modules/comboManager.js';
 import { createAbilitiesManager } from './modules/abilitiesManager.js';
@@ -243,7 +244,8 @@ export const useStatsStore = defineStore('stats', () => {
   });
   const soundStore = useSoundStore();
   const buyUpgradeHandler = createUpgradeHandler(score, saveAllStats, soundStore);
-  const level = ref(loaded?.level ?? 1); // Maybe keep level for display, but not auto
+  // El nivel ahora se calcula automáticamente según el totalScore
+  const level = computed(() => calculateLevel(totalScore.value));
   const pointsPerSpam = ref(loaded?.pointsPerSpam ?? 1);
   const upgradeCost = ref(loaded?.upgradeCost ?? UPGRADE_COST);
   const trashUpgradeCost = ref(loaded?.trashUpgradeCost ?? TRASH_UPGRADE_COST);

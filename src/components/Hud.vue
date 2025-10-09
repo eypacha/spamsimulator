@@ -12,10 +12,16 @@
     <div class="flex items-center space-x-4">
       <span v-if="comboUnlocked && comboMultiplier > 1" class="font-bold text-yellow-300  animate-pulse pulse-fast">x{{
         comboMultiplier }}</span>
-      <span v-if="virusCount > 0" :class="['transition-all duration-300', { 'scale-150 text-red-500': virusAnimating }]">🦠 {{ virusCount }}</span>
-      <span :class="['transition-all duration-300', { 'scale-150': scoreAnimating, 'text-red-500': scoreDecreasing }]">🪙 {{ score }}</span>
+      <span v-if="virusCount > 0"
+        :class="['transition-all duration-300', { 'scale-150 text-red-500': virusAnimating }]">🦠 {{ virusCount
+        }}</span>
+      <span
+        :class="['transition-all duration-300', { 'scale-150': scoreAnimating, 'text-red-500': scoreDecreasing }]">🪙 {{
+        score }}</span>
       <span>🗑️ {{ totalScore }}</span>
-      <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{ unlockedAchievements }}</span>
+      <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{
+        unlockedAchievements }}</span>
+      <span class="font-bold text-green-300">Nivel {{ level }}</span>
     </div>
   </div>
 </template>
@@ -36,6 +42,7 @@ const totalScore = computed(() => statsStore.totalScore);
 const unlockedAchievements = computed(() => statsStore.unlockedAchievements);
 const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);
+const level = computed(() => statsStore.level);
 const scoreAnimating = ref(false);
 const scoreDecreasing = ref(false);
 const achievementsAnimating = ref(false);
