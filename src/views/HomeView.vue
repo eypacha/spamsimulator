@@ -50,6 +50,7 @@
         :key="browser.id"
         :show="browser.show"
         :url="browser.url"
+        :screen="selectedMenu"
         @close="popupsStore.closeBrowser(browser.id)"
       />
       

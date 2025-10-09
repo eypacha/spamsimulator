@@ -279,9 +279,16 @@ export const useStatsStore = defineStore('stats', () => {
   // Inicializar virusStore con datos guardados
   virusStore.initializeVirusData(loaded);
 
-  function incrementVirusCount(amount = 1) {
+  function incrementVirusCount(amount = 1, preferredScreen = null) {
+    let screens = activeScreens.value.slice();
+    if (preferredScreen) {
+      // Añadir la pantalla actual varias veces para aumentar la probabilidad
+      for (let i = 0; i < 5; i++) {
+        screens.push(preferredScreen);
+      }
+    }
     // Usar screens activas para distribuir virus
-    virusStore.incrementVirusCount(amount, activeScreens.value);
+    virusStore.incrementVirusCount(amount, screens);
     statsTracker.recordVirusInfection();
     saveAllStats();
   }

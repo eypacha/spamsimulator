@@ -119,8 +119,8 @@ export const useVirusStore = defineStore('virus', () => {
             delay: Math.random() * 2,
             duration: 3 + Math.random() * 2,
             isMoving: true,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
+            vx: (Math.random() - 0.5) * 0.1,
+            vy: (Math.random() - 0.5) * 0.1,
             screen: virus.screen,
           });
         }

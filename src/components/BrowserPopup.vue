@@ -55,6 +55,10 @@ const props = defineProps({
   url: {
     type: String,
     default: 'https://ejemplo.com'
+  },
+  screen: {
+    type: String,
+    default: 'inbox'
   }
 });
 
@@ -133,7 +137,7 @@ onMounted(() => {
   if (gotVirus) {
     // Si hay virus, infectarse con 1 a 3 virus
     const virusAmount = Math.floor(Math.random() * 3) + 1;
-    statsStore.incrementVirusCount(virusAmount); 
+    statsStore.incrementVirusCount(virusAmount, props.screen); 
     soundStore.playVirusSound();
   } else {
     // Reproducir sonido al abrir
