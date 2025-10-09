@@ -1,9 +1,10 @@
 import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { newEmail } from '../utils/emailApi.js';
-import { EMAILS } from '../constants/emails.js';
+import { calculateArchiveSpamVirusProbability, calculateArchiveSpamMaxVirus } from '../utils/balancing.js';
 import { useSoundStore } from './sound.js';
 import { useStatsStore } from './stats.js';
+import { EMAILS } from '../constants/emails.js';
 
 export const useEmailStore = defineStore('email', () => {
 
@@ -164,9 +165,12 @@ export const useEmailStore = defineStore('email', () => {
         
         soundStore.playPenaltySound();
 
-        // 50% de probabilidad de infectarse con virus adicionales al archivar spam
-        if (Math.random() < 0.5) {
-          const virusAmount = Math.floor(Math.random() * 5) + 1;
+        // Probabilidad y cantidad de virus basada en el nivel del jugador
+        const virusProbability = calculateArchiveSpamVirusProbability(statsStore.level);
+        const maxVirusAmount = calculateArchiveSpamMaxVirus(statsStore.level);
+        
+        if (Math.random() < virusProbability) {
+          const virusAmount = Math.floor(Math.random() * maxVirusAmount) + 1;
           statsStore.incrementVirusCount(virusAmount);
           // Sonido de virus para feedback inmediato
           soundStore.playVirusSound && soundStore.playVirusSound();

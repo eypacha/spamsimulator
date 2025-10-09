@@ -123,3 +123,59 @@ export function calculateUpgradeCostMultiplier(currentLevel) {
   if (currentLevel <= 15) return 2.1;  // Niveles altos: mucho más caro
   return 2.3; // Niveles muy altos: extremadamente caro
 }
+
+/**
+ * Calcula la probabilidad de infección por virus al archivar spam
+ * Más fácil al principio, más difícil en niveles altos
+ * @param {number} level - Nivel actual del jugador
+ * @returns {number} - Probabilidad entre 0 y 1
+ */
+export function calculateArchiveSpamVirusProbability(level) {
+  if (level <= 2) return 0.2;     // Niveles bajos: 20% de probabilidad
+  if (level <= 5) return 0.3;     // Niveles medios-bajos: 30%
+  if (level <= 10) return 0.4;    // Niveles medios: 40%
+  if (level <= 15) return 0.5;    // Niveles medios-altos: 50%
+  return 0.6; // Niveles altos: 60%
+}
+
+/**
+ * Calcula la cantidad máxima de virus al archivar spam
+ * Más virus en niveles altos
+ * @param {number} level - Nivel actual del jugador
+ * @returns {number} - Cantidad máxima de virus (mínimo 1)
+ */
+export function calculateArchiveSpamMaxVirus(level) {
+  if (level <= 3) return 2;      // Niveles bajos: máximo 2 virus
+  if (level <= 7) return 3;      // Niveles medios-bajos: máximo 3
+  if (level <= 12) return 4;     // Niveles medios: máximo 4
+  if (level <= 18) return 5;     // Niveles medios-altos: máximo 5
+  return 6; // Niveles altos: máximo 6 virus
+}
+
+/**
+ * Calcula la probabilidad de infección por virus al hacer click en links ilegítimos
+ * Más fácil al principio, más difícil en niveles altos
+ * @param {number} level - Nivel actual del jugador
+ * @returns {number} - Probabilidad entre 0 y 1
+ */
+export function calculateLinkClickVirusProbability(level) {
+  if (level <= 2) return 0.3;     // Niveles bajos: 30% de probabilidad
+  if (level <= 5) return 0.4;     // Niveles medios-bajos: 40%
+  if (level <= 10) return 0.5;    // Niveles medios: 50%
+  if (level <= 15) return 0.6;    // Niveles medios-altos: 60%
+  return 0.7; // Niveles altos: 70%
+}
+
+/**
+ * Calcula la cantidad máxima de virus al hacer click en links ilegítimos
+ * Más virus en niveles altos
+ * @param {number} level - Nivel actual del jugador
+ * @returns {number} - Cantidad máxima de virus (mínimo 1)
+ */
+export function calculateLinkClickMaxVirus(level) {
+  if (level <= 3) return 1;      // Niveles bajos: máximo 1 virus
+  if (level <= 7) return 2;      // Niveles medios-bajos: máximo 2
+  if (level <= 12) return 3;     // Niveles medios: máximo 3
+  if (level <= 18) return 4;     // Niveles medios-altos: máximo 4
+  return 5; // Niveles altos: máximo 5 virus
+}

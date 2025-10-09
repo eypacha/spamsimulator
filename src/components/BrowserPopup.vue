@@ -42,6 +42,7 @@ import { ref, onUnmounted, onMounted, markRaw } from 'vue';
 import { useStatsStore } from '../store/stats.js';
 import { useEmailStore } from '../store/email.js';
 import { useSoundStore } from '../store/sound.js';
+import { calculateLinkClickVirusProbability, calculateLinkClickMaxVirus } from '../utils/balancing.js';
 import PhishingPrize from './browser-templates/PhishingPrize.vue';
 import VirusWarning from './browser-templates/VirusWarning.vue';
 import FakeBank from './browser-templates/FakeBank.vue';
@@ -130,14 +131,16 @@ onMounted(() => {
   randomPosition.value = getRandomPosition();
   startCountdown();
 
-  
   // Penalización y virus
-  // 50% de probabilidad de infectarse con un virus al hacer clic en un link
-  const gotVirus = Math.random() < 0.5;
+  // Probabilidad y cantidad de virus basada en el nivel del jugador
+  const virusProbability = calculateLinkClickVirusProbability(statsStore.level);
+  const maxVirusAmount = calculateLinkClickMaxVirus(statsStore.level);
+  
+  const gotVirus = Math.random() < virusProbability;
   
   if (gotVirus) {
-    // Si hay virus, infectarse con 1 a 3 virus
-    const virusAmount = Math.floor(Math.random() * 3) + 1;
+    // Si hay virus, infectarse con 1 a maxVirusAmount virus
+    const virusAmount = Math.floor(Math.random() * maxVirusAmount) + 1;
     statsStore.incrementVirusCount(virusAmount, props.screen); 
     soundStore.playVirusSound();
   } else {
