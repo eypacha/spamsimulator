@@ -124,8 +124,7 @@ onMounted(() => {
   currentTemplate.value = markRaw(templates[Math.floor(Math.random() * templates.length)]);
   randomPosition.value = getRandomPosition();
   startCountdown();
-  // Reproducir sonido al abrir
-  soundStore.playWinSound();
+
   
   // Penalización y virus
   // 50% de probabilidad de infectarse con un virus al hacer clic en un link
@@ -136,6 +135,9 @@ onMounted(() => {
     const virusAmount = Math.floor(Math.random() * 5) + 1;
     statsStore.incrementVirusCount(virusAmount); 
     soundStore.playVirusSound();
+  } else {
+    // Reproducir sonido al abrir
+    soundStore.playWinSound();
   }
   
   // Penalización del popup principal: points puntos por spam (como monedas)
