@@ -9,6 +9,7 @@
       :style="{
         left: virus.x + '%',
         top: virus.y + '%',
+        transform: 'translate(-50%, -50%)',
         animationDelay: !virus.isMoving ? virus.delay + 's' : undefined,
         animationDuration: !virus.isMoving ? virus.duration + 's' : undefined
       }"
