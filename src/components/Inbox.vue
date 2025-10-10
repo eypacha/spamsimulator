@@ -21,9 +21,9 @@
         </button>
         <button v-if="statsStore.spamFrenzyUnlocked" @click="statsStore.activateSpamFrenzy()"
           :disabled="statsStore.spamFrenzyActive || statsStore.spamFrenzyCooldown > 0"
-          class="px-4 py-2 rounded bg-pink-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed"
+          class="px-4 py-2 rounded bg-blue-500 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed"
           :class="statsStore.spamFrenzyActive ? 'animate-pulse pulse-fast' : 'hover:bg-pink-700'">
-          Spam Frenzy
+          💥 Spam Frenzy
           <span v-if="statsStore.spamFrenzyCooldown > 0"> ({{ statsStore.spamFrenzyCooldown }})</span>
         </button>
         <button v-if="statsStore.virusBombUnlocked" @click="handleVirusBomb"
@@ -34,8 +34,8 @@
         </button>
         <button v-if="statsStore.spamDetectorUnlocked" @click="handleSpamDetector"
           :disabled="statsStore.spamDetectorActive || statsStore.spamDetectorCooldown > 0"
-          class="px-4 py-2 rounded bg-red-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-red-700">
-          SpamDetector
+          class="px-4 py-2 rounded bg-pink-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-red-700">
+          🔴 SpamDetector
           <span v-if="statsStore.spamDetectorCooldown > 0"> ({{ statsStore.spamDetectorCooldown }})</span>
         </button>
       </div>
