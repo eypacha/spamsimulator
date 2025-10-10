@@ -116,7 +116,7 @@ export const useSoundStore = defineStore('sound', () => {
   
   const detectorSound = new Howl({
     src: [getAssetPath('sounds/dectector.wav')],
-    volume: 0.8
+    volume: 0.5
   });
 
   function playVirusSound() {
@@ -214,7 +214,7 @@ export const useSoundStore = defineStore('sound', () => {
     playTrashSound,
     playSendSound,
     playVirusSound,
-  playAntivirusSound,
+    playAntivirusSound,
     playPenaltySound,
     playWinSound,
     playLevelupSound,

@@ -22,7 +22,7 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   // Spam Detector - Marca visualmente los emails de spam
   const spamDetectorUnlocked = ref(loaded?.spamDetectorUnlocked ?? false);
-  const spamDetectorUpgradeCost = ref(loaded?.spamDetectorUpgradeCost ?? 80);
+  const spamDetectorUpgradeCost = ref(loaded?.spamDetectorUpgradeCost ?? 200);
   const spamDetectorActive = ref(loaded?.spamDetectorActive ?? false);
   const spamDetectorTime = ref(loaded?.spamDetectorTime ?? 0);
   const spamDetectorCooldown = ref(loaded?.spamDetectorCooldown ?? 0);
