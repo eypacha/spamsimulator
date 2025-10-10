@@ -10,14 +10,9 @@ import { createUpgradeHandler } from './modules/upgradeManager.js';
 import { createComboManager } from './modules/comboManager.js';
 import { createAbilitiesManager } from './modules/abilitiesManager.js';
 import { createStatsTracker } from './modules/statsTracker.js';
-import { createTurboSpamManager } from './modules/turboSpamManager.js';
 import { createScoreManager } from './modules/scoreManager.js';
 import {
   EMAIL_SIZE_KB,
-  TURBO_MIN_INTERVAL,
-  TURBO_DEFAULT_INTERVAL,
-  TURBO_DEFAULT_COST,
-  TURBO_DECREASE,
   UPGRADE_COST,
   TRASH_UPGRADE_COST,
   INBOX_UPGRADE_COST,
@@ -61,9 +56,6 @@ export const useStatsStore = defineStore('stats', () => {
       playedAt6AM: statsTracker.playedAt6AM.value,
       playedAt3AM: statsTracker.playedAt3AM.value,
       totalPlayTimeMinutes: statsTracker.totalPlayTimeMinutes.value,
-      turboSpamLevel: turboSpamManager.turboSpamLevel.value,
-      turboSpamInterval: turboSpamManager.turboSpamInterval.value,
-      turboSpamUpgradeCost: turboSpamManager.turboSpamUpgradeCost.value,
       // Combo
       comboUnlocked: comboUnlocked.value,
       comboUpgradeCost: comboUpgradeCost.value,
@@ -280,24 +272,6 @@ export const useStatsStore = defineStore('stats', () => {
   const maxInbox = ref(loaded?.maxInbox ?? MAX_INBOX);
   const maxSelectable = ref(loaded?.maxSelectable ?? MAX_SELECTABLE);
 
-  // TurboSpam Manager - maneja el upgrade de turbo spam
-  const turboSpamManager = createTurboSpamManager(loaded, {
-    TURBO_MIN_INTERVAL,
-    TURBO_DEFAULT_INTERVAL,
-    TURBO_DEFAULT_COST,
-    TURBO_DECREASE
-  });
-  const { turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost } = turboSpamManager;
-
-  function buyTurboSpamUpgrade() {
-    buyUpgradeHandler(
-      turboSpamUpgradeCost, 
-      turboSpamManager.upgradeTurboSpam, 
-      1.7, 
-      turboSpamManager.canUpgrade()
-    );
-  }
-
   // Score Manager - maneja la puntuación con multiplicadores y sonidos
   const scoreManager = createScoreManager(comboUnlocked, comboMultiplier, statsTracker, saveAllStats, soundStore);
   const virusStore = useVirusStore();
@@ -409,7 +383,6 @@ export const useStatsStore = defineStore('stats', () => {
   watch([
     score, level, pointsPerSpam, upgradeCost, trashUpgradeCost, inboxUpgradeCost, selectionUpgradeCost, maxTrash, maxInbox, maxSelectable, totalCoinsEarned,
     totalScore, totalEmailsRead, totalGirlfriendEmailsRead, totalNigerianPrinceDeleted, currentStreak, maxStreak,
-    turboSpamLevel, turboSpamInterval, turboSpamUpgradeCost,
     comboUnlocked, comboUpgradeCost, comboMultiplier, comboCount
   ], saveAllStats);
 
@@ -518,10 +491,6 @@ export const useStatsStore = defineStore('stats', () => {
     levelBarUnlocked,
     levelBarUpgradeCost,
     buyLevelBarUpgrade,
-    turboSpamLevel,
-    turboSpamInterval,
-    turboSpamUpgradeCost,
-    buyTurboSpamUpgrade,
     totalEmailsSent,
     recordEmailSent,
     comboUnlocked,

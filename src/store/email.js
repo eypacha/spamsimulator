@@ -1,7 +1,7 @@
 import { ref, watch } from 'vue';
 import { defineStore } from 'pinia';
 import { newEmail } from '../utils/emailApi.js';
-import { calculateArchiveSpamVirusProbability, calculateArchiveSpamMaxVirus } from '../utils/balancing.js';
+import { calculateArchiveSpamVirusProbability, calculateArchiveSpamMaxVirus, calculateEmailInterval } from '../utils/balancing.js';
 import { useSoundStore } from './sound.js';
 import { useStatsStore } from './stats.js';
 import { EMAILS } from '../constants/emails.js';
@@ -39,7 +39,7 @@ export const useEmailStore = defineStore('email', () => {
 
   function scheduleNextEmail() {
     const randomDelay = Math.floor(Math.random() * 500);
-    let interval = statsStore.turboSpamInterval;
+    let interval = calculateEmailInterval(statsStore.level);
     gameLoopTimeout = setTimeout(async () => {
       await new Promise(res => setTimeout(res, randomDelay));
       await fetchEmail();

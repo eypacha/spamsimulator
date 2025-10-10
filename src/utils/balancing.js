@@ -10,7 +10,7 @@ export function calculateLevel(totalScore) {
   // Nivel 2 a 20 puntos; a partir de ahí la curva crece de forma más pronunciada
   let level = 1;
   let threshold = 0;
-  let step = 20;       // para alcanzar el nivel 2
+  let step = 10;       // para alcanzar el nivel 2
   const growth = 1.5;  // factor de crecimiento pronunciado para pasos posteriores
 
   while (totalScore >= threshold + step) {
@@ -178,4 +178,17 @@ export function calculateLinkClickMaxVirus(level) {
   if (level <= 12) return 3;     // Niveles medios: máximo 3
   if (level <= 18) return 4;     // Niveles medios-altos: máximo 4
   return 5; // Niveles altos: máximo 5 virus
+}
+
+/**
+ * Calcula el intervalo de llegada de emails basado en el nivel del jugador
+ * Más nivel = emails más rápidos (intervalo más corto)
+ * @param {number} level - Nivel actual del jugador
+ * @returns {number} - Intervalo en ms (mínimo 500ms)
+ */
+export function calculateEmailInterval(level) {
+  const BASE_INTERVAL = 3500; // ms, intervalo inicial
+  const DECREASE_PER_LEVEL = 150; // ms menos por nivel
+  const MIN_INTERVAL = 500; // ms, mínimo permitido
+  return Math.max(MIN_INTERVAL, BASE_INTERVAL - (level * DECREASE_PER_LEVEL));
 }

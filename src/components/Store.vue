@@ -171,16 +171,6 @@ const cards = computed(() => [
     rounded: true,
   },
   {
-    title: 'TurboSpam',
-    description: '⚡ Reduce el intervalo de llegada de emails un 10% (mínimo 0.5s).',
-    details: [
-      `Actual: ${(statsStore.turboSpamInterval / 1000).toFixed(2)} s`,
-      `Costo: ${statsStore.turboSpamUpgradeCost} 🪙`,
-    ],
-    onClick: () => statsStore.buyTurboSpamUpgrade(),
-    disabled: statsStore.score < statsStore.turboSpamUpgradeCost || statsStore.turboSpamInterval <= 500,
-  },
-  {
     title: 'Combos',
     description: '🔥 ¡Gana multiplicador de puntos por eliminar spam sin equivocarte!',
     details: [
