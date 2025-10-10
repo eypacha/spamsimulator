@@ -18,7 +18,7 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   // Space Bar - Habilidad de barra espaciadora
   const spaceBarUnlocked = ref(loaded?.spaceBarUnlocked ?? false);
-  const spaceBarUpgradeCost = ref(loaded?.spaceBarUpgradeCost ?? 50);
+  const spaceBarUpgradeCost = ref(loaded?.spaceBarUpgradeCost ?? 40);
 
   // Spam Detector - Marca visualmente los emails de spam
   const spamDetectorUnlocked = ref(loaded?.spamDetectorUnlocked ?? false);
@@ -29,7 +29,7 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   // Trash Bar - Barra de espacio de papelera
   const trashBarUnlocked = ref(loaded?.trashBarUnlocked ?? false);
-  const trashBarUpgradeCost = ref(loaded?.trashBarUpgradeCost ?? 60);
+  const trashBarUpgradeCost = ref(loaded?.trashBarUpgradeCost ?? 40);
 
   // Compose - Habilidad de redactar emails
   const composeUnlocked = ref(loaded?.composeUnlocked ?? false);
@@ -63,7 +63,7 @@ export function createAbilitiesManager(loaded, saveAllStats) {
 
   // Bulk Archive - Archivar múltiples emails seleccionados
   const bulkArchiveUnlocked = ref(loaded?.bulkArchiveUnlocked ?? false);
-  const bulkArchiveUpgradeCost = ref(loaded?.bulkArchiveUpgradeCost ?? 60);
+  const bulkArchiveUpgradeCost = ref(loaded?.bulkArchiveUpgradeCost ?? 50);
 
   // MobileFriendly - Swipe para borrar/archivar mails
   const mobileFriendlyUnlocked = ref(loaded?.mobileFriendlyUnlocked ?? false);

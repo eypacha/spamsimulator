@@ -159,7 +159,7 @@ export const useStatsStore = defineStore('stats', () => {
 
     // Barra de nivel
   const levelBarUnlocked = ref(loaded?.levelBarUnlocked ?? false);
-  const levelBarUpgradeCost = ref(loaded?.levelBarUpgradeCost ?? 200);
+  const levelBarUpgradeCost = ref(loaded?.levelBarUpgradeCost ?? 40);
   function buyLevelBarUpgrade() {
     if (score.value >= levelBarUpgradeCost.value && !levelBarUnlocked.value) {
       score.value -= levelBarUpgradeCost.value;

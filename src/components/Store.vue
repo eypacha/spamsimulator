@@ -65,7 +65,7 @@ const cards = computed(() => [
   },
   {
     title: 'Eliminar Seleccionados',
-    description: '🗑️ Desbloquea el botón para eliminar múltiples emails seleccionados a la vez.',
+    description: '❌ Desbloquea el botón para eliminar múltiples emails seleccionados a la vez.',
     details: [
       statsStore.bulkDeleteUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.bulkDeleteUpgradeCost} 🪙`,
       statsStore.bulkDeleteUnlocked ? 'Elimina en masa' : 'Borra varios a la vez'
@@ -98,12 +98,32 @@ const cards = computed(() => [
   },
     {
     title: 'Barra de Nivel',
-    description: '📈 Desbloquea la barra de progreso de nivel en el sidebar.',
+    description: '📊 Desbloquea la barra de progreso de nivel en el sidebar.',
     details: [
       statsStore.levelBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.levelBarUpgradeCost} 🪙`,
     ],
     onClick: () => statsStore.buyLevelBarUpgrade(),
     disabled: statsStore.score < statsStore.levelBarUpgradeCost || statsStore.levelBarUnlocked,
+    rounded: true,
+  },
+  {
+    title: 'Barra de espacio',
+    description: '📊 Desbloquea la barra de progreso de espacio en la bandeja de entrada.',
+    details: [
+      statsStore.spaceBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spaceBarUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buySpaceBarUpgrade(),
+    disabled: statsStore.score < statsStore.spaceBarUpgradeCost || statsStore.spaceBarUnlocked,
+    rounded: true,
+  },
+  {
+    title: 'Barra de papelera',
+    description: '📊 Desbloquea la barra de progreso de espacio en la papelera.',
+    details: [
+      statsStore.trashBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.trashBarUpgradeCost} 🪙`,
+    ],
+    onClick: () => statsStore.buyTrashBarUpgrade(),
+    disabled: statsStore.score < statsStore.trashBarUpgradeCost || statsStore.trashBarUnlocked,
     rounded: true,
   },
   {
@@ -148,26 +168,6 @@ const cards = computed(() => [
     ],
     onClick: () => statsStore.buyStarredUpgrade(),
     disabled: statsStore.score < statsStore.starredUpgradeCost || statsStore.starredUnlocked,
-    rounded: true,
-  },
-  {
-    title: 'Barra de espacio',
-    description: '📊 Desbloquea la barra de progreso de espacio en la bandeja de entrada.',
-    details: [
-      statsStore.spaceBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spaceBarUpgradeCost} 🪙`,
-    ],
-    onClick: () => statsStore.buySpaceBarUpgrade(),
-    disabled: statsStore.score < statsStore.spaceBarUpgradeCost || statsStore.spaceBarUnlocked,
-    rounded: true,
-  },
-  {
-    title: 'Barra de papelera',
-    description: '📊 Desbloquea la barra de progreso de espacio en la papelera.',
-    details: [
-      statsStore.trashBarUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.trashBarUpgradeCost} 🪙`,
-    ],
-    onClick: () => statsStore.buyTrashBarUpgrade(),
-    disabled: statsStore.score < statsStore.trashBarUpgradeCost || statsStore.trashBarUnlocked,
     rounded: true,
   },
   {
