@@ -23,6 +23,9 @@ export function createAbilitiesManager(loaded, saveAllStats) {
   // Spam Detector - Marca visualmente los emails de spam
   const spamDetectorUnlocked = ref(loaded?.spamDetectorUnlocked ?? false);
   const spamDetectorUpgradeCost = ref(loaded?.spamDetectorUpgradeCost ?? 80);
+  const spamDetectorActive = ref(loaded?.spamDetectorActive ?? false);
+  const spamDetectorTime = ref(loaded?.spamDetectorTime ?? 0);
+  const spamDetectorCooldown = ref(loaded?.spamDetectorCooldown ?? 0);
 
   // Trash Bar - Barra de espacio de papelera
   const trashBarUnlocked = ref(loaded?.trashBarUnlocked ?? false);
@@ -174,6 +177,29 @@ export function createAbilitiesManager(loaded, saveAllStats) {
         }
       }, 1000);
     }
+
+    // Spam Detector cooldown
+    if (spamDetectorCooldown.value > 0) {
+      const cdInterval = setInterval(() => {
+        spamDetectorCooldown.value--;
+        if (spamDetectorCooldown.value <= 0) {
+          clearInterval(cdInterval);
+          saveAllStats();
+        }
+      }, 1000);
+    }
+
+    // Spam Detector active timer
+    if (spamDetectorActive.value && spamDetectorTime.value > 0) {
+      const interval = setInterval(() => {
+        spamDetectorTime.value--;
+        if (spamDetectorTime.value <= 0) {
+          spamDetectorActive.value = false;
+          clearInterval(interval);
+          saveAllStats();
+        }
+      }, 1000);
+    }
   }
 
   // Inicializar cooldowns al cargar el módulo
@@ -253,6 +279,35 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     return false;
   }
 
+  function activateSpamDetector() {
+    if (!spamDetectorUnlocked.value || spamDetectorActive.value || spamDetectorCooldown.value > 0) return;
+
+    spamDetectorActive.value = true;
+    spamDetectorTime.value = 5; // 5 segundos de duración
+    spamDetectorCooldown.value = 30; // 30 segundos de cooldown
+
+    // Timer para la duración
+    const interval = setInterval(() => {
+      spamDetectorTime.value--;
+      if (spamDetectorTime.value <= 0) {
+        spamDetectorActive.value = false;
+        clearInterval(interval);
+      }
+      saveAllStats();
+    }, 1000);
+
+    // Timer para el cooldown
+    const cdInterval = setInterval(() => {
+      spamDetectorCooldown.value--;
+      if (spamDetectorCooldown.value <= 0) {
+        clearInterval(cdInterval);
+      }
+      saveAllStats();
+    }, 1000);
+
+    saveAllStats();
+  }
+
   return {
     // Spam Frenzy
     spamFrenzyUnlocked,
@@ -269,7 +324,11 @@ export function createAbilitiesManager(loaded, saveAllStats) {
     // Spam Detector
     spamDetectorUnlocked,
     spamDetectorUpgradeCost,
+    spamDetectorActive,
+    spamDetectorTime,
+    spamDetectorCooldown,
     unlockSpamDetector,
+    activateSpamDetector,
     // Trash Bar
     trashBarUnlocked,
     trashBarUpgradeCost,

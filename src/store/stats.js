@@ -81,6 +81,9 @@ export const useStatsStore = defineStore('stats', () => {
       // Spam Detector
       spamDetectorUnlocked: abilitiesManager.spamDetectorUnlocked.value,
       spamDetectorUpgradeCost: abilitiesManager.spamDetectorUpgradeCost.value,
+      spamDetectorActive: abilitiesManager.spamDetectorActive.value,
+      spamDetectorTime: abilitiesManager.spamDetectorTime.value,
+      spamDetectorCooldown: abilitiesManager.spamDetectorCooldown.value,
       // Trash Bar
       trashBarUnlocked: abilitiesManager.trashBarUnlocked.value,
       trashBarUpgradeCost: abilitiesManager.trashBarUpgradeCost.value,
@@ -132,6 +135,10 @@ export const useStatsStore = defineStore('stats', () => {
     spaceBarUpgradeCost,
     spamDetectorUnlocked,
     spamDetectorUpgradeCost,
+    spamDetectorActive,
+    spamDetectorTime,
+    spamDetectorCooldown,
+    activateSpamDetector,
     trashBarUnlocked,
     trashBarUpgradeCost,
     composeUnlocked,
@@ -477,7 +484,7 @@ export const useStatsStore = defineStore('stats', () => {
     // Space Bar Upgrade
     spaceBarUnlocked, spaceBarUpgradeCost, buySpaceBarUpgrade,
     // Spam Detector Upgrade
-    spamDetectorUnlocked, spamDetectorUpgradeCost, buySpamDetectorUpgrade,
+    spamDetectorUnlocked, spamDetectorUpgradeCost, spamDetectorActive, spamDetectorTime, spamDetectorCooldown, activateSpamDetector, buySpamDetectorUpgrade,
     // Trash Bar Upgrade
     trashBarUnlocked, trashBarUpgradeCost, buyTrashBarUpgrade,
     // Compose Upgrade

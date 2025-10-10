@@ -119,10 +119,10 @@ const cards = computed(() => [
   },
   {
     title: 'Detector de Spam',
-    description: '🔴 Marca visualmente los emails de spam en color rojo.',
+    description: '🔴 Desbloquea el botón SpamDetector para marcar spam en rojo por 5 segundos.',
     details: [
       statsStore.spamDetectorUnlocked ? '¡Desbloqueado!' : `Costo: ${statsStore.spamDetectorUpgradeCost} 🪙`,
-      statsStore.spamDetectorUnlocked ? 'Los spam ahora se ven en rojo' : 'Todos los emails se ven iguales'
+      statsStore.spamDetectorUnlocked ? 'Puedes activar SpamDetector' : 'No puedes activar SpamDetector'
     ],
     onClick: () => statsStore.buySpamDetectorUpgrade(),
     disabled: statsStore.score < statsStore.spamDetectorUpgradeCost || statsStore.spamDetectorUnlocked,

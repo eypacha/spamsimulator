@@ -32,6 +32,12 @@
           💣 Virus Bomb
           <span v-if="statsStore.virusBombCooldown > 0"> ({{ statsStore.virusBombCooldown }})</span>
         </button>
+        <button v-if="statsStore.spamDetectorUnlocked" @click="statsStore.activateSpamDetector()"
+          :disabled="statsStore.spamDetectorActive || statsStore.spamDetectorCooldown > 0"
+          class="px-4 py-2 rounded bg-red-600 text-white font-bold ml-2 transition disabled:opacity-70 disabled:cursor-not-allowed hover:bg-red-700">
+          SpamDetector
+          <span v-if="statsStore.spamDetectorCooldown > 0"> ({{ statsStore.spamDetectorCooldown }})</span>
+        </button>
       </div>
     </div>
     <div v-if="!selectedEmail" class="flex-1 overflow-y-auto">
