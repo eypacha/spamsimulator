@@ -16,6 +16,6 @@ export const INBOX_UPGRADE_COST = 30;
 export const SELECTION_UPGRADE_COST = 40;
 
 // Otros valores por defecto
-export const MAX_TRASH = 5;
+export const MAX_TRASH = 10;
 export const MAX_INBOX = 20;
 export const MAX_SELECTABLE = 3;
