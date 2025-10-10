@@ -93,7 +93,7 @@ const emailStore = useEmailStore();
 const statsStore = useStatsStore();
 const soundStore = useSoundStore();
 const { emails, inboxFull } = storeToRefs(emailStore);
-const visibleEmails = computed(() => emails.value.filter(e => !e.trash).reverse());
+const visibleEmails = computed(() => emails.value.filter(e => !e.trash).slice().reverse());
 const trashCount = computed(() => emails.value.filter(e => e.trash).length);
 const showTrashFull = ref(false);
 const showInboxFullModal = ref(false);

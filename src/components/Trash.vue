@@ -62,7 +62,7 @@ const statsStore = useStatsStore();
 const { emails } = storeToRefs(emailStore);
 import { useSoundStore } from '../store/sound.js';
 const soundStore = useSoundStore();
-const trashedEmails = computed(() => emails.value.filter(e => e.trash).reverse());
+const trashedEmails = computed(() => emails.value.filter(e => e.trash).slice().reverse());
 const selectedEmail = ref(null);
 const selectedEmails = ref([]);
 

@@ -18,6 +18,22 @@
     <span class="flex-1 min-w-0 truncate whitespace-nowrap w-0">{{ email.subject }}</span>
     <span class="w-32 flex-shrink-0 text-right text-gray-400">{{ formatDate(email.id) }}</span>
   </li>
+  <li :class="[
+    'flex items-center px-6 py-4 md:py-2 cursor-pointer',
+    email.virusFlash ? 'bg-[#ffd9d9] animate-pulse' : (email.read ? 'bg-white hover:bg-gray-50' : 'bg-blue-50 font-bold hover:bg-blue-100')
+  ]" @click="$emit('open')" v-else>
+    <input v-if="showCheckbox" type="checkbox" :checked="modelValue.includes(email.id)" :value="email.id" @click.stop
+      @change="onChange" class="mr-4 h-4 w-4 text-blue-600 rounded focus:ring-0" />
+    <span v-if="statsStore.starredUnlocked" class="mr-2 cursor-pointer" @click.stop="toggleStar">
+      <i :class="email.starred ? 'fas fa-star text-yellow-400' : 'far fa-star text-gray-400'" aria-label="Destacar"></i>
+    </span>
+    <span class="w-50 truncate whitespace-nowrap mr-3"
+      :style="shouldShowSpamColor ? 'color: #e53935; font-weight: bold;' : 'color: #6b7280;'">
+      {{ email.fromName }}
+    </span>
+    <span class="flex-1 min-w-0 truncate whitespace-nowrap w-0">{{ email.subject }}</span>
+    <span class="w-32 flex-shrink-0 text-right text-gray-400">{{ formatDate(email.id) }}</span>
+  </li>
   <div v-if="showTrashFull" class="fixed inset-0 flex items-center justify-center z-50"
     style="background: rgba(0,0,0,0.4);">
     <div class="bg-white rounded-lg shadow-lg p-8 text-center">
@@ -175,7 +191,7 @@ function onChange(event) {
 
 function getEmailGroup(emailId) {
   // Obtener todos los emails visibles
-  const visibleEmails = emailStore.emails.filter(e => !e.trash).reverse();
+  const visibleEmails = emailStore.emails.filter(e => !e.trash).slice().reverse();
 
   // Encontrar el índice del email actual
   const index = visibleEmails.findIndex(e => e.id === emailId);
