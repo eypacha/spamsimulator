@@ -1,5 +1,19 @@
 /**
- * Calcula el nivel del jugador según el totalScore.
+ * Cexport function calculateLevel(totalScore) {
+  // Nivel 2 a 10 puntos; a partir de ahí la curva crece de forma más pronunciada
+  let level = 1;
+  let threshold = 0;
+  let step = 10;       // para alcanzar el nivel 2
+  const growth = 1.5;  // factor de crecimiento pronunciado para pasos posteriores
+
+  while (totalScore >= threshold + step) {
+    threshold += step;
+    level++;
+    step = Math.ceil(step * growth);
+  }
+
+  return level;
+} del jugador según el totalScore.
  * El nivel sube cada vez que se supera el umbral de puntos.
  * Ejemplo: Nivel 1 = 0, Nivel 2 = 100, Nivel 3 = 300, Nivel 4 = 600, etc.
  * Puedes ajustar la progresión como prefieras.
@@ -31,7 +45,7 @@ export function calculateLevelThreshold(targetLevel) {
   if (targetLevel <= 1) return 0;
 
   let threshold = 0;
-  let step = 20;       // para alcanzar el nivel 2
+  let step = 10;       // para alcanzar el nivel 2
   const growth = 1.5;  // factor de crecimiento pronunciado para pasos posteriores
 
   for (let level = 2; level <= targetLevel; level++) {

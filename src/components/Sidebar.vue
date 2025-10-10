@@ -41,7 +41,7 @@
             ></div>
           </div>
           <div class="text-xs text-gray-400 text-center">
-            Nivel {{ statsStore.level }} ({{ levelProgress }}/{{ nextLevelThreshold }})
+            Nivel {{ statsStore.level }} ({{ statsStore.totalScore }}/{{ nextLevelThreshold }})
           </div>
         </div>
         <!-- Barra de Bandeja de Entrada -->
