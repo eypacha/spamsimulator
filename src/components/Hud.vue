@@ -17,12 +17,15 @@
         }}</span>
       <span
         :class="['transition-all duration-300', { 'scale-150': scoreAnimating, 'text-red-500': scoreDecreasing }]">🪙 {{
-        score }}</span>
+          score }}</span>
       <span>🗑️ {{ totalScore }}</span>
-      <span :class="['transition-all duration-300']">💼 {{ workAppointments }}</span>
+      <span :class="['transition-all duration-300', { 'scale-150 text-green-300': workAnimating }]">💼 {{
+        workAppointments }}</span>
       <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{
         unlockedAchievements }}</span>
-      <span :class="['font-bold text-green-300 transition-transform duration-300', { 'scale-150': levelAnimating }]">Nivel {{ level }}</span>
+      <span
+        :class="['font-bold text-green-300 transition-transform duration-300', { 'scale-150': levelAnimating }]">Nivel
+        {{ level }}</span>
     </div>
   </div>
 </template>
@@ -47,6 +50,16 @@ const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);
 const level = computed(() => statsStore.level);
 const workAppointments = computed(() => statsStore.confirmedWorkAppointments?.size || 0);
+const workAnimating = ref(false);
+
+watch(workAppointments, (newValue, oldValue) => {
+  if (oldValue !== undefined && newValue > oldValue) {
+    workAnimating.value = true;
+    setTimeout(() => {
+      workAnimating.value = false;
+    }, 300);
+  }
+});
 const scoreAnimating = ref(false);
 const scoreDecreasing = ref(false);
 const achievementsAnimating = ref(false);
