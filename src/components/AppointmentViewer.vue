@@ -169,12 +169,19 @@ const appointmentTime = computed(() => {
 
 function confirmAppointment() {
   confirmed.value = true;
-  // Solo sumar punto si es cita de trabajo y tiene id
-  if (props.email && props.email.type === 'work' && props.email.id) {
-    console.log('[AppointmentViewer] Confirmando cita de trabajo:', props.email.id);
-    statsStore.recordWorkAppointmentConfirmed(props.email.id);
+  // Sumar punto según tipo de cita y si tiene id
+  if (props.email && props.email.id) {
+    if (props.email.type === 'work') {
+      console.log('[AppointmentViewer] Confirmando cita de trabajo:', props.email.id);
+      statsStore.recordWorkAppointmentConfirmed(props.email.id);
+    } else if (props.email.type === 'medical') {
+      console.log('[AppointmentViewer] Confirmando cita médica:', props.email.id);
+      statsStore.recordMedicalAppointmentConfirmed(props.email.id);
+    } else {
+      console.log('[AppointmentViewer] Tipo de cita no reconocido:', props.email.type);
+    }
   } else {
-    console.log('[AppointmentViewer] No es cita de trabajo o falta id:', props.email);
+    console.log('[AppointmentViewer] Falta email o id:', props.email);
   }
   setTimeout(() => {
     emit('close');

@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="hud-bar bg-blue-600 text-white px-6 py-2 flex justify-between items-center relative">
     <div class="flex items-center space-x-4">
       <!-- Hamburguesa solo en mobile -->
@@ -21,6 +21,7 @@
       <span>🗑️ {{ totalScore }}</span>
       <span :class="['transition-all duration-300', { 'scale-150 text-green-300': workAnimating }]">💼 {{
         workAppointments }}</span>
+      <span :class="['transition-all duration-300', { 'scale-150 text-pink-300': medicalAnimating }]">🫀 {{ medicalAppointments }}</span>
       <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{
         unlockedAchievements }}</span>
       <span
@@ -50,6 +51,17 @@ const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);
 const level = computed(() => statsStore.level);
 const workAppointments = computed(() => statsStore.confirmedWorkAppointments?.size || 0);
+const medicalAppointments = computed(() => statsStore.confirmedMedicalAppointments?.size || 0);
+const medicalAnimating = ref(false);
+
+watch(medicalAppointments, (newValue, oldValue) => {
+  if (oldValue !== undefined && newValue > oldValue) {
+    medicalAnimating.value = true;
+    setTimeout(() => {
+      medicalAnimating.value = false;
+    }, 300);
+  }
+});
 const workAnimating = ref(false);
 
 watch(workAppointments, (newValue, oldValue) => {
