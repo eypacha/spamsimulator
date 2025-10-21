@@ -18,6 +18,7 @@ export function createStatsTracker(loaded, saveAllStats) {
   const catPicturesViewed = ref(new Set(loaded?.catPicturesViewed ?? []));
   const totalVirusesInfected = ref(loaded?.totalVirusesInfected ?? 0);
   const totalAppointmentsConfirmed = ref(loaded?.totalAppointmentsConfirmed ?? 0);
+  const totalWorkAppointmentsConfirmed = ref(loaded?.totalWorkAppointmentsConfirmed ?? 0);
   
   // Logros de tiempo
   const playedAt6AM = ref(loaded?.playedAt6AM ?? false);
@@ -25,6 +26,9 @@ export function createStatsTracker(loaded, saveAllStats) {
   const totalPlayTimeMinutes = ref(loaded?.totalPlayTimeMinutes ?? 0);
   const sessionStartTime = ref(Date.now());
   let playTimeInterval = null;
+
+  // IDs de citas de trabajo confirmadas
+  const confirmedWorkAppointments = ref(new Set(loaded?.confirmedWorkAppointments ?? []));
 
   function recordEmailSent() {
     totalEmailsSent.value += 1;
@@ -75,6 +79,24 @@ export function createStatsTracker(loaded, saveAllStats) {
   function recordAppointmentConfirmed() {
     totalAppointmentsConfirmed.value += 1;
     saveAllStats();
+  }
+
+  function recordWorkAppointmentConfirmed(emailId) {
+    if (!confirmedWorkAppointments.value.has(emailId)) {
+      console.log('[statsTracker] Agregando cita de trabajo confirmada:', emailId);
+      confirmedWorkAppointments.value.add(emailId);
+      totalWorkAppointmentsConfirmed.value += 1;
+      saveAllStats();
+    } else {
+      console.log('[statsTracker] Cita ya confirmada, no se suma:', emailId);
+    }
+  }
+
+  function removeWorkAppointment(emailId) {
+    if (confirmedWorkAppointments.value.has(emailId)) {
+      confirmedWorkAppointments.value.delete(emailId);
+      saveAllStats();
+    }
   }
 
   function checkTimeAchievements() {
@@ -148,6 +170,7 @@ export function createStatsTracker(loaded, saveAllStats) {
     playedAt6AM,
     playedAt3AM,
     totalPlayTimeMinutes,
+    confirmedWorkAppointments,
     recordEmailSent,
     markEmailAsRead,
     markCatPictureViewed,
@@ -158,6 +181,8 @@ export function createStatsTracker(loaded, saveAllStats) {
     incrementCoinsEarned,
     recordVirusInfection,
     recordAppointmentConfirmed,
+    recordWorkAppointmentConfirmed,
+    removeWorkAppointment,
     startPlayTimeTracking,
     stopPlayTimeTracking,
     resetStats

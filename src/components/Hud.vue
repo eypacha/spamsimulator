@@ -19,6 +19,7 @@
         :class="['transition-all duration-300', { 'scale-150': scoreAnimating, 'text-red-500': scoreDecreasing }]">🪙 {{
         score }}</span>
       <span>🗑️ {{ totalScore }}</span>
+      <span :class="['transition-all duration-300']">💼 {{ workAppointments }}</span>
       <span :class="['transition-transform duration-300', { 'scale-150': achievementsAnimating }]">🏅 {{
         unlockedAchievements }}</span>
       <span :class="['font-bold text-green-300 transition-transform duration-300', { 'scale-150': levelAnimating }]">Nivel {{ level }}</span>
@@ -45,6 +46,7 @@ const unlockedAchievements = computed(() => statsStore.unlockedAchievements);
 const comboUnlocked = computed(() => statsStore.comboUnlocked);
 const comboMultiplier = computed(() => statsStore.comboMultiplier);
 const level = computed(() => statsStore.level);
+const workAppointments = computed(() => statsStore.confirmedWorkAppointments?.size || 0);
 const scoreAnimating = ref(false);
 const scoreDecreasing = ref(false);
 const achievementsAnimating = ref(false);

@@ -29,10 +29,11 @@
     
     <!-- Appointment Viewer for meeting confirmations -->
     <AppointmentViewer
-      :show="showAppointment"
-      :url="clickedUrl"
-      :company-name="email.fromName"
-      @close="showAppointment = false"
+  :show="showAppointment"
+  :url="clickedUrl"
+  :company-name="email.fromName"
+  :email="email"
+  @close="showAppointment = false"
     />
   </div>
 </template>

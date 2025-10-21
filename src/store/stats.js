@@ -505,6 +505,7 @@ export const useStatsStore = defineStore('stats', () => {
     spamFrenzyTime,
     activateSpamFrenzy,
     spamFrenzyCooldown,
+    
     // Space Bar Upgrade
     spaceBarUnlocked,
     spaceBarUpgradeCost,
@@ -566,5 +567,8 @@ export const useStatsStore = defineStore('stats', () => {
     virusByScreen,
     activeScreens,
     removeOneVirus,
+    // Confirmed work appointments for HUD
+    confirmedWorkAppointments: computed(() => statsTracker.confirmedWorkAppointments.value),
+  recordWorkAppointmentConfirmed: statsTracker.recordWorkAppointmentConfirmed,
   };
 });

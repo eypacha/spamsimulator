@@ -110,6 +110,10 @@ const props = defineProps({
   companyName: {
     type: String,
     default: 'Empresa'
+  },
+  email: {
+    type: Object,
+    default: undefined
   }
 });
 
@@ -165,7 +169,13 @@ const appointmentTime = computed(() => {
 
 function confirmAppointment() {
   confirmed.value = true;
-  statsStore.recordAppointmentConfirmed();
+  // Solo sumar punto si es cita de trabajo y tiene id
+  if (props.email && props.email.type === 'work' && props.email.id) {
+    console.log('[AppointmentViewer] Confirmando cita de trabajo:', props.email.id);
+    statsStore.recordWorkAppointmentConfirmed(props.email.id);
+  } else {
+    console.log('[AppointmentViewer] No es cita de trabajo o falta id:', props.email);
+  }
   setTimeout(() => {
     emit('close');
   }, 1500);
