@@ -113,16 +113,19 @@ export const useStatsStore = defineStore('stats', () => {
       levelBarUpgradeCost: levelBarUpgradeCost.value,
       // Persistir citas de trabajo confirmadas
       confirmedWorkAppointments: Array.from(statsTracker.confirmedWorkAppointments.value),
+      // Persistir citas médicas confirmadas
+      confirmedMedicalAppointments: Array.from(statsTracker.confirmedMedicalAppointments.value),
+      totalMedicalAppointmentsConfirmed: statsTracker.totalMedicalAppointmentsConfirmed.value,
     });
   }
 
   // Abilities Manager - maneja habilidades especiales (SpamFrenzy y SpaceBar)
   const abilitiesManager = createAbilitiesManager(loaded, saveAllStats);
-  const { 
-    spamFrenzyUnlocked, 
-    spamFrenzyUpgradeCost, 
-    spamFrenzyCooldown, 
-    spamFrenzyActive, 
+  const {
+    spamFrenzyUnlocked,
+    spamFrenzyUpgradeCost,
+    spamFrenzyCooldown,
+    spamFrenzyActive,
     spamFrenzyTime,
     activateSpamFrenzy,
     spaceBarUnlocked,
@@ -159,7 +162,7 @@ export const useStatsStore = defineStore('stats', () => {
     mobileFriendlyUpgradeCost
   } = abilitiesManager;
 
-    // Barra de nivel
+  // Barra de nivel
   const levelBarUnlocked = ref(loaded?.levelBarUnlocked ?? false);
   const levelBarUpgradeCost = ref(loaded?.levelBarUpgradeCost ?? 40);
   function buyLevelBarUpgrade() {
@@ -168,7 +171,7 @@ export const useStatsStore = defineStore('stats', () => {
       levelBarUnlocked.value = true;
       saveAllStats();
       const soundStore = useSoundStore();
-  if (soundStore.playBuySound) soundStore.playBuySound();
+      if (soundStore.playBuySound) soundStore.playBuySound();
     }
   }
 
@@ -212,7 +215,7 @@ export const useStatsStore = defineStore('stats', () => {
     buyUpgradeHandler(groupSelectUpgradeCost, abilitiesManager.unlockGroupSelect, 1.5, !groupSelectUnlocked.value);
   }
 
-  
+
   function buyKeyboardShortcutsUpgrade() {
     buyUpgradeHandler(keyboardShortcutsUpgradeCost, abilitiesManager.unlockKeyboardShortcuts, 1.5, !keyboardShortcutsUnlocked.value);
   }
@@ -391,56 +394,56 @@ export const useStatsStore = defineStore('stats', () => {
   // Computed para contar logros desbloqueados
   const unlockedAchievements = computed(() => {
     let count = 0;
-    
+
     // Logros de spam eliminado
     if (totalScore.value >= 50) count++;
     if (totalScore.value >= 100) count++;
     if (totalScore.value >= 1000) count++;
     if (totalScore.value >= 10000) count++;
-    
+
     // Logros de emails leídos
     if (totalEmailsRead.value >= 50) count++;
     if (totalEmailsRead.value >= 100) count++;
     if (totalEmailsRead.value >= 1000) count++;
-    
+
     // Logros de monedas
     if (totalCoinsEarned.value >= 500) count++;
     if (totalCoinsEarned.value >= 1000) count++;
     if (totalCoinsEarned.value >= 10000) count++;
-    
+
     // Logros de racha
     if (maxStreak.value >= 10) count++;
     if (maxStreak.value >= 50) count++;
     if (maxStreak.value >= 100) count++;
-    
+
     // Logros de correos enviados
     if (totalEmailsSent.value >= 1) count++;
     if (totalEmailsSent.value >= 10) count++;
     if (totalEmailsSent.value >= 100) count++;
-    
+
     // Logros de correos de novia
     if (totalGirlfriendEmailsRead.value >= 100) count++;
     if (totalGirlfriendEmailsRead.value >= 10000) count++;
-    
+
     // Logro de príncipe nigeriano
     if (totalNigerianPrinceDeleted.value >= 1000) count++;
-    
+
     // Logro de fotos de gatos
     if (statsTracker.catPicturesViewed.value.size >= 20) count++;
-    
+
     // Logros de virus infectados
     if (statsTracker.totalVirusesInfected.value >= 50) count++;
     if (statsTracker.totalVirusesInfected.value >= 100) count++;
     if (statsTracker.totalVirusesInfected.value >= 1000) count++;
-    
+
     // Logros de tiempo
     if (statsTracker.playedAt6AM.value) count++;
     if (statsTracker.playedAt3AM.value) count++;
     if (statsTracker.totalPlayTimeMinutes.value >= 480) count++; // 8 horas = 480 minutos
-    
+
     // Logros de citas
     if (statsTracker.totalAppointmentsConfirmed.value >= 100) count++;
-    
+
     return count;
   });
 
@@ -507,7 +510,7 @@ export const useStatsStore = defineStore('stats', () => {
     spamFrenzyTime,
     activateSpamFrenzy,
     spamFrenzyCooldown,
-    
+
     // Space Bar Upgrade
     spaceBarUnlocked,
     spaceBarUpgradeCost,
@@ -569,8 +572,13 @@ export const useStatsStore = defineStore('stats', () => {
     virusByScreen,
     activeScreens,
     removeOneVirus,
+    // Confirmed medical appointments for HUD
+    confirmedMedicalAppointments: computed(() => statsTracker.confirmedMedicalAppointments.value),
+    totalMedicalAppointmentsConfirmed: computed(() => statsTracker.totalMedicalAppointmentsConfirmed.value),
+    recordMedicalAppointmentConfirmed: statsTracker.recordMedicalAppointmentConfirmed,
+    removeMedicalAppointment: statsTracker.removeMedicalAppointment,
     // Confirmed work appointments for HUD
     confirmedWorkAppointments: computed(() => statsTracker.confirmedWorkAppointments.value),
-  recordWorkAppointmentConfirmed: statsTracker.recordWorkAppointmentConfirmed,
+    recordWorkAppointmentConfirmed: statsTracker.recordWorkAppointmentConfirmed,
   };
 });

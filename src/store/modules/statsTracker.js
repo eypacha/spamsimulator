@@ -29,6 +29,9 @@ export function createStatsTracker(loaded, saveAllStats) {
 
   // IDs de citas de trabajo confirmadas
   const confirmedWorkAppointments = ref(new Set(loaded?.confirmedWorkAppointments ?? []));
+  // IDs de citas médicas confirmadas
+  const confirmedMedicalAppointments = ref(new Set(loaded?.confirmedMedicalAppointments ?? []));
+  const totalMedicalAppointmentsConfirmed = ref(loaded?.totalMedicalAppointmentsConfirmed ?? 0);
 
   function recordEmailSent() {
     totalEmailsSent.value += 1;
@@ -89,6 +92,24 @@ export function createStatsTracker(loaded, saveAllStats) {
       saveAllStats();
     } else {
       console.log('[statsTracker] Cita ya confirmada, no se suma:', emailId);
+    }
+  }
+
+  function recordMedicalAppointmentConfirmed(emailId) {
+    if (!confirmedMedicalAppointments.value.has(emailId)) {
+      console.log('[statsTracker] Agregando cita médica confirmada:', emailId);
+      confirmedMedicalAppointments.value.add(emailId);
+      totalMedicalAppointmentsConfirmed.value += 1;
+      saveAllStats();
+    } else {
+      console.log('[statsTracker] Cita médica ya confirmada, no se suma:', emailId);
+    }
+  }
+
+  function removeMedicalAppointment(emailId) {
+    if (confirmedMedicalAppointments.value.has(emailId)) {
+      confirmedMedicalAppointments.value.delete(emailId);
+      saveAllStats();
     }
   }
 
@@ -171,6 +192,8 @@ export function createStatsTracker(loaded, saveAllStats) {
     playedAt3AM,
     totalPlayTimeMinutes,
     confirmedWorkAppointments,
+  confirmedMedicalAppointments,
+  totalMedicalAppointmentsConfirmed,
     recordEmailSent,
     markEmailAsRead,
     markCatPictureViewed,
@@ -183,6 +206,8 @@ export function createStatsTracker(loaded, saveAllStats) {
     recordAppointmentConfirmed,
     recordWorkAppointmentConfirmed,
     removeWorkAppointment,
+  recordMedicalAppointmentConfirmed,
+  removeMedicalAppointment,
     startPlayTimeTracking,
     stopPlayTimeTracking,
     resetStats
