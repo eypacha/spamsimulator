@@ -89,10 +89,10 @@ export const useStatsStore = defineStore('stats', () => {
       virusBombUnlocked: abilitiesManager.virusBombUnlocked.value,
       virusBombUpgradeCost: abilitiesManager.virusBombUpgradeCost.value,
       virusBombCooldown: abilitiesManager.virusBombCooldown.value,
-  // Antivirus
-  antivirusUnlocked: abilitiesManager.antivirusUnlocked.value,
-  antivirusUpgradeCost: abilitiesManager.antivirusUpgradeCost.value,
-  antivirusCooldown: abilitiesManager.antivirusCooldown.value,
+      // Antivirus
+      antivirusUnlocked: abilitiesManager.antivirusUnlocked.value,
+      antivirusUpgradeCost: abilitiesManager.antivirusUpgradeCost.value,
+      antivirusCooldown: abilitiesManager.antivirusCooldown.value,
       // Group Select
       groupSelectUnlocked: abilitiesManager.groupSelectUnlocked.value,
       groupSelectUpgradeCost: abilitiesManager.groupSelectUpgradeCost.value,
@@ -110,7 +110,9 @@ export const useStatsStore = defineStore('stats', () => {
       mobileFriendlyUpgradeCost: abilitiesManager.mobileFriendlyUpgradeCost.value,
       // Level Bar
       levelBarUnlocked: levelBarUnlocked.value,
-      levelBarUpgradeCost: levelBarUpgradeCost.value
+      levelBarUpgradeCost: levelBarUpgradeCost.value,
+      // Persistir citas de trabajo confirmadas
+      confirmedWorkAppointments: Array.from(statsTracker.confirmedWorkAppointments.value),
     });
   }
 
