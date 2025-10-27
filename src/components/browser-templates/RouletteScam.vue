@@ -19,8 +19,8 @@
                 <polygon points="170,20 190,65 150,65" fill="#ef4444" />
             </svg>
         </div>
-        <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded shadow mb-4 transition"
-            :disabled="spinning" @click="spinRoulette">
+        <button class="bg-green-500 cursor-pointer hover:bg-green-600 text-white font-bold py-2 px-6 rounded shadow mb-4 transition"
+            :disabled="spinning || statsStore.score < statsStore.pointsPerSpam" @click="() => { console.log('Botón presionado'); spinRoulette(); }">
             Girar ruleta por {{statsStore.pointsPerSpam}}🪙
         </button>
         <div v-if="result" class="mt-2 text-xl font-bold text-center">
@@ -77,9 +77,14 @@ function getTextY(i) {
 }
 
 function spinRoulette() {
+    console.log('spinRoulette llamada');
     // Coste de girar la ruleta
     const cost = statsStore.pointsPerSpam;
-    if (statsStore.score < cost || spinning.value) return;
+    console.log('score actual:', statsStore.score, 'coste:', cost, 'spinning:', spinning.value);
+    if (statsStore.score < cost || spinning.value) {
+        console.log('No se puede girar: score insuficiente o ya girando');
+        return;
+    }
     statsStore.addScore(-cost);
     spinning.value = true;
     result.value = null;
@@ -90,6 +95,7 @@ function spinRoulette() {
     const anglePerSegment = 360 / segments.length;
     const finalAngle = baseRotations * 360 + (360 - winner * anglePerSegment - anglePerSegment / 2);
     rotation.value = finalAngle;
+    console.log('Rotación final:', finalAngle, 'Índice ganador:', winner);
     setTimeout(() => {
         spinning.value = false;
         const type = segments[winner].type;
@@ -107,6 +113,7 @@ function spinRoulette() {
         }
         // Ajustar rotación para que quede en el ángulo final (sin vueltas extra)
         rotation.value = (360 - winner * anglePerSegment - anglePerSegment / 2) % 360;
+        console.log('Fin de giro, resultado:', result.value);
     }, 2000);
 }
 </script>
