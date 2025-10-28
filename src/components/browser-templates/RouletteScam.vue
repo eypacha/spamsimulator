@@ -1,4 +1,5 @@
 <template>
+    <!-- Canvas manual eliminado para usar el canvas por defecto de js-confetti -->
     <div class="flex flex-col bg-red-200 items-center justify-center h-full">
         <div class="roulette-container mb-6">
             <svg width="340" height="340" viewBox="0 0 340 340">
@@ -15,8 +16,7 @@
                         </g>
                     </g>
                 </g>
-                <!-- Flecha -->
-                <polygon points="170,20 190,65 150,65" fill="#ef4444" />
+                   <polygon points="170,20 190,0 150,0" fill="#ef4444" />
             </svg>
         </div>
         <button class="bg-green-500 cursor-pointer hover:bg-green-600 text-white font-bold py-2 px-6 rounded shadow mb-4 transition"
@@ -34,18 +34,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import JSConfetti from 'js-confetti';
 import { useStatsStore } from '../../store/stats.js';
+
+let jsConfetti = null;
+onMounted(() => {
+    jsConfetti = new JSConfetti(); // Usar canvas por defecto (body)
+});
 
 const segments = [
     { label: '🪙', color: '#cccccc', type: 'coin' },
-    { label: '🦠', color: '#dddddd', type: 'virus' },
+    { label: '😢', color: '#dddddd', type: 'lose' },
     { label: '🪙', color: '#cccccc', type: 'coin' },
-    { label: '🦠', color: '#dddddd', type: 'virus' },
-    { label: '🦠', color: '#cccccc', type: 'virus' },
+    { label: '😢', color: '#dddddd', type: 'lose' },
+    { label: '😢', color: '#cccccc', type: 'lose' },
     { label: '🪙', color: '#dddddd', type: 'coin' },
-    { label: '🦠', color: '#cccccc', type: 'virus' },
-    { label: '🦠', color: '#dddddd', type: 'virus' },
+    { label: '😢', color: '#cccccc', type: 'lose' },
+    { label: '😢', color: '#dddddd', type: 'lose' },
 ];
 
 const statsStore = useStatsStore();
@@ -99,17 +105,11 @@ function spinRoulette() {
     setTimeout(() => {
         spinning.value = false;
         const type = segments[winner].type;
-        if (type === 'virus') {
+        if (type === 'lose') {
             result.value = 'lose';
-            if (typeof statsStore.incrementVirusCount === 'function') {
-                statsStore.incrementVirusCount(1, 'roulette');
-            }
         } else if (type === 'coin') {
             result.value = 'win';
             statsStore.addScore(statsStore.pointsPerSpam);
-        } else if (type === 'diamond') {
-            result.value = 'win';
-            statsStore.addScore(statsStore.pointsPerSpam * 2);
         }
         // Ajustar rotación para que quede en el ángulo final (sin vueltas extra)
         rotation.value = (360 - winner * anglePerSegment - anglePerSegment / 2) % 360;
