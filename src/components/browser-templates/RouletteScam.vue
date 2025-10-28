@@ -110,6 +110,13 @@ function spinRoulette() {
         } else if (type === 'coin') {
             result.value = 'win';
             statsStore.addScore(statsStore.pointsPerSpam);
+            if (jsConfetti) {
+                jsConfetti.addConfetti({
+                    emojis: ['🎉', '🪙'],
+                    emojiSize: 20,
+                    confettiNumber: 50
+                });
+            }
         }
         // Ajustar rotación para que quede en el ángulo final (sin vueltas extra)
         rotation.value = (360 - winner * anglePerSegment - anglePerSegment / 2) % 360;
