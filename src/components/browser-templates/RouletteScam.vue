@@ -45,13 +45,13 @@ onMounted(() => {
 
 const segments = [
     { label: '🪙', color: '#cccccc', type: 'coin' },
-    { label: '😢', color: '#dddddd', type: 'lose' },
+    { label: '❌', color: '#dddddd', type: 'lose' },
     { label: '🪙', color: '#cccccc', type: 'coin' },
-    { label: '😢', color: '#dddddd', type: 'lose' },
-    { label: '😢', color: '#cccccc', type: 'lose' },
+    { label: '❌', color: '#dddddd', type: 'lose' },
+    { label: '❌', color: '#cccccc', type: 'lose' },
     { label: '🪙', color: '#dddddd', type: 'coin' },
-    { label: '😢', color: '#cccccc', type: 'lose' },
-    { label: '😢', color: '#dddddd', type: 'lose' },
+    { label: '❌', color: '#cccccc', type: 'lose' },
+    { label: '❌', color: '#dddddd', type: 'lose' },
 ];
 
 const statsStore = useStatsStore();
