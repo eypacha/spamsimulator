@@ -141,6 +141,7 @@ onMounted(() => {
   if (gotVirus) {
     // Si hay virus, infectarse con 1 a maxVirusAmount virus
     const virusAmount = Math.floor(Math.random() * maxVirusAmount) + 1;
+    console.log("🚀 ~ maxVirusAmount:", maxVirusAmount)
     statsStore.incrementVirusCount(virusAmount, props.screen); 
     soundStore.playVirusSound();
   } else {

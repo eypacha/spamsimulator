@@ -146,6 +146,7 @@ export const useEmailStore = defineStore('email', () => {
   }
 
   function archiveEmail(id) {
+    console.log("🚀 ~ archiveEmail ~ archiveEmail:", id)
     // Archivar: elimina directamente el email sin pasar por la papelera
     const emailIndex = emails.value.findIndex(e => e.id === id);
     if (emailIndex !== -1) {
@@ -168,9 +169,11 @@ export const useEmailStore = defineStore('email', () => {
         // Probabilidad y cantidad de virus basada en el nivel del jugador
         const virusProbability = calculateArchiveSpamVirusProbability(statsStore.level);
         const maxVirusAmount = calculateArchiveSpamMaxVirus(statsStore.level);
-        
+
         if (Math.random() < virusProbability) {
           const virusAmount = Math.floor(Math.random() * maxVirusAmount) + 1;
+
+          console.log("🚀 ~ archiveEmail ~ virusAmount:", virusAmount)
           statsStore.incrementVirusCount(virusAmount);
           // Sonido de virus para feedback inmediato
           soundStore.playVirusSound && soundStore.playVirusSound();

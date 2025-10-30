@@ -62,12 +62,12 @@ export const useVirusStore = defineStore('virus', () => {
   // Incrementa la cantidad de virus (puede ser por pantalla)
   function incrementVirusCount(amount = 1, screens = []) {
     virusCount.value += amount;
+    // Nuevo: parámetro opcional playerLevel para balancear tamaño
+    // Si no se pasa, por defecto 1
+    const playerLevel = arguments.length > 2 ? arguments[2] : 1;
     for (let i = 0; i < amount; i++) {
-      // Probabilidad de tamaño: 70% 4x, 20% 8x, 10% 16x
-      const rand = Math.random();
-      let size = 4;
-      if (rand > 0.9) size = 16;
-      else if (rand > 0.7) size = 8;
+      const size = getVirusSizeByLevel(playerLevel);
+      
       const screen = screens.length > 0 ? screens[Math.floor(Math.random() * screens.length)] : null;
       if (screen) {
         if (!virusByScreen.value[screen]) virusByScreen.value[screen] = 0;
@@ -86,6 +86,33 @@ export const useVirusStore = defineStore('virus', () => {
         screen,
       });
     }
+
+  // Auxiliar: determina el tamaño de virus según el nivel del jugador
+  function getVirusSizeByLevel(playerLevel) {
+    // Probabilidades progresivas según nivel
+    // Nivel 1-2: solo pequeños
+    // Nivel 3-10: probabilidad de medianos y grandes aumenta gradualmente
+    // Nivel 11+: grandes más frecuentes
+    let pSmall = 1, pMedium = 0, pLarge = 0;
+    if (playerLevel <= 2) {
+      pSmall = 1; pMedium = 0; pLarge = 0;
+    } else if (playerLevel <= 10) {
+      // Interpolación lineal: a nivel 3, pMedium=0.1, pLarge=0; a nivel 10, pMedium=0.25, pLarge=0.1
+      pMedium = 0.1 + (playerLevel - 3) * (0.25 - 0.1) / (10 - 3);
+      pLarge = (playerLevel - 3) * (0.1) / (10 - 3);
+      pSmall = 1 - pMedium - pLarge;
+    } else {
+      // Desde nivel 11 en adelante, pSmall baja, pMedium y pLarge suben
+      // pSmall nunca menor a 0.5, pLarge nunca mayor a 0.3
+      pMedium = 0.25 + Math.min(0.15, (playerLevel - 10) * 0.02); // hasta 0.4
+      pLarge = 0.1 + Math.min(0.2, (playerLevel - 10) * 0.025); // hasta 0.3
+      pSmall = Math.max(0.5, 1 - pMedium - pLarge);
+    }
+    const rand = Math.random();
+    if (rand < pSmall) return 4;
+    else if (rand < pSmall + pMedium) return 8;
+    else return 16;
+  }
   }
 
   // Remueve un virus de una pantalla específica o aleatoria
