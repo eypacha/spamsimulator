@@ -5,9 +5,8 @@
     </div>
     <div class="flex-1 overflow-y-auto p-6">
       <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        <div v-for="achievement in achievements" :key="achievement.id"
-             class="bg-white p-4 border-2 text-center"
-             :class="achievement.unlocked ? 'border-yellow-400' : 'border-gray-200 opacity-80'">
+        <div v-for="achievement in achievements" :key="achievement.id" class="bg-white p-4 border-2 text-center"
+          :class="achievement.unlocked ? 'border-yellow-400' : 'border-gray-200 opacity-80'">
           <div class="flex flex-col items-center space-y-2">
             <span class="text-4xl">{{ achievement.emoji }}</span>
             <div class="text-center">
@@ -17,7 +16,8 @@
               <p class="text-sm text-gray-500">{{ achievement.description }}</p>
               <p class="text-xs text-gray-400 mt-1">
                 <template v-if="achievement.id === 'workaholic'">
-                  {{ Math.floor(Math.min(achievement.current, achievement.target) / 60) }}/{{ Math.floor(achievement.target / 60) }} horas
+                  {{ Math.floor(Math.min(achievement.current, achievement.target) / 60) }}/{{
+                    Math.floor(achievement.target / 60) }} horas
                 </template>
                 <template v-else>
                   {{ Math.min(achievement.current, achievement.target) }}/{{ achievement.target }}
@@ -25,11 +25,12 @@
               </p>
             </div>
             <div v-if="!achievement.unlocked" class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-yellow-400 h-2 rounded-full transition-all duration-300" 
-                  :style="{ width: Math.min((achievement.current / achievement.target) * 100, 100) + '%' }">
+              <div class="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+                :style="{ width: Math.min((achievement.current / achievement.target) * 100, 100) + '%' }">
               </div>
             </div>
-            <span :class="achievement.unlocked ? 'text-5xl' : 'text-2xl'">{{ achievement.unlocked ? '🏅' : '🔒' }}</span>
+            <span :class="achievement.unlocked ? 'text-5xl' : 'text-2xl'">{{ achievement.unlocked ? '🏅' : '🔒'
+              }}</span>
           </div>
         </div>
       </div>
@@ -164,7 +165,7 @@ const achievements = computed(() => [
     current: statsStore.maxStreak,
     unlocked: statsStore.maxStreak >= 100
   },
-   {
+  {
     id: 'sent-1',
     name: 'Primer envío',
     description: 'Envía tu primer correo',
@@ -291,31 +292,31 @@ const achievements = computed(() => [
     unlocked: statsStore.totalAppointmentsConfirmed >= 100
   },
   {
-      id: 'employee-month',
-      name: 'Empleado del mes',
-      description: 'Confirmar 100 reuniones de trabajo',
-      emoji: '🗓️',
-      target: 100,
-        current: statsStore.confirmedWorkAppointments.size,
-        unlocked: statsStore.confirmedWorkAppointments.size >= 100
-    },
-    {
-      id: 'employee-year',
-      name: 'Empleado del año',
-      description: 'Confirmar 1000 reuniones de trabajo',
-      emoji: '🏆',
-      target: 1000,
-        current: statsStore.confirmedWorkAppointments.size,
-        unlocked: statsStore.confirmedWorkAppointments.size >= 1000
-    },
-    {
-      id: 'employee-lustro',
-      name: 'Empleado del lustro',
-      description: 'Confirmar 10,000 reuniones de trabajo',
-      emoji: '🥇',
-      target: 10000,
-        current: statsStore.confirmedWorkAppointments.size,
-        unlocked: statsStore.confirmedWorkAppointments.size >= 10000
-    },
+    id: 'employee-month',
+    name: 'Empleado del mes',
+    description: 'Confirmar 100 reuniones de trabajo',
+    emoji: '🗓️',
+    target: 100,
+    current: statsStore.confirmedWorkAppointments.size,
+    unlocked: statsStore.confirmedWorkAppointments.size >= 100
+  },
+  {
+    id: 'employee-year',
+    name: 'Empleado del año',
+    description: 'Confirmar 1000 reuniones de trabajo',
+    emoji: '🏆',
+    target: 1000,
+    current: statsStore.confirmedWorkAppointments.size,
+    unlocked: statsStore.confirmedWorkAppointments.size >= 1000
+  },
+  {
+    id: 'employee-lustro',
+    name: 'Empleado del lustro',
+    description: 'Confirmar 10,000 reuniones de trabajo',
+    emoji: '🥇',
+    target: 10000,
+    current: statsStore.confirmedWorkAppointments.size,
+    unlocked: statsStore.confirmedWorkAppointments.size >= 10000
+  },
 ]);
 </script>
