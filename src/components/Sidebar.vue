@@ -1,5 +1,5 @@
 <template>
-  <aside class="w-64 bg-gray-800 text-white flex-shrink-0 h-full">
+  <aside class="w-64 bg-gray-800 bg-[url('images/backgrounds/doodle-email-dark.jpg')] bg-[length:1200px] text-white flex-shrink-0 h-full">
     <nav class="h-full flex flex-col py-6">
       <ul class="space-y-2">
         <li v-if="statsStore.composeUnlocked">
