@@ -171,6 +171,8 @@ function confirmAppointment() {
   confirmed.value = true;
   // Sumar punto según tipo de cita y si tiene id
   if (props.email && props.email.id) {
+    // Sumar al contador global de citas confirmadas
+    statsStore.recordAppointmentConfirmed();
     if (props.email.type === 'work') {
       console.log('[AppointmentViewer] Confirmando cita de trabajo:', props.email.id);
       statsStore.recordWorkAppointmentConfirmed(props.email.id);
