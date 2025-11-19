@@ -290,5 +290,32 @@ const achievements = computed(() => [
     current: statsStore.totalAppointmentsConfirmed,
     unlocked: statsStore.totalAppointmentsConfirmed >= 100
   },
+  {
+      id: 'employee-month',
+      name: 'Empleado del mes',
+      description: 'Confirmar 100 reuniones de trabajo',
+      emoji: '🗓️',
+      target: 100,
+        current: statsStore.confirmedWorkAppointments.size,
+        unlocked: statsStore.confirmedWorkAppointments.size >= 100
+    },
+    {
+      id: 'employee-year',
+      name: 'Empleado del año',
+      description: 'Confirmar 1000 reuniones de trabajo',
+      emoji: '🏆',
+      target: 1000,
+        current: statsStore.confirmedWorkAppointments.size,
+        unlocked: statsStore.confirmedWorkAppointments.size >= 1000
+    },
+    {
+      id: 'employee-lustro',
+      name: 'Empleado del lustro',
+      description: 'Confirmar 10,000 reuniones de trabajo',
+      emoji: '🥇',
+      target: 10000,
+        current: statsStore.confirmedWorkAppointments.size,
+        unlocked: statsStore.confirmedWorkAppointments.size >= 10000
+    },
 ]);
 </script>
