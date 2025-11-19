@@ -10,13 +10,16 @@
         </button>
       </router-link>
     </div>
+    <a href="https://github.com/eypacha/spamsimulator" target="_blank">
+        <div style="background-image: url(images/forkme.png)" alt="Fork me on Github" class="absolute top-0 right-0 w-40 h-40 bg-cover">
+            
+        </div>
+    </a>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HomeScreen'
-}
+<script setup>
+
 </script>
 
 <style scoped>
