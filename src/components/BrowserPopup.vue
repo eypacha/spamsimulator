@@ -30,8 +30,16 @@
       
       <!-- Contenido del navegador -->
       <div class="flex-1 overflow-auto bg-white">
-        <!-- Página de spam/phishing simulada - Template aleatorio -->
-        <component :is="currentTemplate" :countdown="countdown" />
+        <component
+          v-if="component"
+          :is="component"
+          @close="closePopup"
+        />
+        <component
+          v-else
+          :is="currentTemplate"
+          :countdown="countdown"
+        />
       </div>
     </div>
   </div>
@@ -61,6 +69,10 @@ const props = defineProps({
   screen: {
     type: String,
     default: 'inbox'
+  },
+  component: {
+    type: [Object, Function, String],
+    default: null
   }
 });
 
@@ -126,6 +138,11 @@ function stopCountdown() {
 }
 
 onMounted(() => {
+  // Si se pasa un componente personalizado, solo mostrarlo y no penalizar ni mostrar templates de spam
+  if (props.component) {
+    randomPosition.value = getRandomPosition();
+    return;
+  }
   // Inicializar template y countdown para todos los popups
   currentTemplate.value = markRaw(templates[Math.floor(Math.random() * templates.length)]);
   randomPosition.value = getRandomPosition();
