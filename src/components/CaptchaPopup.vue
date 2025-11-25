@@ -3,11 +3,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import StringCaptcha from './captchas/StringCaptcha.vue';
-// Puedes agregar más tipos de captcha aquí si lo deseas
-const captchaTypes = [StringCaptcha];
-const captchaComponent = ref(captchaTypes[Math.floor(Math.random() * captchaTypes.length)]);
+
+import { ref, markRaw } from 'vue';
+import { CAPTCHA_COMPONENTS } from './captchas/index.js';
+const captchaComponent = ref(markRaw(CAPTCHA_COMPONENTS[Math.floor(Math.random() * CAPTCHA_COMPONENTS.length)]));
 
 function onCaptchaSuccess() {
   window.alert('Captcha completado con éxito.');
