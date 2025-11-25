@@ -9,14 +9,14 @@
                 top: pieceY2 + 'px',
                 width: pieceWidth + 'px',
                 height: pieceHeight + 'px',
-                backgroundImage: `url(/images/puzzleCaptcha/piece-white.png), url(${image.src})`,
+                backgroundImage: `url(images/puzzleCaptcha/piece-white.png), url(${image.src})`,
                 backgroundPosition: `center center, -${pieceX}px -${pieceY}px`,
                 backgroundSize: `100% 100%, 400px 250px`,
                 zIndex: 2,
-                WebkitMaskImage: `url(/images/puzzleCaptcha/piece-black.png)`,
+                WebkitMaskImage: `url(images/puzzleCaptcha/piece-black.png)`,
                 WebkitMaskRepeat: 'no-repeat',
                 WebkitMaskSize: '100% 100%',
-                maskImage: `url(/images/puzzleCaptcha/piece-black.png)`,
+                maskImage: `url(images/puzzleCaptcha/piece-black.png)`,
                 maskRepeat: 'no-repeat',
                 maskSize: '100% 100%'
             }">
@@ -51,14 +51,21 @@ const pieceX2 = ref(10);
 const pieceY2 = ref(0);
 
 const image = new window.Image();
-image.src = '/images/puzzleCaptcha/image0.jpg';
+image.src = 'images/puzzleCaptcha/image0.jpg';
 const imageLoaded = ref(false);
-image.onload = () => { imageLoaded.value = true; };
+image.onload = () => {
+    imageLoaded.value = true;
+    console.log('Imagen cargada correctamente:', image.src);
+};
+image.onerror = () => {
+    imageLoaded.value = false;
+    console.error('Error al cargar la imagen:', image.src);
+};
 
 const pieceBlackImg = new window.Image();
-pieceBlackImg.src = '/images/puzzleCaptcha/piece-black.png';
+pieceBlackImg.src = 'images/puzzleCaptcha/piece-black.png';
 const pieceWhiteImg = new window.Image();
-pieceWhiteImg.src = '/images/puzzleCaptcha/piece-white.png';
+pieceWhiteImg.src = 'images/puzzleCaptcha/piece-white.png';
 
 const isAligned = computed(() => {
     return (
@@ -104,13 +111,19 @@ function drawImage() {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (image.complete) {
+    if (image.complete && image.naturalWidth > 0) {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         drawPiece(ctx);
     } else {
+        console.warn('La imagen aún no está lista para dibujar:', image.src);
         image.onload = () => {
-            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-            drawPiece(ctx);
+            if (image.naturalWidth > 0) {
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+                drawPiece(ctx);
+                console.log('Imagen dibujada tras cargar:', image.src);
+            } else {
+                console.error('La imagen sigue sin poder dibujarse:', image.src);
+            }
         };
     }
 }
