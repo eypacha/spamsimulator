@@ -8,7 +8,6 @@ export const EMAILS_OTHERS_LEGIT = [
   { subject: 'Nuevo mensaje de contacto', fromName: 'Formulario Web', fromEmail: 'info@proaestudiocreativo.com', body: 'Recibimos tu consulta, un asesor te contactará en breve.', isSpam: false, type: 'contact' },
   { subject: 'Entrada confirmada 🎟️', fromName: 'Eventbrite', fromEmail: 'noreply@eventbrite.com', body: 'Tu entrada para “Noche de Circo” está confirmada. Presentá este correo en la puerta.', isSpam: false, type: 'event' },
   { subject: 'Tu cuenta fue verificada ✅', fromName: 'Google', fromEmail: 'no-reply@google.com', body: 'Se ha completado el proceso de verificación de tu cuenta.', isSpam: false, type: 'account' },
-  { subject: 'Resumen mensual disponible', fromName: 'Banco Nación', fromEmail: 'notificaciones@bna.com.ar', body: 'Ya podés descargar el resumen de tu cuenta corriente del mes de septiembre.', isSpam: false, type: 'finance' },
   { subject: '¡Feliz cumpleaños! 🎂', fromName: 'RRHH - Acme Corp', fromEmail: 'rrhh@acme.com', body: 'Todo el equipo te desea un excelente día y un gran año por venir.', isSpam: false, type: 'work' },
   { subject: 'Actualización del sistema', fromName: 'IT Support', fromEmail: 'soporte@empresa.com', body: 'El sistema estará en mantenimiento el sábado de 22:00 a 02:00.', isSpam: false, type: 'work' },
   { subject: 'Recordatorio de reunión', fromName: 'Agenda Corporativa', fromEmail: 'notificaciones@calendar.com', body: 'Tenés una reunión programada con el equipo de marketing mañana a las 15:00.', isSpam: false, type: 'work' },
