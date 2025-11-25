@@ -1,5 +1,8 @@
 <template>
-  <CaptchaPopup @close="closePopup" />
+  <div class="flex flex-col align-items-center justify-center gap-4">
+    <h2 class="text-center font-bold text-lg">BBA Verificación de seguridad</h2>
+    <CaptchaPopup @close="closePopup" />
+  </div>
 </template>
 
 <script setup>

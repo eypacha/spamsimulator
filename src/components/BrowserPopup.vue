@@ -29,7 +29,7 @@
       </div>
       
       <!-- Contenido del navegador -->
-      <div class="flex-1 overflow-auto bg-white">
+      <div class="flex-1 overflow-auto bg-white flex items-center justify-center">
         <component
           v-if="component"
           :is="component"
