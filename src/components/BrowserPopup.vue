@@ -14,7 +14,7 @@
           <!-- Barra de URL -->
           <div class="flex-1 bg-white rounded px-3 py-1 text-sm text-gray-700 border border-gray-300 flex items-center gap-2">
             <span class="text-gray-400">🔒</span>
-            <span class="truncate">{{ url }}</span>
+            <span class="truncate">{{ url || (component && $props.url) }}</span>
           </div>
         </div>
         

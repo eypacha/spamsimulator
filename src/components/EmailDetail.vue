@@ -128,9 +128,10 @@ function handleLegitimateContent() {
   console.log('[DEBUG] props.email.url:', props.email.url);
 
   if (content === 'captcha') {
-    // Usar el sistema de popups para abrir el captcha como browser popup
+    // Usar el sistema de popups para abrir el captcha como browser popup y pasar la url
     popupsStore.addBrowser({
-      component: CaptchaBrowser
+      component: CaptchaBrowser,
+      url: props.email.url || ''
     });
     return;
   }

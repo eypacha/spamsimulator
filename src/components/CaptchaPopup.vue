@@ -10,7 +10,6 @@ const captchaTypes = [StringCaptcha];
 const captchaComponent = ref(captchaTypes[Math.floor(Math.random() * captchaTypes.length)]);
 
 function onCaptchaSuccess() {
-  // Aquí puedes emitir un evento o manejar el éxito del captcha
-  // Por ahora solo cierra el popup (deberás integrar con tu sistema de popups)
+  window.alert('Captcha completado con éxito.');
 }
 </script>
