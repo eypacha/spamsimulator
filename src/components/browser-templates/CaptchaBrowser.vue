@@ -19,6 +19,7 @@ function pickRandomCaptcha() {
 
 function onCaptchaSuccess() {
   // Aquí podrías emitir un evento para cerrar el popup si lo deseas
+  console.log('Captcha completado con éxito');
 }
 
 onMounted(() => {
