@@ -24,10 +24,20 @@ export const usePopupsStore = defineStore('popups', () => {
     addBrowser('https://ejemplo.com');
   }
 
+  function addCaptchaPopup(captchaId) {
+    browsers.value.push({
+      id: Date.now() + Math.random(),
+      show: true,
+      url: 'captcha',
+      captchaId
+    });
+  }
+
   return {
     browsers,
     addBrowser,
     closeBrowser,
-    createAdditional
+    createAdditional,
+    addCaptchaPopup
   };
 });

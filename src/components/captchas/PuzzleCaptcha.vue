@@ -21,21 +21,28 @@
                 maskSize: '100% 100%'
             }">
             </div>
-            <span v-if="isAligned" class="absolute top-2 right-3 text-2xl z-20 pointer-events-none">✅</span>
+            <span v-if="isAligned || props.verified" class="absolute top-2 right-3 text-2xl z-20 pointer-events-none">✅</span>
         </div>
         <div class="w-full flex justify-center mt-2">
-            <input type="range" min="0" max="350" v-model="sliderValue" class="w-[calc(100%-20px)]" />
+            <input type="range" min="0" max="350" v-model="sliderValue" class="w-[calc(100%-20px)]" :disabled="props.verified || props.disabled" />
         </div>
     </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
-// Si tienes un store de captcha, importa aquí
-// import useCaptcha from '../../stores/captcha.js';
-// const { onCaptchaSuccess } = useCaptcha();
-
 const emit = defineEmits(['submit']);
+const props = defineProps({
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
+});
+
 let alignTimer = null;
 const captchaValid = ref(false);
 
@@ -77,14 +84,13 @@ const isAligned = computed(() => {
 // Watcher para detectar alineación y slider quieto
 watch([isAligned, sliderValue], ([aligned, value], [prevAligned, prevValue]) => {
     if (alignTimer) clearTimeout(alignTimer);
-    if (aligned) {
+    if (aligned && !props.verified && !props.disabled) {
         // Si el slider no se mueve por 1 segundo y está alineado, validar captcha
         alignTimer = setTimeout(() => {
             // Si sigue alineado y el slider no se movió
             if (isAligned.value && sliderValue.value === value && !captchaValid.value) {
                 captchaValid.value = true;
                 emit('submit');
-                // onCaptchaSuccess && onCaptchaSuccess();
             }
         }, 1000);
     }

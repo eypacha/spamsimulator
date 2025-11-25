@@ -57,22 +57,15 @@ import FakeBank from './browser-templates/FakeBank.vue';
 import SurveyScam from './browser-templates/SurveyScam.vue';
 import RouletteScam from './browser-templates/RouletteScam.vue';
 import CaptchaBrowser from './browser-templates/CaptchaBrowser.vue';
-
-const statsStore = useStatsStore();
-const soundStore = useSoundStore();
-
 const props = defineProps({
+  url: String,
   show: Boolean,
-  url: {
-    type: String,
-    default: 'https://ejemplo.com'
-  },
-  screen: {
-    type: String,
-    default: 'inbox'
+  captchaId: {
+    type: [String, Number],
+    default: null
   },
   component: {
-    type: [Object, Function, String],
+    type: Object,
     default: null
   }
 });
@@ -84,9 +77,7 @@ const templates = [PhishingPrize, VirusWarning, FakeBank, SurveyScam, RouletteSc
 
 // Seleccionar template aleatorio
 const currentTemplate = ref(null);
-
-// Posición aleatoria del popup
-const randomPosition = ref({ top: '50%', left: '50%' });
+const randomPosition = ref({ top: '20%', left: '50%' });
 
 const countdown = ref('00:10');
 let countdownInterval = null;
@@ -144,9 +135,12 @@ onMounted(() => {
     randomPosition.value = getRandomPosition();
     return;
   }
-  // Si la url es 'captcha', mostrar CaptchaBrowser
+  // Si la url es 'captcha', mostrar CaptchaBrowser y pasar captchaId
   if (props.url === 'captcha') {
-    currentTemplate.value = markRaw(CaptchaBrowser);
+    currentTemplate.value = markRaw({
+      ...CaptchaBrowser,
+      props: { captchaId: props.captchaId }
+    });
     randomPosition.value = getRandomPosition();
     return;
   }

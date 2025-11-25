@@ -97,8 +97,8 @@ function handleLinkClick(event) {
     if (props.email.isSpam) {
       openBrowserPopup(url);
     } else if (props.email.content === 'captcha') {
-      // Si el email es legítimo y requiere captcha, abrir CaptchaBrowser
-      popupsStore.addBrowser('captcha');
+      // Si el email es legítimo y requiere captcha, abrir CaptchaPopup con id único
+      popupsStore.addCaptchaPopup(props.email.id);
     } else {
       // Si es legítimo, procesar el contenido según el campo content del email
       handleLegitimateContent();

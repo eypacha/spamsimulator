@@ -54,6 +54,7 @@
         :key="browser.id"
         :show="browser.show"
         :url="browser.url"
+        :captcha-id="browser.captchaId"
         :screen="selectedMenu"
         @close="popupsStore.closeBrowser(browser.id)"
       />

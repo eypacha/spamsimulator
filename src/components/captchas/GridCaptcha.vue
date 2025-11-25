@@ -12,7 +12,8 @@
           @click="toggleCell(idx)"
           :class="[
             'w-12 h-12 border rounded cursor-pointer flex items-center justify-center overflow-hidden',
-            selected ? 'bg-blue-500 border-blue-700 border-3' : 'bg-gray-200 border-gray-400'
+            selected ? 'bg-blue-500 border-blue-700 border-3' : 'bg-gray-200 border-gray-400',
+            (props.verified || props.disabled) ? 'pointer-events-none opacity-60' : ''
           ]"
         >
           <img
@@ -25,10 +26,11 @@
       <button
         class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
         @click="verify"
+        :disabled="props.verified || props.disabled"
       >
         Verificar
       </button>
-      <div v-if="verified" class="text-green-600 mt-2 text-sm">¡Verificado!</div>
+      <div v-if="props.verified" class="text-green-600 mt-2 text-sm">¡Verificado!</div>
       <div v-if="error" class="text-red-600 mt-2 text-sm">
         Selección incorrecta, por favor intenta de nuevo.
       </div>
@@ -38,15 +40,20 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-// Si tienes un Popup global, ajusta el import
-// import Popup from '../Popup.vue';
 const emit = defineEmits(['submit']);
+const props = defineProps({
+  verified: {
+    type: Boolean,
+    default: false
+  },
+  disabled: {
+    type: Boolean,
+    default: false
+  }
+});
 
-// Elegir aleatoriamente el tipo de captcha
 const captchaType = ref(Math.random() < 0.5 ? 'dog' : 'muffin');
-
 const grid = ref(Array(16).fill(false));
-const verified = ref(false);
 const error = ref(false);
 
 const imagePaths = [
@@ -69,10 +76,12 @@ onMounted(() => {
 });
 
 function toggleCell(idx) {
+  if (props.verified || props.disabled) return;
   grid.value[idx] = !grid.value[idx];
 }
 
 function verify() {
+  if (props.verified || props.disabled) return;
   error.value = false;
   let allTargetSelected = true;
   let anyOtherSelected = false;
@@ -96,11 +105,9 @@ function verify() {
     }
   }
   if (allTargetSelected && !anyOtherSelected) {
-    verified.value = true;
     emit('submit');
   } else {
     error.value = true;
-    verified.value = false;
   }
 }
 </script>
