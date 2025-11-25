@@ -33,5 +33,5 @@ export const EMAILS = [
   ...EMAILS_OTHERS_SPAM,
 
   ...EMAILS_BANK_LEGIT,
-  ...EMAILS_BANK_SPAM,
+  // ...EMAILS_BANK_SPAM,
 ];

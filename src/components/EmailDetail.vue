@@ -26,7 +26,7 @@
       :url="clickedUrl"
       @close="showContent = false"
     />
-    
+
     <!-- Appointment Viewer for meeting confirmations -->
     <AppointmentViewer
       :show="showAppointment"
@@ -35,11 +35,15 @@
       :email="email"
       @close="showAppointment = false"
     />
+
+    <!-- Captcha Popup for emails with captcha content -->
+    <CaptchaPopup v-if="showCaptcha" @close="showCaptcha = false" />
   </div>
 </template>
 
 <script setup>
 import { defineProps, defineEmits, computed, ref } from 'vue';
+import CaptchaPopup from './CaptchaPopup.vue';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { formatDate } from '@/utils/date';
 import { shouldShowAds as checkShouldShowAds } from '@/utils/ads';
@@ -49,6 +53,7 @@ import AppointmentViewer from './AppointmentViewer.vue';
 import { useStatsStore } from '../store/stats.js';
 import { useVirusStore } from '../store/virus.js';
 import { usePopupsStore } from '../store/popups.js';
+import CaptchaBrowser from './browser-templates/CaptchaBrowser.vue';
 
 import { RANDOM_URLS_SPAM_URLS } from '@/constants/spamUrls.js';
 
@@ -63,6 +68,7 @@ const showContent = ref(false);
 const contentType = ref('');
 const contentData = ref('');
 const showAppointment = ref(false);
+const showCaptcha = ref(false);
 
 const shouldShowAds = computed(() => checkShouldShowAds(props.email));
 
@@ -120,41 +126,42 @@ function openBrowserPopup(url) {
 function handleLegitimateContent() {
   // Usar el campo content del email para determinar qué mostrar
   const content = props.email.content;
-  
   console.log('[DEBUG] handleLegitimateContent called');
   console.log('[DEBUG] content:', content);
   console.log('[DEBUG] props.email.url:', props.email.url);
-  
+
+  if (content === 'captcha') {
+    // Usar el sistema de popups para abrir el captcha como browser popup y pasar la url
+    popupsStore.addBrowser({
+      component: CaptchaBrowser,
+      url: props.email.url || ''
+    });
+    return;
+  }
+
   if (content === 'picture' && props.email.url) {
-    // Mostrar imagen usando la URL especificada en el email
     contentType.value = 'image';
     contentData.value = `images/${props.email.url}`;
     showContent.value = true;
-    
-    // Si es una foto de gato (cats/XX.jpg), marcar como vista
     const catMatch = props.email.url.match(/cats\/(\d+)\.jpg/);
     if (catMatch) {
       const catNumber = parseInt(catMatch[1]);
       statsStore.markCatPictureViewed(catNumber);
       console.log('[DEBUG] Cat picture viewed:', catNumber);
     }
-    
     console.log('[DEBUG] Modal should open now with:', contentData.value);
   } else if (content === 'iframe' && props.email.url) {
-    // Mostrar iframe (videos, etc) usando la URL del email
     contentType.value = 'iframe';
     contentData.value = props.email.url;
     showContent.value = true;
     console.log('[DEBUG] Iframe should open now with:', contentData.value);
   } else if (content === 'apointment' && props.email.url) {
-    // Mostrar confirmación de cita usando la URL del email
     clickedUrl.value = props.email.url;
     showAppointment.value = true;
     console.log('[DEBUG] Appointment should open now with:', props.email.url);
   } else {
     console.log('[DEBUG] Condition not met. content:', content, 'url:', props.email.url);
   }
-  // Para cualquier otro tipo de contenido, simplemente no hacer nada
 }
 
 // Regex para URLs (simplificado)
