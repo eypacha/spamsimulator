@@ -13,7 +13,7 @@
       <span v-if="comboUnlocked && comboMultiplier > 1" class="font-bold text-yellow-300  animate-pulse pulse-fast">x{{
         comboMultiplier }}</span>
       <span v-if="virusCount > 0"
-        :class="['transition-all duration-300', { 'scale-150 text-red-500': virusAnimating }]">🦠 {{ virusCount
+        :class="['inline-block transition-all duration-300', { 'scale-150 text-red-500': virusAnimating }]">🦠 {{ virusCount
         }}</span>
       <span
         :class="['transition-all duration-300', { 'scale-150': scoreAnimating, 'text-red-500': scoreDecreasing }]">🪙 {{
