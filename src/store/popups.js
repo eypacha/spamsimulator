@@ -4,12 +4,15 @@ import { defineStore } from 'pinia';
 export const usePopupsStore = defineStore('popups', () => {
   const browsers = ref([]);
 
-  function addBrowser(url) {
-    browsers.value.push({
+  function addBrowser(options) {
+    // options puede ser { url } o { component }
+    const popup = {
       id: Date.now() + Math.random(),
       show: true,
-      url: url
-    });
+      url: options.url || '',
+      component: options.component || null
+    };
+    browsers.value.push(popup);
   }
 
   function closeBrowser(id) {
