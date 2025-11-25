@@ -1,17 +1,27 @@
 <template>
   <div class="flex flex-col align-items-center justify-center gap-4">
     <h2 class="text-center font-bold text-lg">BBA Verificación de seguridad</h2>
-    <!-- <component :is="captchaComponent" @submit="closePopup" /> -->
+    <component v-if="captchaComponent" :is="captchaComponent" @submit="onCaptchaSuccess" />
   </div>
 </template>
-<!-- 
+
 <script setup>
-import { defineProps, defineEmits } from 'vue';
-const emit = defineEmits(['close']);
-const props = defineProps({ captchaComponent: Object });
-const captchaComponent = props.captchaComponent;
-console.log('[DEBUG] CaptchaBrowser captchaComponent:', captchaComponent);
-function closePopup() {
-  emit('close');
+import { ref, markRaw, onMounted } from 'vue';
+import PuzzleCaptcha from '../captchas/PuzzleCaptcha.vue';
+import StringCaptcha from '../captchas/StringCaptcha.vue';
+
+const captchaComponents = [PuzzleCaptcha, StringCaptcha];
+const captchaComponent = ref(null);
+
+function pickRandomCaptcha() {
+  captchaComponent.value = markRaw(captchaComponents[Math.floor(Math.random() * captchaComponents.length)]);
 }
-</script> -->
+
+function onCaptchaSuccess() {
+  // Aquí podrías emitir un evento para cerrar el popup si lo deseas
+}
+
+onMounted(() => {
+  pickRandomCaptcha();
+});
+</script>
