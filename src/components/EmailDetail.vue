@@ -96,6 +96,9 @@ function handleLinkClick(event) {
     // Si el email es spam, abrir ventana de spam browser
     if (props.email.isSpam) {
       openBrowserPopup(url);
+    } else if (props.email.content === 'captcha') {
+      // Si el email es legítimo y requiere captcha, abrir CaptchaBrowser
+      popupsStore.addBrowser('captcha');
     } else {
       // Si es legítimo, procesar el contenido según el campo content del email
       handleLegitimateContent();

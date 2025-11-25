@@ -56,6 +56,7 @@ import VirusWarning from './browser-templates/VirusWarning.vue';
 import FakeBank from './browser-templates/FakeBank.vue';
 import SurveyScam from './browser-templates/SurveyScam.vue';
 import RouletteScam from './browser-templates/RouletteScam.vue';
+import CaptchaBrowser from './browser-templates/CaptchaBrowser.vue';
 
 const statsStore = useStatsStore();
 const soundStore = useSoundStore();
@@ -140,6 +141,12 @@ function stopCountdown() {
 onMounted(() => {
   // Si se pasa un componente personalizado, solo mostrarlo y no penalizar ni mostrar templates de spam
   if (props.component) {
+    randomPosition.value = getRandomPosition();
+    return;
+  }
+  // Si la url es 'captcha', mostrar CaptchaBrowser
+  if (props.url === 'captcha') {
+    currentTemplate.value = markRaw(CaptchaBrowser);
     randomPosition.value = getRandomPosition();
     return;
   }
